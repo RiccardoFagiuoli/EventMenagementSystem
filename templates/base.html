@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Event Management System{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; line-height: 1.6; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 0; }
+        nav { background-color: #333; padding: 0.5rem; }
+        nav a { color: white; text-decoration: none; padding: 0.5rem 1rem; display: inline-block; }
+        nav a:hover { background-color: #555; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .messages { margin: 1rem 0; }
+        .message { padding: 1rem; margin-bottom: 0.5rem; border-radius: 4px; }
+        .message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .message.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; background-color: #667eea; color: white; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
+        .btn:hover { background-color: #5568d3; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; }
+        .btn-secondary { background-color: #6c757d; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        footer { background-color: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+        .event-card { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .event-title { font-size: 1.5rem; margin-bottom: 0.5rem; color: #333; }
+        .event-meta { color: #666; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .event-description { color: #555; margin-bottom: 1rem; }
+        form { background: white; padding: 2rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        label { display: block; margin-top: 1rem; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; }
+        textarea { resize: vertical; min-height: 120px; }
+        .form-group { margin-bottom: 1.5rem; }
+        .btn-group { margin-top: 2rem; }
+        .btn-group button, .btn-group a { margin-right: 1rem; }
+        .user-info { color: white; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        table th, table td { padding: 1rem; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background-color: #f5f5f5; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>🎉 Event Management System</h1>
+                <div class="user-info">
+                    {% if user.is_authenticated %}
+                        <span>Benvenuto, {{ user.first_name|default:user.username }}!</span>
+                        <a href="{% url 'users:profile' %}" style="color: white; text-decoration: underline;">Profilo</a> |
+                        <form method="post" action="{% url 'users:logout' %}" style="display: inline; margin: 0; padding: 0; background: none; border:none; outline: none; box-shadow: none;">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; color: white; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">
+                                Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" style="color: white; text-decoration: underline;">Login</a> |
+                        <a href="{% url 'users:register' %}" style="color: white; text-decoration: underline;">Registrati</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'events:event_list' %}">Tutti gli Eventi</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'events:user_registrations' %}">Le mie Registrazioni</a>
+            {% if user.profile.role == 'organizer' %}
+                <a href="{% url 'events:organizer_events' %}">I miei Eventi</a>
+                <a href="{% url 'events:event_create' %}">Crea Evento</a>
+            {% endif %}
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Event Management System. All rights reserved.</p>
+        <p>Developed for Università degli Studi di Firenze</p>
+    </footer>
+</body>
+</html>
+

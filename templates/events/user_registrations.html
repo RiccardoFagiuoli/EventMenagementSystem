@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Le Mie Registrazioni - Event Management System{% endblock %}
+
+{% block content %}
+<h2>Le Mie Registrazioni agli Eventi</h2>
+
+{% if registrations %}
+    <table style="width: 100%; margin-top: 2rem;">
+        <thead>
+            <tr>
+                <th>Nome Evento</th>
+                <th>Data Evento</th>
+                <th>Luogo</th>
+                <th>Status Iscrizione</th>
+                <th>Data Iscrizione</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registration in registrations %}
+                <tr>
+                    <td><strong>{{ registration.event.title }}</strong></td>
+                    <td>{{ registration.event.start_date|date:"d/m/Y H:i" }}</td>
+                    <td>{{ registration.event.location }}</td>
+                    <td>
+                        <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem;
+                            {% if registration.status == 'confirmed' %}background-color: #d4edda; color: #155724;
+                            {% elif registration.status == 'pending' %}background-color: #fff3cd; color: #856404;
+                            {% elif registration.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
+                            {% elif registration.status == 'attended' %}background-color: #d1ecf1; color: #0c5460;
+                            {% endif %}">
+                            {{ registration.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Dettagli</a>
+                        {% if registration.status != 'cancelled' %}
+                            <a href="{% url 'events:event_unregister' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div style="text-align: center; padding: 3rem; background-color: #f9f9f9; border-radius: 4px; margin-top: 2rem;">
+        <p style="color: #666; font-size: 1.1rem;">Non sei ancora iscritto a nessun evento.</p>
+        <a href="{% url 'events:event_list' %}" class="btn" style="margin-top: 1rem;">Visualizza gli Eventi</a>
+    </div>
+{% endif %}
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} - Event Management System{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>{{ event.title }}</h2>
+    {% if user == event.organizer %}
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary">Modifica</a>
+            <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">Elimina</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="event-card">
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <div>
+            <h3>Descrizione</h3>
+            <p style="margin: 1rem 0;">{{ event.description }}</p>
+
+            <h3 style="margin-top: 2rem;">Dettagli Evento</h3>
+            <table style="margin: 1rem 0;">
+                <tr>
+                    <td><strong>📍 Luogo:</strong></td>
+                    <td>{{ event.location }}</td>
+                </tr>
+                <tr>
+                    <td><strong>📅 Data Inizio:</strong></td>
+                    <td>{{ event.start_date|date:"d/m/Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <td><strong>🏁 Data Fine:</strong></td>
+                    <td>{{ event.end_date|date:"d/m/Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <td><strong>👥 Organizzatore:</strong></td>
+                    <td>{{ event.organizer.get_full_name|default:event.organizer.username }}</td>
+                </tr>
+                <tr>
+                    <td><strong>📝 Stato:</strong></td>
+                    <td>{{ event.get_status_display }}</td>
+                </tr>
+                <tr>
+                    <td><strong>👤 Iscritti:</strong></td>
+                    <td>{{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background-color: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
+            {% if user.is_authenticated %}
+                {% if user_registration %}
+                    <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                        <strong>✓ Sei iscritto a questo evento</strong><br>
+                        Stato: {{ user_registration.get_status_display }}
+                    </div>
+                    <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                {% else %}
+                    {% if event.is_full %}
+                        <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
+                            <strong>⚠️ Questo evento è al completo</strong>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti a questo Evento</a>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <a href="{% url 'users:login' %}" class="btn" style="width: 100%; text-align: center;">Accedi per Iscriverti</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if can_view_attendees %}
+        <div style="margin-top: 2rem;">
+            <h3>Iscritti Confermati</h3>
+            {% if attendees %}
+                <table style="width: 100%; margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Data Iscrizione</th>
+                            <th>Stata</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in attendees %}
+                            <tr>
+                                <td>{{ registration.user.get_full_name|default:registration.user.username }}</td>
+                                <td>{{ registration.user.email }}</td>
+                                <td>{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
+                                <td>{{ registration.get_status_display }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="color: #666;">Nessun iscritto confermato.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
+</div>
+{% endblock %}
+

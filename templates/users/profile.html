@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Profilo Utente - Event Management System{% endblock %}
+
+{% block content %}
+<h2>Il Mio Profilo</h2>
+
+<div style="max-width: 800px;">
+    <form method="post" style="margin-top: 2rem;">
+        {% csrf_token %}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="first_name">Nome</label>
+                <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Cognome</label>
+                <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Numero di Telefono</label>
+            <input type="tel" name="phone_number" id="phone_number" value="{{ profile.phone_number|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="bio">Biografia</label>
+            <textarea name="bio" id="bio">{{ profile.bio|default:'' }}</textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" value="{{ user.username }}" disabled style="background-color: #f0f0f0;">
+            </div>
+
+            <div class="form-group">
+                <label>Tipo di Utente</label>
+                <input type="text" value="{{ profile.get_role_display }}" disabled style="background-color: #f0f0f0;">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Data Iscrizione</label>
+            <input type="text" value="{{ user.date_joined|date:'d/m/Y H:i' }}" disabled style="background-color: #f0f0f0;">
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn">Salva Modifiche</button>
+            <a href="{% url 'events:event_list' %}" class="btn btn-secondary">Annulla</a>
+        </div>
+    </form>
+
+    <div style="margin-top: 3rem; padding: 1.5rem; background-color: #f9f9f9; border-radius: 4px;">
+        <h3>Riepilogo Attività</h3>
+        <p><strong>Numero di iscrizioni:</strong> {{ user.event_registrations.count }}</p>
+        {% if profile.role == 'organizer' %}
+            <p><strong>Numero di eventi creati:</strong> {{ user.organized_events.count }}</p>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 2rem; padding: 1.5rem; background-color: #f8d7da; border-radius: 4px; border-left: 4px solid #dc3545;">
+        <h3 style="color: #721c24;">Sezione Pericolosa</h3>
+        <p style="color: #721c24;">Gestisci le tue impostazioni di sicurezza.</p>
+        <button onclick="alert('Funzione di cambio password non ancora disponibile')" class="btn btn-danger">Cambia Password</button>
+    </div>
+</div>
+{% endblock %}
+
