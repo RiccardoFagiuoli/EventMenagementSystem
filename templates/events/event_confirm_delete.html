@@ -16,9 +16,9 @@
     <p><strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}</p>
 
     <div class="btn-group" style="margin-top: 2rem;">
-        <form method="post" style="display: inline;">
+        <form method="post" style="display: inline; box-shadow: none;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Sì, Elimina Evento</button>
+            <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 1rem">Sì, Elimina Evento</button>
         </form>
         <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">Annulla</a>
     </div>
