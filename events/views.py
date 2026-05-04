@@ -62,7 +62,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
-    success_url = reverse_lazy('events:event_list')
+    success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
@@ -89,7 +89,7 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
-    success_url = reverse_lazy('events:event_list')
+    success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
@@ -105,7 +105,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """ Class-based generic view for deleting events. """
     model = Event
     template_name = 'events/event_confirm_delete.html'
-    success_url = reverse_lazy('events:event_list')
+    success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
@@ -113,13 +113,17 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         event = self.get_object()
         return self.request.user == event.organizer or self.request.user.is_staff
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        """Questo metodo gestisce le richieste POST (soft delete)"""
         event = self.get_object()
         from django.utils import timezone
         event.deleted_at = timezone.now()
         event.save()
         messages.success(request, 'Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni.')
         return redirect(self.success_url)
+
+    def delete(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 def event_register(request, pk):
     """ View for registering a user to an event. """
@@ -211,17 +215,25 @@ def event_restore(request, pk):
     if not request.user.is_authenticated:
         messages.error(request, 'È necessario essere loggati.')
         return redirect('users:login')
-    event = get_object_or_404(Event, pk=pk, organizer=request.user)
+
+    event = get_object_or_404(Event, pk=pk)
+
+    # Permetti sia all'organizzatore che agli admin
+    if not (request.user == event.organizer or request.user.is_staff):
+        messages.error(request, 'Non hai i permessi per ripristinare questo evento.')
+        return redirect('events:organizer_events')
+
     if event.deleted_at:
         from django.utils import timezone
         if (timezone.now() - event.deleted_at).days < 3:
             event.deleted_at = None
             event.save()
-            messages.success(request, 'Evento ripristinato con successo!')
+            messages.success(request, f'Evento "{event.title}" ripristinato con successo!')
         else:
             messages.error(request, 'Non è possibile ripristinare eventi eliminati da più di 3 giorni.')
     else:
         messages.warning(request, 'L\'evento non è eliminato.')
+
     return redirect('events:organizer_events')
 
 def admin_unregister_user(request, event_id, registration_id):
