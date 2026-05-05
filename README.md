@@ -1,7 +1,7 @@
 # Event Management System
 
 ## Railway link:
-***https://event-management-system-railway.up.railway.app/***
+***https://eventmenagementsystem.up.railway.app/***
 
 ## Brief Summary
 
