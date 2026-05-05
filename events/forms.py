@@ -14,6 +14,10 @@ class EventForm(forms.ModelForm):
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
+        n_attendees = cleaned_data.get('max_attendees')
+
+        if n_attendees < 1:
+            raise forms.ValidationError('Numero di partecipanti deve essere maggiore di 0')
 
         if start_date and end_date:
             if start_date >= end_date:

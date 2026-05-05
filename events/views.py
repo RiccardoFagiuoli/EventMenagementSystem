@@ -40,7 +40,8 @@ class EventDetailView(DetailView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if not self.request.user.is_authenticated or not hasattr(self.request.user, 'profile') or self.request.user.profile.role != 'organizer':
+        # Mostra gli eventi eliminati solo agli organizzatori e admin
+        if not self.request.user.is_authenticated or not (self.request.user.is_staff or (hasattr(self.request.user, 'profile') and self.request.user.profile.role == 'organizer')):
             queryset = queryset.filter(deleted_at__isnull=True)
         return queryset
 
@@ -49,6 +50,14 @@ class EventDetailView(DetailView):
         event = self.get_object()
         context['attendees'] = event.eventregistration_set.filter(status='confirmed')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.has_perm('events.can_view_attendees')
+
+        # Calcola se l'evento può essere ripristinato
+        if event.deleted_at:
+            from django.utils import timezone
+            context['can_restore'] = (timezone.now() - event.deleted_at).days < 3
+        else:
+            context['can_restore'] = False
+
         if self.request.user.is_authenticated:
             try:
                 registration = EventRegistration.objects.get(event=event, user=self.request.user)
@@ -98,7 +107,13 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == event.organizer or self.request.user.is_staff
 
     def form_valid(self, form):
-        messages.success(self.request, 'Evento aggiornato con successo!')
+        # Se l'evento è stato eliminato, ripristinalo
+        event = form.instance
+        if event.deleted_at:
+            event.deleted_at = None
+            messages.success(self.request, 'Evento ripristinato e aggiornato con successo!')
+        else:
+            messages.success(self.request, 'Evento aggiornato con successo!')
         return super().form_valid(form)
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -114,12 +129,21 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == event.organizer or self.request.user.is_staff
 
     def post(self, request, *args, **kwargs):
-        """Questo metodo gestisce le richieste POST (soft delete)"""
+        """Questo metodo gestisce le richieste POST (soft delete o hard delete)"""
         event = self.get_object()
         from django.utils import timezone
-        event.deleted_at = timezone.now()
-        event.save()
-        messages.success(request, 'Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni.')
+
+        if event.deleted_at:
+            # Se l'evento è già eliminato, eliminarlo definitivamente dal database
+            event_title = event.title
+            event.delete()
+            messages.success(request, f'Evento "{event_title}" eliminato definitivamente dal database.')
+        else:
+            # Se l'evento non è eliminato, fare soft delete
+            event.deleted_at = timezone.now()
+            event.save()
+            messages.success(request, 'Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni.')
+
         return redirect(self.success_url)
 
     def delete(self, request, *args, **kwargs):
@@ -237,16 +261,22 @@ def event_restore(request, pk):
     return redirect('events:organizer_events')
 
 def admin_unregister_user(request, event_id, registration_id):
-    """ View to unregister a user from an event (admin only). """
-    if not request.user.is_authenticated or not request.user.is_staff:
-        messages.error(request, 'Accesso negato. Solo gli admin possono eseguire questa azione.')
-        return redirect('events:event_list')
-    
-    event = get_object_or_404(Event, pk=event_id)
-    registration = get_object_or_404(EventRegistration, pk=registration_id, event=event)
-    
-    user_name = registration.user.username
-    registration.delete()
-    messages.success(request, f'Utente {user_name} discritto dall\'evento {event.title}.')
-    return redirect('events:event_detail', pk=event_id)
+     """ View to unregister a user from an event (admin and organizer only). """
+     if not request.user.is_authenticated:
+         messages.error(request, 'È necessario essere loggati.')
+         return redirect('users:login')
+
+     event = get_object_or_404(Event, pk=event_id)
+
+     # Permetti solo all'admin o all'organizzatore dell'evento
+     if not (request.user.is_staff or request.user == event.organizer):
+         messages.error(request, 'Accesso negato. Solo gli admin e l\'organizzatore possono eseguire questa azione.')
+         return redirect('events:event_list')
+
+     registration = get_object_or_404(EventRegistration, pk=registration_id, event=event)
+
+     user_name = registration.user.username
+     registration.delete()
+     messages.success(request, f'Utente {user_name} discritto dall\'evento {event.title}.')
+     return redirect('events:event_detail', pk=event_id)
 

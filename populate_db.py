@@ -12,9 +12,9 @@ from users.models import UserProfile
 from events.models import Event, EventRegistration, EventAttendance
 
 # Clear existing data
-# User.objects.all().delete()
-# Event.objects.all().delete()
-# Group.objects.all().delete()
+User.objects.all().delete()
+Event.objects.all().delete()
+Group.objects.all().delete()
 
 # Create groups with permissions
 attendee_group, _ = Group.objects.get_or_create(name='Attendee')
@@ -211,6 +211,20 @@ event5, created = Event.objects.get_or_create(
     }
 )
 
+event6, created = Event.objects.get_or_create(
+    title='Cybersecurity & Data Protection Summit',
+    defaults={
+        'description': 'Un summit completo sulla sicurezza informatica, protezione dei dati personali (GDPR) e best practices per aziende moderne.',
+        'organizer': organizer1,
+        'location': 'Centro Congressi, Piazza della Libertà 10, Firenze',
+        'start_date': now + timedelta(days=20),
+        'end_date': now + timedelta(days=20, hours=6),
+        'max_attendees': 60,
+        'status': 'published',
+        'deleted_at': now  # Soft delete: evento marcato come eliminato
+    }
+)
+
 # Create registrations
 events = [event1, event2, event3, event4]
 attendees = [attendee1, attendee2, attendee3]
@@ -246,3 +260,7 @@ print(f"- Created/Updated {Event.objects.count()} events")
 print(f"- Created/Updated {EventRegistration.objects.count()} registrations")
 print(f"- Created/Updated {EventAttendance.objects.count()} attendance records")
 print(f"- Groups configured: {Group.objects.count()} groups")
+print(f"\n📌 Eventi eliminati (soft delete):")
+deleted_events = Event.objects.filter(deleted_at__isnull=False)
+for event in deleted_events:
+    print(f"   - {event.title} (organizzato da {event.organizer.first_name} {event.organizer.last_name}, eliminato il {event.deleted_at.strftime('%Y-%m-%d %H:%M')})")

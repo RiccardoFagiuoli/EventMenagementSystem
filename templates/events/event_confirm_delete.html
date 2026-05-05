@@ -3,14 +3,25 @@
 {% block title %}Elimina "{{ event.title }}"{% endblock %}
 
 {% block content %}
+{% if event.deleted_at %}
+<div style="background-color: #f8d7da; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; border-left: 4px solid #dc3545;">
+    <h2 style="color: #721c24;">⚠️ Eliminazione Permanente</h2>
+    <p>Sei sicuro di voler <strong>eliminare definitivamente</strong> l'evento <strong>"{{ event.title }}"</strong> dal database?</p>
+    <p style="color: #721c24; font-weight: bold;">Questa azione non può essere annullata e l'evento verrà rimosso permanentemente!</p>
+</div>
+{% else %}
 <div style="background-color: #fff3cd; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; border-left: 4px solid #ffc107;">
     <h2 style="color: #856404;">⚠️ Conferma Eliminazione</h2>
     <p>Sei sicuro di voler eliminare l'evento <strong>"{{ event.title }}"</strong>?</p>
-    <p style="color: #856404; font-weight: bold;">Questa azione non può essere annullata!</p>
+    <p style="color: #856404; font-weight: bold;">Potrai ripristinarlo entro 3 giorni.</p>
 </div>
+{% endif %}
 
 <div class="event-card">
     <h3>{{ event.title }}</h3>
+    {% if event.deleted_at %}
+        <p style="color: #dc3545; font-weight: bold;">🗑️ Stato: Eliminato</p>
+    {% endif %}
     <p><strong>Luogo:</strong> {{ event.location }}</p>
     <p><strong>Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }}</p>
     <p><strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}</p>
@@ -18,7 +29,11 @@
     <div class="btn-group" style="margin-top: 2rem;">
         <form method="post" style="display: inline; box-shadow: none;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 1rem">Sì, Elimina Evento</button>
+            {% if event.deleted_at %}
+                <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 1rem">Sì, Elimina Definitivamente</button>
+            {% else %}
+                <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 1rem">Sì, Elimina Evento</button>
+            {% endif %}
         </form>
         <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">Annulla</a>
     </div>

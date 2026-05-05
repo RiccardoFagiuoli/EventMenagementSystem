@@ -120,6 +120,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # La tua cartella static del progetto
+]
 
 # Media files
 MEDIA_URL = '/media/'
