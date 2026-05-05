@@ -24,6 +24,82 @@
     {% endif %}
 </div>
 
+<!-- Calendario per utenti autenticati NON admin -->
+{% if user.is_authenticated and not user.is_staff %}
+<div style="max-width: 1200px; margin: 3rem auto; background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h3 style="margin-bottom: 1.5rem;">📅 I Tuoi Prossimi Eventi</h3>
+    <div id="calendar"></div>
+</div>
+
+<!-- FullCalendar CSS -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
+
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'listMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'listMonth,timeGridDay'
+    },
+    locale: 'it',
+    height: 'auto',
+    events: {
+      url: '{% url "events:calendar_events" %}',
+      failure: function() {
+        alert('Errore nel caricamento degli eventi');
+      }
+    },
+    eventClick: function(info) {
+      window.location.href = info.event.url;
+    }
+  });
+
+  calendar.render();
+});
+</script>
+
+<style>
+.fc {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.fc .fc-button-primary {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #5568d3;
+    border-color: #5568d3;
+}
+
+.fc .fc-button-primary.fc-button-active {
+    background-color: #764ba2;
+    border-color: #764ba2;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: #f0f0ff;
+}
+
+.fc .fc-event {
+    cursor: pointer;
+}
+
+.fc .fc-event-title {
+    font-weight: bold;
+    white-space: normal;
+}
+</style>
+{% endif %}
+
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0;">
     <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center;">
         <h3>👥 Partecipa agli Eventi</h3>

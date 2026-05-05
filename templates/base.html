@@ -82,6 +82,7 @@
                 <a href="{% url 'events:deleted_events' %}">Eventi Eliminati</a>
             {% else %}
                 <a href="{% url 'events:user_registrations' %}">Le mie Registrazioni</a>
+                <a href="{% url 'events:calendar_view' %}">Calendario</a>
             {% endif %}
             {% if user.profile.role == 'organizer' %}
                 <a href="{% url 'events:organizer_events' %}">I miei Eventi</a>

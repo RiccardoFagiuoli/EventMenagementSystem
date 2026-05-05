@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendario - Event Management System{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="margin-bottom: 2rem;">📅 Mio Calendario Personale</h2>
+
+    <div id="calendar" style="background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+</div>
+
+<!-- FullCalendar CSS -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
+
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+    },
+    locale: 'it',
+    height: 'auto',
+    events: {
+      url: '{% url "events:calendar_events" %}',
+      failure: function() {
+        alert('Errore nel caricamento degli eventi');
+      }
+    },
+    eventClick: function(info) {
+      // Reindirizza al dettaglio dell'evento quando viene cliccato
+      window.location.href = info.event.url;
+    }
+  });
+
+  calendar.render();
+});
+</script>
+
+<style>
+.fc {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.fc .fc-button-primary {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #5568d3;
+    border-color: #5568d3;
+}
+
+.fc .fc-button-primary.fc-button-active {
+    background-color: #764ba2;
+    border-color: #764ba2;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: #f0f0ff;
+}
+
+.fc .fc-event {
+    cursor: pointer;
+}
+
+.fc .fc-event-title {
+    font-weight: bold;
+    white-space: normal;
+}
+</style>
+{% endblock %}
+

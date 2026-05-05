@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.db.models import Q
 from .models import Event, EventRegistration, EventAttendance
 from .forms import EventForm
 from users.models import UserProfile
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 class EventListView(ListView):
     """ Class-based generic view for listing all published events. """
@@ -53,7 +55,6 @@ class EventDetailView(DetailView):
 
         # Calcola se l'evento può essere ripristinato e il tempo rimanente
         if event.deleted_at:
-            from django.utils import timezone
             from datetime import timedelta
             restore_deadline = event.deleted_at + timedelta(days=3)
             time_remaining = restore_deadline - timezone.now()
@@ -330,3 +331,45 @@ def deleted_events(request):
 
     context = {'deleted_events': deleted_events_list, 'title': 'Eventi Eliminati'}
     return render(request, 'events/deleted_events.html', context)
+
+@login_required
+def calendar_view(request):
+    """ View to display user's event calendar. """
+    # Impedisce gli admin di accedere (non possono iscriversi agli eventi)
+    if request.user.is_staff:
+        messages.error(request, 'Gli admin non possono visualizzare il calendario.')
+        return redirect('home')
+
+    return render(request, 'events/calendar.html', {'title': 'Calendario'})
+
+@login_required
+def calendar_events(request):
+    """ API endpoint to get user's registered events in JSON format. """
+    # Impedisce gli admin di accedere
+    if request.user.is_staff:
+        return JsonResponse([], safe=False)
+
+    # Recupera gli eventi a cui l'utente è registrato
+    registrations = EventRegistration.objects.filter(
+        user=request.user,
+        status='confirmed'
+    ).select_related('event')
+
+    events = []
+    for registration in registrations:
+        event = registration.event
+
+        # Salta gli eventi eliminati
+        if event.deleted_at:
+            continue
+
+        events.append({
+            'title': event.title,
+            'start': event.start_date.isoformat(),
+            'end': event.end_date.isoformat(),
+            'backgroundColor': '#667eea',
+            'borderColor': '#764ba2',
+            'url': reverse('events:event_detail', kwargs={'pk': event.id})
+        })
+
+    return JsonResponse(events, safe=False)

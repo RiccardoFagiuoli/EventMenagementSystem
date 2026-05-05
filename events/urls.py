@@ -16,4 +16,6 @@ urlpatterns = [
     path('deleted-events/', views.deleted_events, name='deleted_events'),
     path('event/<int:pk>/restore/', views.event_restore, name='event_restore'),
     path('event/<int:event_id>/unregister-user/<int:registration_id>/', views.admin_unregister_user, name='admin_unregister_user'),
+    path('calendar/', views.calendar_view, name='calendar_view'),
+    path('api/calendar-events/', views.calendar_events, name='calendar_events'),
 ]
