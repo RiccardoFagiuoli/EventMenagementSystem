@@ -51,7 +51,7 @@ class EventDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
         context['attendees'] = event.eventregistration_set.filter(status='confirmed')
-        context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.has_perm('events.can_view_attendees')
+        context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.is_staff
 
         # Calcola se l'evento può essere ripristinato e il tempo rimanente
         if event.deleted_at:
@@ -349,27 +349,50 @@ def calendar_events(request):
     if request.user.is_staff:
         return JsonResponse([], safe=False)
 
-    # Recupera gli eventi a cui l'utente è registrato
+    events = []
+
+    # 1. Eventi a cui l'utente è registrato
     registrations = EventRegistration.objects.filter(
         user=request.user,
         status='confirmed'
     ).select_related('event')
 
-    events = []
     for registration in registrations:
         event = registration.event
-
         # Salta gli eventi eliminati
         if event.deleted_at:
             continue
 
         events.append({
-            'title': event.title,
+            'title': f'📝 {event.title}',  # Icona per eventi registrati
             'start': event.start_date.isoformat(),
             'end': event.end_date.isoformat(),
-            'backgroundColor': '#667eea',
-            'borderColor': '#764ba2',
+            'backgroundColor': 'white',
+            'borderColor': '#667eea',
+            'textColor': 'black',
             'url': reverse('events:event_detail', kwargs={'pk': event.id})
         })
+
+    # 2. Eventi creati dall'utente (organizzatore)
+    try:
+        if request.user.profile.role == 'organizer':
+            user_events = Event.objects.filter(
+                organizer=request.user,
+                deleted_at__isnull=True,  # Solo eventi non eliminati
+                status='published'
+            )
+
+            for event in user_events:
+                events.append({
+                    'title': f'🎯 {event.title}',  # Icona per eventi creati
+                    'start': event.start_date.isoformat(),
+                    'end': event.end_date.isoformat(),
+                    'backgroundColor': 'white',
+                    'borderColor': '#764ba2',
+                    'textColor': '#764ba2',
+                    'url': reverse('events:event_detail', kwargs={'pk': event.id})
+                })
+    except UserProfile.DoesNotExist:
+        pass  # L'utente non ha un profilo organizzatore
 
     return JsonResponse(events, safe=False)

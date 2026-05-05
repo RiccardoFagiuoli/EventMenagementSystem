@@ -16,7 +16,11 @@
         </div>
     {% else %}
         <div style="margin: 2rem 0;">
-            <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
+            {% if user.is_staff or user.profile.role == 'attendee' %}
+                <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
+            {% else %}
+                <a href="{% url 'events:event_list' %}" class="btn">Visualizza Eventi</a>
+            {% endif %}
             {% if user.profile.role == 'organizer' %}
                 <a href="{% url 'events:event_create' %}" class="btn" style="background-color: #764ba2; margin-left: 1rem;">Crea un Evento</a>
             {% endif %}
@@ -29,6 +33,18 @@
 <div style="max-width: 1200px; margin: 3rem auto; background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <h3 style="margin-bottom: 1.5rem;">📅 I Tuoi Prossimi Eventi</h3>
     <div id="calendar"></div>
+
+    <!-- Legenda colori calendario -->
+    <div style="margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666;">
+        <div style="display: inline-block; margin: 0 1rem;">
+            <span style="display: inline-block; width: 12px; height: 12px; background-color: #667eea; border-radius: 50%; margin-right: 0.5rem;"></span>
+            Eventi a cui sei registrato
+        </div>
+        <div style="display: inline-block; margin: 0 1rem;">
+            <span style="display: inline-block; width: 12px; height: 12px; background-color: #764ba2; border-radius: 50%; margin-right: 0.5rem;"></span>
+            Eventi che organizzi
+        </div>
+    </div>
 </div>
 
 <!-- FullCalendar CSS -->
@@ -71,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .fc .fc-button-primary {
-    background-color: #667eea;
-    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: rgb(255 255 255 / 0.4);
 }
 
 .fc .fc-button-primary:hover {
@@ -82,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .fc .fc-button-primary.fc-button-active {
     background-color: #764ba2;
-    border-color: #764ba2;
+    border: 2px solid #764ba2;
 }
 
 .fc .fc-daygrid-day.fc-day-today {
@@ -115,4 +131,3 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 {% endblock %}
-
