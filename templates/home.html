@@ -16,7 +16,7 @@
         </div>
     {% else %}
         <div style="margin: 2rem 0;">
-            <a href="{% url 'events:event_list' %}" class="btn">Visualizza Eventi</a>
+            <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
             {% if user.profile.role == 'organizer' %}
                 <a href="{% url 'events:event_create' %}" class="btn" style="background-color: #764ba2; margin-left: 1rem;">Crea un Evento</a>
             {% endif %}
