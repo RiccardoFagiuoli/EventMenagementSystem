@@ -4,8 +4,10 @@
 
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <h2>I Miei Eventi</h2>
-    <a href="{% url 'events:event_create' %}" class="btn">+ Crea Nuovo Evento</a>
+    <h2>{% if is_admin %}Tutti gli Eventi{% else %}I Miei Eventi{% endif %}</h2>
+    {% if not is_admin %}
+        <a href="{% url 'events:event_create' %}" class="btn">+ Crea Nuovo Evento</a>
+    {% endif %}
 </div>
 
 {% if events %}
@@ -14,6 +16,11 @@
             <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div style="flex: 1;">
                     <h3 class="event-title">{{ event.title }}</h3>
+                    {% if is_admin and user != event.organizer %}
+                        <div style="background-color: #e2e3e5; padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            <strong>Organizzatore:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}
+                        </div>
+                    {% endif %}
                     <div class="event-meta">
                         <strong>📍 Luogo:</strong> {{ event.location }}<br>
                         <strong>📅 Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }} - {{ event.end_date|date:"H:i" }}<br>
@@ -24,16 +31,32 @@
                             {% elif event.status == 'draft' %}background-color: #fff3cd; color: #856404;
                             {% elif event.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
                             {% elif event.status == 'completed' %}background-color: #d1ecf1; color: #0c5460;
+                            {% elif event.status == 'ongoing' %}background-color: #e8d9ff; color: #4a1d8c;
                             {% endif %}">
                             {{ event.get_status_display }}
                         </span>
+                        {% if event.deleted_at %}
+                            <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem; background-color: #f8d7da; color: #721c24; margin-left: 0.5rem;">
+                                Eliminato
+                            </span>
+                        {% endif %}
                     </div>
                     <p class="event-description">{{ event.description|truncatewords:30 }}</p>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-left: 1rem;">
                     <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="white-space: nowrap;">Dettagli</a>
-                    <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="white-space: nowrap;">Modifica</a>
-                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap;">Elimina</a>
+                    {% if not event.deleted_at %}
+                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="white-space: nowrap;">Modifica</a>
+                        <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap;">Elimina</a>
+                    {% elif is_admin %}
+                        {% if event.can_restore %}
+                            <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
+                        {% endif %}
+                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="white-space: nowrap;">Modifica</a>
+                        <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap;">Elimina</a>
+                    {% elif event.can_restore %}
+                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -49,4 +72,3 @@
     <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
 </div>
 {% endblock %}
-

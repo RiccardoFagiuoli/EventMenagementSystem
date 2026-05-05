@@ -5,38 +5,51 @@
 {% block content %}
 <h2>{% if form.instance.pk %}Modifica Evento{% else %}Crea Nuovo Evento{% endif %}</h2>
 
+{% if form.non_field_errors or form.errors %}
+    <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; color: #721c24;">
+        <strong>Errori nel modulo:</strong>
+        <ul>
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
 <form method="post">
     {% csrf_token %}
 
     <div class="form-group">
         {{ form.title.label_tag }}
         {{ form.title }}
-        {% if form.title.errors %}<p style="color: #dc3545;">{{ form.title.errors }}</p>{% endif %}
     </div>
 
     <div class="form-group">
         {{ form.description.label_tag }}
         {{ form.description }}
-        {% if form.description.errors %}<p style="color: #dc3545;">{{ form.description.errors }}</p>{% endif %}
     </div>
 
     <div class="form-group">
         {{ form.location.label_tag }}
         {{ form.location }}
-        {% if form.location.errors %}<p style="color: #dc3545;">{{ form.location.errors }}</p>{% endif %}
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <div class="form-group">
             {{ form.start_date.label_tag }}
             {{ form.start_date }}
-            {% if form.start_date.errors %}<p style="color: #dc3545;">{{ form.start_date.errors }}</p>{% endif %}
         </div>
 
         <div class="form-group">
             {{ form.end_date.label_tag }}
             {{ form.end_date }}
-            {% if form.end_date.errors %}<p style="color: #dc3545;">{{ form.end_date.errors }}</p>{% endif %}
         </div>
     </div>
 
@@ -44,20 +57,17 @@
         <div class="form-group">
             {{ form.max_attendees.label_tag }}
             {{ form.max_attendees }}
-            {% if form.max_attendees.errors %}<p style="color: #dc3545;">{{ form.max_attendees.errors }}</p>{% endif %}
         </div>
 
         <div class="form-group">
             {{ form.status.label_tag }}
             {{ form.status }}
-            {% if form.status.errors %}<p style="color: #dc3545;">{{ form.status.errors }}</p>{% endif %}
         </div>
     </div>
 
     <div class="form-group">
         {{ form.image.label_tag }}
         {{ form.image }}
-        {% if form.image.errors %}<p style="color: #dc3545;">{{ form.image.errors }}</p>{% endif %}
     </div>
 
     <div class="btn-group">

@@ -1,13 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Event Management System{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; line-height: 1.6; }
         header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 0; }
+        .header-logo { display: flex; align-items: center; gap: 0.75rem; }
+        .header-logo img { height: 100px; width: auto; border: 2px solid rgb(255 255 255 / 0.4); border-radius: 50%; }
+        .header-logo h1 { margin: 0; font-size: 1.5rem; }
         nav { background-color: #333; padding: 0.5rem; }
         nav a { color: white; text-decoration: none; padding: 0.5rem 1rem; display: inline-block; }
         nav a:hover { background-color: #555; }
@@ -46,7 +51,10 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1>🎉 Event Management System</h1>
+                <div class="header-logo">
+                    <img src="{% static 'favicon.ico' %}" alt="Event Management System Logo">
+                    <h1>Event Management System</h1>
+                </div>
                 <div class="user-info">
                     {% if user.is_authenticated %}
                         <span>Benvenuto, {{ user.first_name|default:user.username }}!</span>

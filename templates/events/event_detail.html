@@ -4,11 +4,26 @@
 
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <h2>{{ event.title }}</h2>
-    {% if user == event.organizer %}
+    <h2>
+        {{ event.title }}
+        {% if event.deleted_at %}
+            <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem; background-color: #f8d7da; color: #721c24; margin-left: 0.5rem;">
+                Eliminato
+            </span>
+        {% endif %}
+    </h2>
+    {% if user == event.organizer or user.is_staff %}
         <div style="display: flex; gap: 1rem;">
-            <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary">Modifica</a>
-            <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">Elimina</a>
+            {% if not event.deleted_at %}
+                <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary">Modifica</a>
+                <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">Elimina</a>
+            {% else %}
+                {% if can_restore %}
+                    <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">Ripristina</a>
+                {% endif %}
+                <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary">Modifica</a>
+                <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">Elimina Definitivamente</a>
+            {% endif %}
         </div>
     {% endif %}
 </div>
@@ -49,13 +64,31 @@
         </div>
 
         <div style="background-color: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
-            {% if user.is_authenticated %}
+            {% if event.deleted_at %}
+                <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
+                    <strong>⚠️ Questo evento è stato eliminato</strong><br>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Non è possibile iscriversi a un evento eliminato. Contatta l'organizzatore per ripristinarlo.</p>
+                </div>
+            {% elif user.is_authenticated %}
                 {% if user_registration %}
-                    <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                        <strong>✓ Sei iscritto a questo evento</strong><br>
-                        Stato: {{ user_registration.get_status_display }}
-                    </div>
-                    <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                    {% if user_registration.status == 'cancelled' %}
+                        <div style="background-color: #fff3cd; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                            <strong>⚠️ Hai cancellato la tua iscrizione a questo evento</strong>
+                        </div>
+                        {% if event.is_full %}
+                            <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
+                                <strong>Questo evento è al completo</strong>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti di nuovo a questo Evento</a>
+                        {% endif %}
+                    {% else %}
+                        <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                            <strong>✓ Sei iscritto a questo evento</strong><br>
+                            Stato: {{ user_registration.get_status_display }}
+                        </div>
+                        <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                    {% endif %}
                 {% else %}
                     {% if event.is_full %}
                         <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
@@ -81,7 +114,8 @@
                             <th>Nome</th>
                             <th>Email</th>
                             <th>Data Iscrizione</th>
-                            <th>Stata</th>
+                            <th>Stato</th>
+                            {% if user.is_staff or user == event.organizer %}<th>Azioni</th>{% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -91,6 +125,11 @@
                                 <td>{{ registration.user.email }}</td>
                                 <td>{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
                                 <td>{{ registration.get_status_display }}</td>
+                                {% if user.is_staff or user == event.organizer %}
+                                    <td>
+                                        <a href="{% url 'events:admin_unregister_user' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">Disiscrivi</a>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -106,4 +145,3 @@
     <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
 </div>
 {% endblock %}
-

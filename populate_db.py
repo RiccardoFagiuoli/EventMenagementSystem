@@ -11,10 +11,10 @@ from django.contrib.contenttypes.models import ContentType
 from users.models import UserProfile
 from events.models import Event, EventRegistration, EventAttendance
 
-# Clear existing data (optional - comment out to keep existing data)
-# User.objects.all().delete()
-# Event.objects.all().delete()
-# Group.objects.all().delete()
+# Clear existing data
+User.objects.all().delete()
+Event.objects.all().delete()
+Group.objects.all().delete()
 
 # Create groups with permissions
 attendee_group, _ = Group.objects.get_or_create(name='Attendee')
@@ -149,7 +149,7 @@ now = datetime.now()
 event1, created = Event.objects.get_or_create(
     title='Python Conference 2025',
     defaults={
-        'description': 'A comprehensive conference about Python development, web frameworks, and best practices.',
+        'description': 'Una conferenza completa sullo sviluppo Python, framework web e migliori pratiche.',
         'organizer': organizer1,
         'location': 'Università di Firenze, Aula Magna',
         'start_date': now + timedelta(days=30),
@@ -162,7 +162,7 @@ event1, created = Event.objects.get_or_create(
 event2, created = Event.objects.get_or_create(
     title='Web Development Masterclass',
     defaults={
-        'description': 'Learn advanced web development techniques with Django, React, and modern tools.',
+        'description': 'Impara tecniche avanzate di sviluppo web con Django, React e strumenti moderni.',
         'organizer': organizer2,
         'location': 'Online - Zoom',
         'start_date': now + timedelta(days=14),
@@ -175,7 +175,7 @@ event2, created = Event.objects.get_or_create(
 event3, created = Event.objects.get_or_create(
     title='Artificial Intelligence Workshop',
     defaults={
-        'description': 'Hands-on workshop on machine learning and AI fundamentals.',
+        'description': 'Workshop pratico su apprendimento automatico e fondamenta dell\'intelligenza artificiale.',
         'organizer': organizer1,
         'location': 'Campus Scientifico, Sesto Fiorentino',
         'start_date': now + timedelta(days=60),
@@ -188,13 +188,40 @@ event3, created = Event.objects.get_or_create(
 event4, created = Event.objects.get_or_create(
     title='Cloud Computing & DevOps',
     defaults={
-        'description': 'Explore cloud technologies, Docker, Kubernetes and DevOps practices.',
+        'description': 'Esplora le tecnologie cloud, Docker, Kubernetes e pratiche DevOps.',
         'organizer': organizer2,
         'location': 'Innovation Hub, Via dei Servi',
         'start_date': now + timedelta(days=45),
         'end_date': now + timedelta(days=45, hours=5),
         'max_attendees': 75,
         'status': 'published'
+    }
+)
+
+event5, created = Event.objects.get_or_create(
+    title='Workshop di Networking Avanzato',
+    defaults={
+        'description': 'Un workshop esclusivo per professionisti che desiderano migliorare le loro competenze di networking e creare connessioni strategiche.',
+        'organizer': organizer2,
+        'location': 'Sala Conferenze Palazzo Vecchio, Firenze',
+        'start_date': now + timedelta(days=10),
+        'end_date': now + timedelta(days=10, hours=3),
+        'max_attendees': 2,
+        'status': 'published'
+    }
+)
+
+event6, created = Event.objects.get_or_create(
+    title='Cybersecurity & Data Protection Summit',
+    defaults={
+        'description': 'Un summit completo sulla sicurezza informatica, protezione dei dati personali (GDPR) e best practices per aziende moderne.',
+        'organizer': organizer1,
+        'location': 'Centro Congressi, Piazza della Libertà 10, Firenze',
+        'start_date': now + timedelta(days=20),
+        'end_date': now + timedelta(days=20, hours=6),
+        'max_attendees': 60,
+        'status': 'published',
+        'deleted_at': now  # Soft delete: evento marcato come eliminato
     }
 )
 
@@ -210,6 +237,18 @@ for event in events:
             defaults={'status': 'confirmed' if i < 2 else 'pending'}
         )
 
+# Specific registrations for event5 (only 2 attendees: Luca Verdi and Anna Marini)
+EventRegistration.objects.get_or_create(
+    event=event5,
+    user=attendee1,  # Luca Verdi
+    defaults={'status': 'confirmed'}
+)
+EventRegistration.objects.get_or_create(
+    event=event5,
+    user=attendee2,  # Anna Marini
+    defaults={'status': 'confirmed'}
+)
+
 # Create some attendance records (mark some registrations as attended)
 registrations = EventRegistration.objects.filter(status='confirmed').order_by('-registered_at')[:3]
 for reg in registrations:
@@ -221,4 +260,7 @@ print(f"- Created/Updated {Event.objects.count()} events")
 print(f"- Created/Updated {EventRegistration.objects.count()} registrations")
 print(f"- Created/Updated {EventAttendance.objects.count()} attendance records")
 print(f"- Groups configured: {Group.objects.count()} groups")
-
+print(f"\n📌 Eventi eliminati (soft delete):")
+deleted_events = Event.objects.filter(deleted_at__isnull=False)
+for event in deleted_events:
+    print(f"   - {event.title} (organizzato da {event.organizer.first_name} {event.organizer.last_name}, eliminato il {event.deleted_at.strftime('%Y-%m-%d %H:%M')})")
