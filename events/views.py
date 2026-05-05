@@ -51,12 +51,28 @@ class EventDetailView(DetailView):
         context['attendees'] = event.eventregistration_set.filter(status='confirmed')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.has_perm('events.can_view_attendees')
 
-        # Calcola se l'evento può essere ripristinato
+        # Calcola se l'evento può essere ripristinato e il tempo rimanente
         if event.deleted_at:
             from django.utils import timezone
-            context['can_restore'] = (timezone.now() - event.deleted_at).days < 3
+            from datetime import timedelta
+            restore_deadline = event.deleted_at + timedelta(days=3)
+            time_remaining = restore_deadline - timezone.now()
+            context['can_restore'] = time_remaining.total_seconds() > 0
+
+            # Calcola giorni, ore, minuti rimanenti
+            total_seconds = max(0, time_remaining.total_seconds())
+            days = int(total_seconds // 86400)
+            hours = int((total_seconds % 86400) // 3600)
+            minutes = int((total_seconds % 3600) // 60)
+
+            context['restore_days'] = days
+            context['restore_hours'] = hours
+            context['restore_minutes'] = minutes
         else:
             context['can_restore'] = False
+            context['restore_days'] = 0
+            context['restore_hours'] = 0
+            context['restore_minutes'] = 0
 
         if self.request.user.is_authenticated:
             try:
@@ -280,3 +296,37 @@ def admin_unregister_user(request, event_id, registration_id):
      messages.success(request, f'Utente {user_name} discritto dall\'evento {event.title}.')
      return redirect('events:event_detail', pk=event_id)
 
+def deleted_events(request):
+    """ View to display all deleted events (admin only). """
+    if not request.user.is_authenticated:
+        messages.error(request, 'È necessario essere loggati.')
+        return redirect('users:login')
+
+    if not request.user.is_staff:
+        messages.error(request, 'Accesso negato. Solo gli admin possono visualizzare questa pagina.')
+        return redirect('events:event_list')
+
+    # Mostra tutti gli eventi eliminati (soft deleted)
+    deleted_events_list = Event.objects.filter(deleted_at__isnull=False).order_by('-deleted_at')
+
+    from django.utils import timezone
+    from datetime import timedelta
+
+    # Calcola il tempo rimanente per ogni evento
+    for event in deleted_events_list:
+        restore_deadline = event.deleted_at + timedelta(days=3)
+        time_remaining = restore_deadline - timezone.now()
+        event.can_restore = time_remaining.total_seconds() > 0
+
+        # Calcola giorni, ore, minuti rimanenti
+        total_seconds = max(0, time_remaining.total_seconds())
+        days = int(total_seconds // 86400)
+        hours = int((total_seconds % 86400) // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+
+        event.restore_days = days
+        event.restore_hours = hours
+        event.restore_minutes = minutes
+
+    context = {'deleted_events': deleted_events_list, 'title': 'Eventi Eliminati'}
+    return render(request, 'events/deleted_events.html', context)

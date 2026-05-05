@@ -225,6 +225,20 @@ event6, created = Event.objects.get_or_create(
     }
 )
 
+event7, created = Event.objects.get_or_create(
+    title='PPM',
+    defaults={
+        'description': 'Corso di progettazione e produzione multimediale',
+        'organizer': organizer1,
+        'location': 'Centro didattico Morgani - UNIFI, Firenze',
+        'start_date': now - timedelta(days=20, hours=6),
+        'end_date': now - timedelta(days=20),
+        'max_attendees': 60,
+        'status': 'published',
+        'deleted_at': now - timedelta(days=21)  # Soft delete: evento marcato come eliminato
+    }
+)
+
 # Create registrations
 events = [event1, event2, event3, event4]
 attendees = [attendee1, attendee2, attendee3]
