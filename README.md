@@ -1,5 +1,8 @@
 # Event Management System
 
+## Railway link:
+***https://event-management-system-railway.up.railway.app/***
+
 ## Brief Summary
 
 Questo sistema permette la gestione completa di eventi con due ruoli utente:
