@@ -4,12 +4,35 @@
 
 {% block content %}
 <style>
-    .delete-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
-    .delete-buttons form { display: contents; }
-    .delete-buttons .btn { flex: 1; min-width: 150px; }
+    .delete-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    align-items: center;
+}
+
+.delete-buttons form {
+    box-shadow: none;
+    flex: 1;
+    margin: 0;
+    display: flex;
+}
+
+.delete-buttons .btn {
+    flex: 1;
+    min-width: 150px;
+    min-height: 48px;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
+}
 
     @media (max-width: 480px) {
-        .delete-buttons { flex-direction: column; }
+        .delete-buttons { flex-direction: column; align-items: stretch;}
         .delete-buttons .btn { width: 100%; }
     }
 </style>
@@ -17,7 +40,7 @@
 {% if event.deleted_at %}
 <div style="background-color: #f8d7da; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; border-left: 4px solid #dc3545;">
     <h2 style="color: #721c24;">⚠️ Eliminazione Permanente</h2>
-    <p>Sei sicuro di voler <strong>eliminare definitivamente</strong> l'evento <strong>"{{ event.title }}"</strong> dal database?</p>
+    <p>Sei sicuro di voler <strong>eliminare definitivamente</strong> l'evento <strong>"{{ event.title }}"</strong>?</p>
     <p style="color: #721c24; font-weight: bold;">Questa azione non può essere annullata e l'evento verrà rimosso permanentemente!</p>
 </div>
 {% else %}
@@ -41,12 +64,12 @@
         <form method="post" style="display: block;">
             {% csrf_token %}
             {% if event.deleted_at %}
-                <button type="submit" class="btn btn-danger">Sì, Elimina Definitivamente</button>
+                <button type="submit" class="btn btn-danger w-100">Sì, Elimina Definitivamente</button>
             {% else %}
-                <button type="submit" class="btn btn-danger">Sì, Elimina Evento</button>
+                <button type="submit" class="btn btn-danger w-100">Sì, Elimina Evento</button>
             {% endif %}
         </form>
-        <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">Annulla</a>
+        <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary w-100" style="height: auto">Annulla</a>
     </div>
 </div>
 {% endblock %}

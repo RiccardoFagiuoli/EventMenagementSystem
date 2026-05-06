@@ -67,7 +67,6 @@
                     <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="white-space: nowrap;">Dettagli</a>
                     {% if not event.deleted_at %}
                         <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="white-space: nowrap;">Modifica</a>
-                        <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap;">Elimina</a>
                     {% elif is_admin %}
                         {% if event.can_restore %}
                             <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
@@ -77,6 +76,13 @@
                     {% elif event.can_restore %}
                         <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
                     {% endif %}
+                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap; ">
+                        {% if event.can_restore or not event.deleted_at%}
+                            Elimina
+                        {% else %}
+                            Elim. Def.
+                        {% endif %}
+                    </a>
                 </div>
             </div>
         </div>

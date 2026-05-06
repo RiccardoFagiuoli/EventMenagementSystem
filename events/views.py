@@ -154,7 +154,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             # Se l'evento è già eliminato, eliminarlo definitivamente dal database
             event_title = event.title
             event.delete()
-            messages.success(request, f'Evento "{event_title}" eliminato definitivamente dal database.')
+            messages.success(request, f'Evento "{event_title}" eliminato definitivamente.')
         else:
             # Se l'evento non è eliminato, fare soft delete
             event.deleted_at = timezone.now()
@@ -370,6 +370,7 @@ def calendar_events(request):
             'backgroundColor': 'white',
             'borderColor': '#667eea',
             'textColor': 'black',
+            'classNames':['custom-border-registered'],
             'url': reverse('events:event_detail', kwargs={'pk': event.id})
         })
 
@@ -390,6 +391,7 @@ def calendar_events(request):
                     'backgroundColor': 'white',
                     'borderColor': '#764ba2',
                     'textColor': '#764ba2',
+                    'classNames':['custom-border-organized'],
                     'url': reverse('events:event_detail', kwargs={'pk': event.id})
                 })
     except UserProfile.DoesNotExist:

@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
     },
     locale: 'it',
     height: 'auto',
@@ -91,12 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .fc .fc-button-primary.fc-button-active {
-    background-color: #764ba2;
-    border: 2px solid #764ba2;
+    border: 2px solid #333 !important;
 }
 
 .fc .fc-daygrid-day.fc-day-today {
-    background-color: #f0f0ff;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
 }
 
 .fc .fc-event {
@@ -107,6 +106,41 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: bold;
     white-space: normal;
     color: black;
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-list-day-text,
+.fc .fc-list-day-side-text {
+    color: black !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+}
+
+.fc .fc-event-time{
+    color: black !important;
+    font-weight: 500 !important;
+}
+
+.fc-daygrid .custom-border-organized,
+.fc-timegrid .custom-border-organized,
+.fc-daygrid .custom-border-registered,
+.fc-timegrid .custom-border-registered {
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+.custom-border-organized {
+    border-color: #764ba2 !important;
+}
+
+.custom-border-registered {
+    border-color: #667eea !important;
+}
+
+.fc .fc-daygrid-day-number {
+    color: black !important;  /* Blu scuro */
+    font-weight: 500 !important;
+    text-decoration: none !important;
 }
 </style>
 {% endblock %}
