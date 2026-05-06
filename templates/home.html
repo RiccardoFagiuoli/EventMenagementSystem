@@ -10,6 +10,7 @@
     .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
     .legend-item { display: flex; align-items: center; gap: 0.5rem; }
     .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+    .fc .fc-toolbar-title {text-transform: capitalize !important;}
 
     @media (max-width: 768px) {
         .home-buttons { flex-direction: column; }
@@ -20,6 +21,60 @@
 
     @media (max-width: 480px) {
         .calendar-legend { flex-direction: column; gap: 1rem; }
+        .calendar-legend { flex-direction: column; }
+        .home-buttons {
+            flex-direction: column;
+        }
+        .home-buttons .btn {
+            width: 100%;
+        }
+
+        /* Calendario */
+        .fc .fc-toolbar {
+            flex-wrap: wrap;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+
+        /* Riga 1: bottoni navigazione (prev/today/next) */
+        .fc .fc-toolbar-chunk:first-child {
+            order: 1;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        /* Riga 2: bottoni viste (list/day) */
+        .fc .fc-toolbar-chunk:nth-child(2) {
+            order: 3;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        /* Riga 3: data */
+        .fc .fc-toolbar-chunk:last-child{
+            order: 2;
+            width: 100% !important;
+            justify-content: center !important;
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.2rem;
+            margin: 0 !important;
+        }
+
+        .fc .fc-button {
+            padding: 0.35rem 0.7rem !important;
+            font-size: 0.8rem !important;
+        }
+
+        .fc .fc-button-group {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+        }
     }
 </style>
 
