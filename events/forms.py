@@ -24,3 +24,12 @@ class EventForm(forms.ModelForm):
                 raise forms.ValidationError('La data e ora di inizio deve essere precedente alla data e ora di fine.')
 
         return cleaned_data
+
+    # Validazione dimensione immagine(max 2 MB)
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image:
+            if image.size > 2 * 1024 * 1024:
+                raise forms.ValidationError("L'immagine è troppo pesante (max 2MB).")
+        return image

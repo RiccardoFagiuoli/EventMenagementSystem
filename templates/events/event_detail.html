@@ -97,6 +97,16 @@
         </div>
 
         <div style="background-color: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
+            <!-- MINIATURA DELL'IMMAGINE - AGGIUNTA QUI -->
+            {% if event.image %}
+                <div class="event-thumbnail">
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px;">
+                </div>
+            {% else %}
+                <div class="no-image" style="margin-bottom: 1rem;">
+                    <span>📷 Nessuna immagine disponibile</span>
+                </div>
+            {% endif %}
             {% if event.deleted_at %}
                 <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
                     <strong>⚠️ Questo evento è stato eliminato</strong><br>
@@ -148,7 +158,6 @@
             {% endif %}
         </div>
     </div>
-
     {% if can_view_attendees %}
         <div style="margin-top: 2rem;">
             <h3>Iscritti Confermati</h3>

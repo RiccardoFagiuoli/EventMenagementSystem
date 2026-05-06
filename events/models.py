@@ -10,7 +10,7 @@ class Event(models.Model):
     location = models.CharField(max_length=255, verbose_name='Luogo')
     start_date = models.DateTimeField(verbose_name='Data e Ora Inizio')
     end_date = models.DateTimeField(verbose_name='Data e Ora Fine')
-    max_attendees = models.IntegerField(null=True, blank=True, verbose_name='Numero Massimo Partecipanti')
+    max_attendees = models.IntegerField(blank=True, verbose_name='Numero Massimo Partecipanti')
     image = models.ImageField(upload_to='event_images/', blank=True, null=True, verbose_name='Immagine')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='draft', verbose_name='Stato')
     created_at = models.DateTimeField(auto_now_add=True)
