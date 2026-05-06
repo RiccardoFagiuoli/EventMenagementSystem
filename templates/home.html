@@ -78,12 +78,128 @@
     }
 </style>
 
-<div style="text-align: center; padding: 3rem 0;">
+<div style="text-align: center; padding: 0;margin-top: 2rem; margin-left: auto; margin-right:auto;">
     <h2>Benvenuto al Sistema di Gestione degli Eventi</h2>
     <p style="font-size: 1.1rem; color: #666; margin: 1rem 0;">
         Scopri, partecipa e organizza eventi straordinari
     </p>
+</div>
 
+<!-- Calendario per utenti autenticati NON admin -->
+{% if user.is_authenticated and not user.is_staff %}
+    <div style="max-width: 1200px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3 style="margin-bottom: 1.5rem;">📅 I Tuoi Prossimi Eventi</h3>
+        <div id="calendar"></div>
+
+        <!-- Legenda colori calendario -->
+        {% if  user.profile.role == 'organizer' %}
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: #667eea;"></span>
+                    <span>Eventi a cui sei registrato</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: #764ba2;"></span>
+                    <span>Eventi che organizzi</span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
+
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const calendarEl = document.getElementById('calendar');
+
+          const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'listMonth',
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'listMonth,timeGridDay'
+            },
+            locale: 'it',
+            height: 'auto',
+            events: {
+              url: '{% url "events:calendar_events" %}',
+              failure: function() {
+                alert('Errore nel caricamento degli eventi');
+              }
+            },
+            eventClick: function(info) {
+              window.location.href = info.event.url;
+            }
+          });
+
+          calendar.render();
+        });
+    </script>
+
+    <style>
+        .fc {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .fc .fc-button-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: rgb(255 255 255 / 0.4);
+        }
+
+        .fc .fc-button-primary:hover {
+            background-color: #5568d3;
+            border-color: #5568d3;
+        }
+
+        .fc .fc-button-primary.fc-button-active {
+            border: 2px solid #333 !important;
+        }
+
+        .fc .fc-daygrid-day.fc-day-today {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+        }
+
+        .fc .fc-col-header-cell-cushion,
+        .fc .fc-list-day-text,
+        .fc .fc-list-day-side-text {
+            color: black !important;
+            font-weight: bold !important;
+            text-decoration: none !important;
+        }
+
+        .fc-daygrid .custom-border-organized,
+        .fc-timegrid .custom-border-organized,
+        .fc-daygrid .custom-border-registered,
+        .fc-timegrid .custom-border-registered {
+            border-width: 2px !important;
+            border-style: solid !important;
+        }
+
+        .custom-border-organized {
+            border-color: #764ba2 !important;
+        }
+
+        .custom-border-registered {
+            border-color: #667eea !important;
+        }
+
+        .fc .fc-event {
+            cursor: pointer;
+        }
+
+        .fc .fc-event-title {
+            font-weight: bold;
+            white-space: normal;
+            color: black;
+        }
+    </style>
+{% endif %}
+
+<div style="text-align: center; padding: 0;margin-top: 1rem; margin-left: auto; margin-right:auto;">
     {% if not user.is_authenticated %}
         <div class="home-buttons">
             <a href="{% url 'users:login' %}" class="btn">Accedi</a>
@@ -102,118 +218,6 @@
         </div>
     {% endif %}
 </div>
-
-<!-- Calendario per utenti autenticati NON admin -->
-{% if user.is_authenticated and not user.is_staff %}
-<div style="max-width: 1200px; margin: 3rem auto; background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    <h3 style="margin-bottom: 1.5rem;">📅 I Tuoi Prossimi Eventi</h3>
-    <div id="calendar"></div>
-
-    <!-- Legenda colori calendario -->
-    <div class="calendar-legend">
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color: #667eea;"></span>
-            <span>Eventi a cui sei registrato</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color: #764ba2;"></span>
-            <span>Eventi che organizzi</span>
-        </div>
-    </div>
-</div>
-
-<!-- FullCalendar CSS -->
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
-
-<!-- FullCalendar JS -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const calendarEl = document.getElementById('calendar');
-
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'listMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'listMonth,timeGridDay'
-    },
-    locale: 'it',
-    height: 'auto',
-    events: {
-      url: '{% url "events:calendar_events" %}',
-      failure: function() {
-        alert('Errore nel caricamento degli eventi');
-      }
-    },
-    eventClick: function(info) {
-      window.location.href = info.event.url;
-    }
-  });
-
-  calendar.render();
-});
-</script>
-
-<style>
-.fc {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.fc .fc-button-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: rgb(255 255 255 / 0.4);
-}
-
-.fc .fc-button-primary:hover {
-    background-color: #5568d3;
-    border-color: #5568d3;
-}
-
-.fc .fc-button-primary.fc-button-active {
-    border: 2px solid #333 !important;
-}
-
-.fc .fc-daygrid-day.fc-day-today {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-}
-
-.fc .fc-col-header-cell-cushion,
-.fc .fc-list-day-text,
-.fc .fc-list-day-side-text {
-    color: black !important;
-    font-weight: bold !important;
-    text-decoration: none !important;
-}
-
-.fc-daygrid .custom-border-organized,
-.fc-timegrid .custom-border-organized,
-.fc-daygrid .custom-border-registered,
-.fc-timegrid .custom-border-registered {
-    border-width: 2px !important;
-    border-style: solid !important;
-}
-
-.custom-border-organized {
-    border-color: #764ba2 !important;
-}
-
-.custom-border-registered {
-    border-color: #667eea !important;
-}
-
-.fc .fc-event {
-    cursor: pointer;
-}
-
-.fc .fc-event-title {
-    font-weight: bold;
-    white-space: normal;
-    color: black;
-}
-</style>
-{% endif %}
 
 <div class="home-features">
     <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center;">

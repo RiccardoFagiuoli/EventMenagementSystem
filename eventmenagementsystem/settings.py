@@ -147,7 +147,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Login settings
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'events:event_list'
+LOGIN_REDIRECT_URL = 'home'
 
 # Allow all hosts for development (restrict in production)
 ALLOWED_HOSTS = ['*']
