@@ -3,14 +3,26 @@
 {% block title %}Tutti gli Eventi - Event Management System{% endblock %}
 
 {% block content %}
+<style>
+    .search-form { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+    .search-form input { flex: 1; min-width: 200px; border: 1px solid #667eea; }
+    .search-form button { white-space: nowrap; }
+
+    @media (max-width: 480px) {
+        .search-form { flex-direction: column; gap: 0.5rem; }
+        .search-form input { min-width: 100%; }
+        .search-form button { width: 100%; }
+        .event-card-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
+        .event-card-buttons .btn { width: 100%; }
+    }
+</style>
+
 <h2>Tutti gli Eventi Disponibili</h2>
 
-<div style="margin: 2rem 0;">
-    <form method="get" style="display: flex; gap: 1rem;">
-        <input type="text" name="q" placeholder="Cerca eventi..." value="{{ request.GET.q }}" style="flex: 1; border: 1px solid #667eea;"  aria-label="Cerca eventi">
-        <button type="submit" class="btn" style="margin-top: 7px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Cerca</button>
-    </form>
-</div>
+<form method="get" class="search-form">
+    <input type="text" name="q" placeholder="Cerca eventi..." value="{{ request.GET.q }}" aria-label="Cerca eventi">
+    <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Cerca</button>
+</form>
 
 <p style="color: #666; margin-bottom: 1.5rem;">
     Total Eventi: <strong>{{ total_events }}</strong>
@@ -27,7 +39,7 @@
                 <strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}
             </div>
             <p class="event-description">{{ event.description|truncatewords:30 }}</p>
-            <div style="display: flex; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;" class="event-card-buttons">
                 <a href="{% url 'events:event_detail' event.pk %}" class="btn">Dettagli</a>
                 {% if request.user.is_authenticated %}
                     {% if event.pk in registered_events %}
@@ -43,12 +55,12 @@
     {% endfor %}
 
     {% if is_paginated %}
-        <div style="text-align: center; margin: 2rem 0;">
+        <div style="text-align: center; margin: 2rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
             {% if page_obj.has_previous %}
                 <a href="?page=1" class="btn btn-secondary">Prima</a>
                 <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Precedente</a>
             {% endif %}
-            <span style="padding: 0.5rem 1rem;">Pagina {{ page_obj.number }} di {{ page_obj.paginator.num_pages }}</span>
+            <span style="padding: 0.5rem 1rem; align-self: center;">Pagina {{ page_obj.number }} di {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Prossima</a>
                 <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Ultima</a>
@@ -59,4 +71,3 @@
     <p style="text-align: center; padding: 2rem; color: #666;">Nessun evento disponibile in questo momento.</p>
 {% endif %}
 {% endblock %}
-

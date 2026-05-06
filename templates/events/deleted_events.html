@@ -3,6 +3,33 @@
 {% block title %}Eventi Eliminati - Event Management System{% endblock %}
 
 {% block content %}
+<style>
+    .deleted-events-container { width: 100%; }
+
+    @media (max-width: 768px) {
+        table, thead, tbody, th, td, tr { display: block; width: 100%; }
+        thead { display: none; }
+        tr { background: white; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; }
+        td { padding: 0.75rem 1rem !important; text-align: left; border: none !important; border-bottom: 1px solid #ddd; position: relative; padding-left: 120px !important; }
+        td:last-child { border-bottom: none; }
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 110px;
+            font-weight: bold;
+            background-color: #f5f5f5;
+            padding: 0.75rem 0.5rem;
+            border-right: 1px solid #ddd;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .btn-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .btn-group .btn { width: 100%; padding: 0.5rem 0.75rem; font-size: 0.8rem; }
+    }
+</style>
+
 <div style="margin-bottom: 2rem;">
     <h2>🗑️ Eventi Eliminati</h2>
     <p style="color: #666; margin-top: 0.5rem;">Elenco di tutti gli eventi in soft delete. Puoi ripristinarli entro 3 giorni dall'eliminazione.</p>
@@ -23,17 +50,17 @@
             <tbody>
                 {% for event in deleted_events %}
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 1rem;">
+                        <td style="padding: 1rem;" data-label="Evento">
                             <strong>{{ event.title }}</strong><br>
                             <span style="color: #666; font-size: 0.9rem;">{{ event.location }}</span>
                         </td>
-                        <td style="padding: 1rem;">
+                        <td style="padding: 1rem;" data-label="Organizzatore">
                             {{ event.organizer.get_full_name|default:event.organizer.username }}
                         </td>
-                        <td style="padding: 1rem;">
+                        <td style="padding: 1rem;" data-label="Data Elim.">
                             {{ event.deleted_at|date:"d/m/Y H:i" }}
                         </td>
-                        <td style="padding: 1rem;">
+                        <td style="padding: 1rem;" data-label="Recupero">
                             {% if event.can_restore %}
                                 <div style="background-color: #d4edda; padding: 0.5rem; border-radius: 4px; color: #155724; font-weight: bold;">
                                     {{ event.restore_days }}g {{ event.restore_hours }}h {{ event.restore_minutes }}m
@@ -44,8 +71,8 @@
                                 </div>
                             {% endif %}
                         </td>
-                        <td style="padding: 1rem;">
-                            <div style="display: flex; gap: 0.5rem;">
+                        <td style="padding: 1rem;" data-label="Azioni">
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                 <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Dettagli</a>
                                 {% if event.can_restore %}
                                     <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Ripristina</a>
@@ -55,7 +82,7 @@
                                     {% if event.can_restore %}
                                         Elimina
                                     {% else %}
-                                        Elimina Definitivamente
+                                        Elim. Def.
                                     {% endif %}
                                 </a>
                             </div>
@@ -76,4 +103,3 @@
     <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
 </div>
 {% endblock %}
-

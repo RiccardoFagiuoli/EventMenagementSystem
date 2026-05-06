@@ -3,20 +3,39 @@
 {% block title %}Calendario - Event Management System{% endblock %}
 
 {% block content %}
-<div style="max-width: 1000px; margin: 0 auto;">
+<style>
+    .calendar-wrapper { max-width: 1000px; margin: 0 auto; }
+    .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+    .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+
+    @media (max-width: 768px) {
+        .fc .fc-toolbar { flex-wrap: wrap; }
+        .fc .fc-toolbar-title { font-size: 1.2rem; }
+        .calendar-legend { gap: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+        .calendar-legend { flex-direction: column; }
+        .fc .fc-button-group { flex-wrap: wrap; }
+        .fc .fc-button { padding: 0.25rem 0.5rem !important; font-size: 0.8rem !important; }
+    }
+</style>
+
+<div class="calendar-wrapper">
     <h2 style="margin-bottom: 2rem;">📅 Mio Calendario Personale</h2>
 
     <div id="calendar" style="background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
 
     <!-- Legenda colori calendario -->
-    <div style="margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666;">
-        <div style="display: inline-block; margin: 0 1rem;">
-            <span style="display: inline-block; width: 12px; height: 12px; background-color: #667eea; border-radius: 50%; margin-right: 0.5rem;"></span>
-            Eventi a cui sei registrato
+    <div class="calendar-legend">
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color: #667eea;"></span>
+            <span>Eventi a cui sei registrato</span>
         </div>
-        <div style="display: inline-block; margin: 0 1rem;">
-            <span style="display: inline-block; width: 12px; height: 12px; background-color: #764ba2; border-radius: 50%; margin-right: 0.5rem;"></span>
-            Eventi che organizzi
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color: #764ba2;"></span>
+            <span>Eventi che organizzi</span>
         </div>
     </div>
 </div>

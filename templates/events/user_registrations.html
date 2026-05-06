@@ -3,6 +3,27 @@
 {% block title %}Le Mie Registrazioni - Event Management System{% endblock %}
 
 {% block content %}
+<style>
+    @media (max-width: 768px) {
+        table, thead, tbody, th, td, tr { display: block; width: 100%; }
+        thead { display: none; }
+        tr { background: white; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; }
+        td { padding: 0.75rem 1rem !important; text-align: left; border: none !important; border-bottom: 1px solid #ddd; position: relative; padding-left: 120px !important; }
+        td:last-child { border-bottom: none; }
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 110px;
+            font-weight: bold;
+            background-color: #f5f5f5;
+            padding: 0.75rem 0.5rem;
+            border-right: 1px solid #ddd;
+        }
+        .btn { width: 100%; margin-bottom: 0.5rem; }
+    }
+</style>
+
 <h2>Le Mie Registrazioni agli Eventi</h2>
 
 {% if registrations %}
@@ -10,20 +31,20 @@
         <thead>
             <tr>
                 <th>Nome Evento</th>
-                <th>Data Evento</th>
+                <th style="display: none;">Data Evento</th>
                 <th>Luogo</th>
-                <th>Status Iscrizione</th>
-                <th>Data Iscrizione</th>
+                <th>Status</th>
+                <th style="display: none;">Data Iscrizione</th>
                 <th>Azioni</th>
             </tr>
         </thead>
         <tbody>
             {% for registration in registrations %}
                 <tr>
-                    <td><strong>{{ registration.event.title }}</strong></td>
-                    <td>{{ registration.event.start_date|date:"d/m/Y H:i" }}</td>
-                    <td>{{ registration.event.location }}</td>
-                    <td>
+                    <td data-label="Evento"><strong>{{ registration.event.title }}</strong><br><span style="color: #666; font-size: 0.85rem;">{{ registration.event.start_date|date:"d/m/Y H:i" }}</span></td>
+                    <td data-label="Data" style="display: none;">{{ registration.event.start_date|date:"d/m/Y H:i" }}</td>
+                    <td data-label="Luogo">{{ registration.event.location }}</td>
+                    <td data-label="Status">
                         <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem;
                             {% if registration.status == 'confirmed' %}background-color: #d4edda; color: #155724;
                             {% elif registration.status == 'pending' %}background-color: #fff3cd; color: #856404;
@@ -33,8 +54,8 @@
                             {{ registration.get_status_display }}
                         </span>
                     </td>
-                    <td>{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
-                    <td>
+                    <td data-label="Data Iscr." style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
+                    <td data-label="Azioni">
                         <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Dettagli</a>
                         {% if registration.status != 'cancelled' %}
                             <a href="{% url 'events:event_unregister' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
@@ -55,4 +76,3 @@
     <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
 </div>
 {% endblock %}
-

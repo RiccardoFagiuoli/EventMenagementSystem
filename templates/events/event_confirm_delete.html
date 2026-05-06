@@ -3,6 +3,17 @@
 {% block title %}Elimina "{{ event.title }}"{% endblock %}
 
 {% block content %}
+<style>
+    .delete-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+    .delete-buttons form { display: contents; }
+    .delete-buttons .btn { flex: 1; min-width: 150px; }
+
+    @media (max-width: 480px) {
+        .delete-buttons { flex-direction: column; }
+        .delete-buttons .btn { width: 100%; }
+    }
+</style>
+
 {% if event.deleted_at %}
 <div style="background-color: #f8d7da; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; border-left: 4px solid #dc3545;">
     <h2 style="color: #721c24;">⚠️ Eliminazione Permanente</h2>
@@ -26,17 +37,16 @@
     <p><strong>Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }}</p>
     <p><strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}</p>
 
-    <div class="btn-group" style="margin-top: 2rem;">
-        <form method="post" style="display: inline; box-shadow: none;">
+    <div class="delete-buttons">
+        <form method="post" style="display: block;">
             {% csrf_token %}
             {% if event.deleted_at %}
-                <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 1rem">Sì, Elimina Definitivamente</button>
+                <button type="submit" class="btn btn-danger">Sì, Elimina Definitivamente</button>
             {% else %}
-                <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 1rem">Sì, Elimina Evento</button>
+                <button type="submit" class="btn btn-danger">Sì, Elimina Evento</button>
             {% endif %}
         </form>
         <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">Annulla</a>
     </div>
 </div>
 {% endblock %}
-
