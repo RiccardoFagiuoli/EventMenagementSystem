@@ -147,9 +147,6 @@
     </div>
 </div>
 
-<!-- FullCalendar CSS -->
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
-
 <!-- FullCalendar JS -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
@@ -165,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
     },
     locale: 'it',
+    firstDay: 1,
     height: 'auto',
     events: {
       url: '{% url "events:calendar_events" %}',
