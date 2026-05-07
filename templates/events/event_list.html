@@ -8,7 +8,6 @@
     .search-form input { flex: 1; min-width: 200px; border: 1px solid #667eea; }
     .search-form button { white-space: nowrap; }
 
-    /* Stile per la card con layout a due colonne */
     .event-card {
         display: flex;
         gap: 1.5rem;
@@ -16,12 +15,10 @@
         margin-bottom: 1.5rem;
     }
 
-    /* Contenuto testuale a sinistra */
     .event-content {
         flex: 2;
     }
 
-    /* Immagine a destra */
     .event-thumbnail {
         flex: 1;
         min-width: 150px;
@@ -60,22 +57,21 @@
         gap: 0.75rem;
         justify-content: center;
         min-width: 140px;
-        width: auto;  /* ← Larghezza automatica */
+        width: auto;
     }
 
     .event-card-buttons .btn,
     .event-card-buttons span {
         text-align: center;
-        width: 200px;  /* ← Larghezza automatica */
+        width: 200px;
         min-width: 120px;
-         display: inline-flex;  /* ← Cambia da inline-block a inline-flex */
-        align-items: center;    /* ← Centra verticalmente */
+         display: inline-flex;
+        align-items: center;
         justify-content: center;
         box-sizing: border-box;
         white-space: nowrap;
     }
 
-    /* Stile specifico per lo span "Iscritto" */
     .event-card-buttons span {
         background-color: #28a745;
         color: white;
@@ -91,21 +87,20 @@
 
         /* Mostra l'immagine posizionata sotto il titolo */
         .event-thumbnail {
-            display: block;  /* ← MOSTRA invece di nascondere */
+            display: block;
             width: 100%;
             max-width: 100%;
-            margin: 1rem 0;  /* ← Margine sopra e sotto */
-            order: 1;  /* ← Posiziona dopo il titolo */
+            margin: 1rem 0;
+            order: 1;
         }
 
         .event-thumbnail img {
             width: 100%;
             height: auto;
-            max-height: 300px;  /* ← Altezza massima per non essere troppo grande */
+            max-height: 300px;
             object-fit: cover;
         }
 
-        /* Mostra anche il placeholder */
         .no-image {
             display: none;
         }
@@ -114,7 +109,6 @@
             width: 100%;
         }
 
-        /* Il titolo rimane in alto */
         .event-title {
             order: 0;
         }
@@ -184,7 +178,7 @@
                     {% endif %}
                 </div>
             </div>
-            <!-- IMMAGINE A DESTRA (sparisce su telefono) -->
+            <!-- IMMAGINE A DESTRA -->
             {% if event.image %}
                 <div class="event-thumbnail">
                     <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 0 10px 2px dimgray">
