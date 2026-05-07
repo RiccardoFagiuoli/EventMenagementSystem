@@ -29,6 +29,8 @@ class Event(models.Model):
     @property
     def get_confirmed_attendees_count(self):
         return self.eventregistration_set.filter(status='confirmed').count()
+    def get_pending_attendees_count(self):
+        return self.eventregistration_set.filter(status='pending').count()
 
 class EventRegistration(models.Model):
     STATUS_CHOICES = [('pending', 'In Attesa'), ('confirmed', 'Confermato'), ('cancelled', 'Annullato'), ('attended', 'Partecipato')]

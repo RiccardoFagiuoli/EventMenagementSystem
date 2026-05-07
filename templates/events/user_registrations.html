@@ -40,28 +40,30 @@
         </thead>
         <tbody>
             {% for registration in registrations %}
-                <tr>
-                    <td data-label="Evento"><strong>{{ registration.event.title }}</strong><br><span style="color: #666; font-size: 0.85rem;">{{ registration.event.start_date|date:"d/m/Y H:i" }}</span></td>
-                    <td data-label="Data" style="display: none;">{{ registration.event.start_date|date:"d/m/Y H:i" }}</td>
-                    <td data-label="Luogo">{{ registration.event.location }}</td>
-                    <td data-label="Status">
-                        <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem;
-                            {% if registration.status == 'confirmed' %}background-color: #d4edda; color: #155724;
-                            {% elif registration.status == 'pending' %}background-color: #fff3cd; color: #856404;
-                            {% elif registration.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
-                            {% elif registration.status == 'attended' %}background-color: #d1ecf1; color: #0c5460;
-                            {% endif %}">
-                            {{ registration.get_status_display }}
-                        </span>
-                    </td>
-                    <td data-label="Data Iscr." style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
-                    <td data-label="Azioni">
-                        <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Dettagli</a>
-                        {% if registration.status != 'cancelled' %}
-                            <a href="{% url 'events:event_unregister' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
-                        {% endif %}
-                    </td>
-                </tr>
+                {% if not registration.event.deleted_at %}
+                    <tr>
+                        <td data-label="Evento"><strong>{{ registration.event.title }}</strong><br><span style="color: #666; font-size: 0.85rem;">{{ registration.event.start_date|date:"d/m/Y H:i" }}</span></td>
+                        <td data-label="Data" style="display: none;">{{ registration.event.start_date|date:"d/m/Y H:i" }}</td>
+                        <td data-label="Luogo">{{ registration.event.location }}</td>
+                        <td data-label="Status">
+                            <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem;
+                                {% if registration.status == 'confirmed' %}background-color: #d4edda; color: #155724;
+                                {% elif registration.status == 'pending' %}background-color: #fff3cd; color: #856404;
+                                {% elif registration.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
+                                {% elif registration.status == 'attended' %}background-color: #d1ecf1; color: #0c5460;
+                                {% endif %}">
+                                {{ registration.get_status_display }}
+                            </span>
+                        </td>
+                        <td data-label="Data Iscr." style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
+                        <td data-label="Azioni">
+                            <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Dettagli</a>
+                            {% if registration.status != 'cancelled' %}
+                                <a href="{% url 'events:event_unregister' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>

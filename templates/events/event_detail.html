@@ -124,34 +124,42 @@
                         {% endif %}
                     </div>
                 </div>
-            {% elif user.is_authenticated %}
-                {% if user_registration %}
-                    {% if user_registration.status == 'cancelled' %}
-                        <div style="background-color: #fff3cd; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                            <strong>⚠️ Hai cancellato la tua iscrizione a questo evento</strong>
-                        </div>
-                        {% if event.is_full %}
-                            <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
-                                <strong>Questo evento è al completo</strong>
+            {% elif user.is_authenticated%}
+                {% if not user.is_staff and request.user != event.organizer%}
+                    {% if user_registration %}
+                        {% if user_registration.status == 'cancelled' %}
+                            <div style="background-color: #fff3cd; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                                <strong>⚠️ Hai cancellato la tua iscrizione a questo evento</strong>
                             </div>
+                            {% if event.is_full %}
+                                <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
+                                    <strong>⚠️ Questo evento è al completo</strong>
+                                </div>
+                                <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: #e0a800;">Mettiti in coda</a>
+                            {% else %}
+                                <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti di nuovo a questo Evento</a>
+                            {% endif %}
                         {% else %}
-                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti di nuovo a questo Evento</a>
+                            <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                                <strong>✓ Sei iscritto a questo evento</strong><br>
+                                Stato: {{ user_registration.get_status_display }}
+                            </div>
+                            <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
                         {% endif %}
                     {% else %}
-                        <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                            <strong>✓ Sei iscritto a questo evento</strong><br>
-                            Stato: {{ user_registration.get_status_display }}
-                        </div>
-                        <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                        {% if event.is_full %}
+                            <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
+                                <strong>⚠️ Questo evento è al completo</strong>
+                            </div>
+                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: #e0a800; ">Mettiti in coda</a>
+                        {% else %}
+                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti a questo Evento</a>
+                        {% endif %}
                     {% endif %}
-                {% else %}
-                    {% if event.is_full %}
-                        <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
-                            <strong>⚠️ Questo evento è al completo</strong>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti a questo Evento</a>
-                    {% endif %}
+                {% elif event.is_full %}
+                    <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
+                        <strong>⚠️ Questo evento è al completo</strong>
+                    </div>
                 {% endif %}
             {% else %}
                 <a href="{% url 'users:login' %}" class="btn" style="width: 100%; text-align: center;">Accedi per Iscriverti</a>
@@ -160,9 +168,10 @@
     </div>
     {% if can_view_attendees %}
         <div style="margin-top: 2rem;">
-            <h3>Iscritti Confermati</h3>
+            <h3>Iscritti</h3>
             {% if attendees %}
-                <table style="width: 100%; margin-top: 1rem;">
+                <p style="font-weight: 500;">Confermati:</p>
+                <table style="width: 100%; ;margin-top: 1rem; margin-bottom: 1rem;">
                     <thead>
                         <tr>
                             <th>Nome</th>
@@ -178,10 +187,49 @@
                                 <td data-label="Nome">{{ registration.user.get_full_name|default:registration.user.username }}</td>
                                 <td data-label="Email" style="word-break: break-all;">{{ registration.user.email }}</td>
                                 <td data-label="Data" style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
-                                <td data-label="Stato">{{ registration.get_status_display }}</td>
+                                <td data-label="Stato">
+                                    <span style="background-color: #d4edda; color: #155724; border-radius: 4px; padding: 0.25rem 0.75rem; display: inline-block;">
+                                    {{ registration.get_status_display }}
+                                    </span>
+                                </td>
                                 {% if user.is_staff or user == event.organizer %}
-                                    <td data-label="Azioni">
+                                    <td  data-label="Azioni">
                                         <a href="{% url 'events:admin_unregister_user' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">Disiscrivi</a>
+                                        <span style="width: 80px; display: inline-block;"></span>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+                <p style="font-weight: 500;">In attesa:</p>
+                <table style="width: 100%; margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th style="display: none; text-align: left;">Data Iscrizione</th>
+                            <th>Stato</th>
+                            {% if user.is_staff or user == event.organizer %}<th>Azioni</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in pending_attendees %}
+                            <tr data-label="Partecipante">
+                                <td data-label="Nome">{{ registration.user.get_full_name|default:registration.user.username }}</td>
+                                <td data-label="Email" style="word-break: break-all;">{{ registration.user.email }}</td>
+                                <td data-label="Data" style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
+                                <td data-label="Stato">
+                                    <span style="background-color: #fff3cd; color: #856404; border-radius: 4px; padding: 0.25rem 0.75rem; display: inline-block;">
+                                    {{ registration.get_status_display }}
+                                    </span>
+                                </td>
+                                {% if user.is_staff or user == event.organizer %}
+                                    <td data-label="Azioni" style="gap: 0.5rem;">
+                                        <a href="{% url 'events:admin_unregister_user' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">Disiscrivi</a>
+                                        <a href="{% url 'events:admin_register_user' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 1rem; font-size: 0.85rem; background-color: #28a745; ">Iscrivi</a>
                                     </td>
                                 {% endif %}
                             </tr>

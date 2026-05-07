@@ -240,7 +240,7 @@ event7, created = Event.objects.get_or_create(
 )
 
 # Create registrations
-events = [event1, event2, event3, event4]
+events = [event1, event2, event3, event4, event5, event6, event7]
 attendees = [attendee1, attendee2, attendee3]
 
 for event in events:

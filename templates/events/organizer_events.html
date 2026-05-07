@@ -45,6 +45,7 @@
                         <strong>📍 Luogo:</strong> {{ event.location }}<br>
                         <strong>📅 Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }} - {{ event.end_date|date:"H:i" }}<br>
                         <strong>👥 Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
+                        <strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}<br>
                         <strong>Stato:</strong>
                         <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem;
                             {% if event.status == 'published' %}background-color: #d4edda; color: #155724;

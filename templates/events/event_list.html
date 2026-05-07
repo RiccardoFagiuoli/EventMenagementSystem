@@ -36,16 +36,19 @@
                 <strong>📍 Luogo:</strong> {{ event.location }}<br>
                 <strong>📅 Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }} - {{ event.end_date|date:"H:i" }}<br>
                 <strong>Organizzatore:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}<br>
-                <strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}
+                <strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
+                {% if user.is_staff or user == event.organizer %}<strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}{% endif %}
             </div>
             <p class="event-description">{{ event.description|truncatewords:30 }}</p>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;" class="event-card-buttons">
                 <a href="{% url 'events:event_detail' event.pk %}" class="btn">Dettagli</a>
                 {% if request.user.is_authenticated %}
-                    {% if event.pk in registered_events %}
+                    {% if not request.user.is_staff %}
+                    {% if event.pk in registered_events  and not user_registration.status == 'cancelled' %}
                         <span style="padding: 0.75rem; background-color: #28a745; color: white; border-radius: 4px;">✓ Iscritto</span>
                     {% else %}
                         <a href="{% url 'events:event_register' event.pk %}" class="btn btn-secondary">Iscriviti</a>
+                    {% endif %}
                     {% endif %}
                 {% else %}
                     <a href="{% url 'users:login' %}" class="btn btn-secondary">Accedi per Iscriverti</a>
