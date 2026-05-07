@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import os
 import django
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
+from django.conf import settings
+from django.core.files import File
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eventmenagementsystem.settings')
 django.setup()
@@ -144,7 +147,7 @@ if created:
     UserProfile.objects.create(user=attendee3, role='attendee', bio='Business professional', phone_number='+39 777 888 9999')
 
 # Create sample events
-now = datetime.now()
+now = timezone.now()
 
 event1, created = Event.objects.get_or_create(
     title='Python Conference 2025',
@@ -180,7 +183,7 @@ event3, created = Event.objects.get_or_create(
         'location': 'Campus Scientifico, Sesto Fiorentino',
         'start_date': now + timedelta(days=60),
         'end_date': now + timedelta(days=60, hours=6),
-        'max_attendees': 30,
+        'max_attendees': 2,
         'status': 'published'
     }
 )
@@ -193,17 +196,17 @@ event4, created = Event.objects.get_or_create(
         'location': 'Innovation Hub, Via dei Servi',
         'start_date': now + timedelta(days=45),
         'end_date': now + timedelta(days=45, hours=5),
-        'max_attendees': 75,
+        'max_attendees': 30,
         'status': 'published'
     }
 )
 
 event5, created = Event.objects.get_or_create(
-    title='Workshop di Networking Avanzato',
+    title='PPM',
     defaults={
-        'description': 'Un workshop esclusivo per professionisti che desiderano migliorare le loro competenze di networking e creare connessioni strategiche.',
+        'description': 'Corso di progettazione e produzione multimediale',
         'organizer': organizer2,
-        'location': 'Sala Conferenze Palazzo Vecchio, Firenze',
+        'location': 'Centro didattico Morgani - UNIFI, Firenze',
         'start_date': now + timedelta(days=10),
         'end_date': now + timedelta(days=10, hours=3),
         'max_attendees': 2,
@@ -226,14 +229,14 @@ event6, created = Event.objects.get_or_create(
 )
 
 event7, created = Event.objects.get_or_create(
-    title='PPM',
+    title='Workshop di Networking Avanzato',
     defaults={
-        'description': 'Corso di progettazione e produzione multimediale',
+        'description': 'Un workshop esclusivo per professionisti che desiderano migliorare le loro competenze di networking e creare connessioni strategiche.',
         'organizer': organizer1,
-        'location': 'Centro didattico Morgani - UNIFI, Firenze',
+        'location': 'Sala Conferenze Palazzo Vecchio, Firenze',
         'start_date': now - timedelta(days=20, hours=6),
         'end_date': now - timedelta(days=20),
-        'max_attendees': 60,
+        'max_attendees': 75,
         'status': 'published',
         'deleted_at': now - timedelta(days=21)  # Soft delete: evento marcato come eliminato
     }
@@ -244,24 +247,43 @@ events = [event1, event2, event3, event4, event5, event6, event7]
 attendees = [attendee1, attendee2, attendee3]
 
 for event in events:
-    for i, attendee in enumerate(attendees):
+    print(f"\nRegistrazioni per evento: {event.title} (max {event.max_attendees} partecipanti)")
+    for attendee in attendees:
+        # Conta quanti sono già confermati
+        confermati = EventRegistration.objects.filter(
+            event=event,
+            status='confirmed'
+        ).count()
+
+        # Decidi lo stato in base ai posti disponibili
+        if event.max_attendees is None or confermati < event.max_attendees:
+            stato_finale = 'confirmed'
+            if event.max_attendees:
+                print(f"   ✅ {attendee.username} → CONFERMATO (posto {confermati + 1}/{event.max_attendees})")
+            else:
+                print(f"   ✅ {attendee.username} → CONFERMATO (posto {confermati + 1}/illimitato)")
+        else:
+            stato_finale = 'pending'
+            print(f"   ⏳ {attendee.username} → IN LISTA D'ATTESA (evento pieno)")
+
+        # Crea o aggiorna la registrazione
         reg, created = EventRegistration.objects.get_or_create(
             event=event,
             user=attendee,
-            defaults={'status': 'confirmed' if i < 2 else 'pending'}
+            defaults={'status': stato_finale}
         )
 
-# Specific registrations for event5 (only 2 attendees: Luca Verdi and Anna Marini)
-EventRegistration.objects.get_or_create(
-    event=event5,
-    user=attendee1,  # Luca Verdi
-    defaults={'status': 'confirmed'}
-)
-EventRegistration.objects.get_or_create(
-    event=event5,
-    user=attendee2,  # Anna Marini
-    defaults={'status': 'confirmed'}
-)
+reg, created = EventRegistration.objects.get_or_create(
+            event=event5,
+            user=organizer1,
+            defaults={'status': 'pending'}
+        )
+
+if not event5.image:
+        image_path = 'event_images/morgagni.jpg'
+        event5.image = image_path
+        event5.save()
+        print(f"   ✅ Immagine associata a {event5.title}")
 
 # Create some attendance records (mark some registrations as attended)
 registrations = EventRegistration.objects.filter(status='confirmed').order_by('-registered_at')[:3]

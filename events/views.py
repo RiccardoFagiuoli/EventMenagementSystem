@@ -50,9 +50,12 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
-        context['attendees'] = event.eventregistration_set.filter(status='confirmed')
-        context['pending_attendees'] = event.eventregistration_set.filter(status='pending')
+        context['attendees'] = event.eventregistration_set.filter(status='confirmed').order_by('-registered_at')
+        context['pending_attendees'] = event.eventregistration_set.filter(status='pending').order_by('-registered_at')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.is_staff
+
+        context['pending_count'] = context['pending_attendees'].count()
+        context['confirmed_count'] = context['attendees'].count()
 
         # Calcola se l'evento può essere ripristinato e il tempo rimanente
         if event.deleted_at:
@@ -111,6 +114,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Evento creato con successo!')
         return super().form_valid(form)
 
+
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """ Class-based generic view for updating events. """
     model = Event
@@ -125,14 +129,38 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == event.organizer or self.request.user.is_staff
 
     def form_valid(self, form):
+        event = self.get_object()  # Ottieni l'evento originale
+        old_image = event.image  # Salva la vecchia immagine
+
+        new_event = form.save(commit=False)
+
+        # GESTISCI CANCELLAZIONE IMMAGINE (checkbox)
+        if self.request.POST.get('delete_image') == 'on':
+            if old_image:
+                old_image.delete()  # Elimina il vecchio file
+                new_event.image = None
+                messages.info(self.request, 'Immagine rimossa.')
+
+        # GESTISCI SOSTITUZIONE IMMAGINE (se ne carica una nuova)
+        elif 'image' in self.request.FILES:
+            if old_image and old_image.name != self.request.FILES['image'].name:
+                old_image.delete()  # Elimina la vecchia immagine
+                messages.info(self.request, 'Immagine sostituita.')
+
         # Se l'evento è stato eliminato, ripristinalo
-        event = form.instance
-        if event.deleted_at:
-            event.deleted_at = None
+        if new_event.deleted_at:
+            new_event.deleted_at = None
             messages.success(self.request, 'Evento ripristinato e aggiornato con successo!')
         else:
             messages.success(self.request, 'Evento aggiornato con successo!')
-        return super().form_valid(form)
+
+        new_event.save()
+        form.save_m2m()  # Salva le relazioni many-to-many se ci sono
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Errore nel modulo. Controlla i dati inseriti.')
+        return super().form_invalid(form)
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """ Class-based generic view for deleting events. """
@@ -231,6 +259,12 @@ def event_unregister(request, pk):
         registration.status = 'cancelled'
         registration.save()
         messages.success(request, 'Cancellazione registrazione completata!')
+        # PROMUOVI DALLA LISTA D'ATTESA
+        promoted = event.promote_from_waiting_list()
+
+        # Messaggio di conferma promozione
+        if promoted:
+            promoted_name = promoted.user.get_full_name() or promoted.user.username
     except EventRegistration.DoesNotExist:
         messages.error(request, 'Non sei registrato a questo evento.')
     return redirect('events:event_detail', pk=pk)
@@ -301,7 +335,7 @@ def event_restore(request, pk):
     return redirect('events:organizer_events')
 
 def admin_unregister_user(request, event_id, registration_id):
-     """ View to unregister a user from an event (admin and organizer only). """
+     """ View to unregister a user from an event (admin and organizer only). Promuove il primo in coda """
      if not request.user.is_authenticated:
          messages.error(request, 'È necessario essere loggati.')
          return redirect('users:login')
@@ -318,6 +352,14 @@ def admin_unregister_user(request, event_id, registration_id):
      user_name = registration.user.username
      registration.delete()
      messages.success(request, f'Utente {user_name} discritto dall\'evento {event.title}.')
+
+     # PROMUOVI DALLA LISTA D'ATTESA
+     promoted = event.promote_from_waiting_list()
+
+     # Messaggio di conferma promozione
+     if promoted:
+         promoted_name = promoted.user.get_full_name() or promoted.user.username
+         messages.warning(request,f'🎉 Un posto si è liberato! {promoted_name} è stato promosso dalla lista d\'attesa.')
      return redirect('events:event_detail', pk=event_id)
 
 def admin_register_user(request, pk, registration_pk):

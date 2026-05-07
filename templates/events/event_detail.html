@@ -82,7 +82,7 @@
                     <td>{{ event.end_date|date:"d/m/Y H:i" }}</td>
                 </tr>
                 <tr>
-                    <td><strong>👥 Organizzatore:</strong></td>
+                    <td><strong>👤 Organizzatore:</strong></td>
                     <td>{{ event.organizer.get_full_name|default:event.organizer.username }}</td>
                 </tr>
                 <tr>
@@ -90,8 +90,12 @@
                     <td>{{ event.get_status_display }}</td>
                 </tr>
                 <tr>
-                    <td><strong>👤 Iscritti:</strong></td>
+                    <td><strong>👥 Iscritti:</strong></td>
                     <td>{{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td><strong>⚠️ In attesa:</strong></td>
+                    <td>{{ event.get_pending_attendees_count }}</td>
                 </tr>
             </table>
         </div>
@@ -100,10 +104,10 @@
             <!-- MINIATURA DELL'IMMAGINE - AGGIUNTA QUI -->
             {% if event.image %}
                 <div class="event-thumbnail">
-                    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px;">
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 0 10px 2px dimgray">
                 </div>
             {% else %}
-                <div class="no-image" style="margin-bottom: 1rem;">
+                <div class="no-image" style="text-align: center; margin-bottom: 1rem; padding: 2px; border-radius: 4px; background-color: #f0f0f0; box-shadow: 0 0 10px 2px lightgray">
                     <span>📷 Nessuna immagine disponibile</span>
                 </div>
             {% endif %}
@@ -140,10 +144,17 @@
                                 <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti di nuovo a questo Evento</a>
                             {% endif %}
                         {% else %}
-                            <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                                <strong>✓ Sei iscritto a questo evento</strong><br>
-                                Stato: {{ user_registration.get_status_display }}
-                            </div>
+                            {% if user_registration.get_status_display == 'In Attesa' %}
+                                <div style="background-color: #fff3cd; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                                    <strong>✓ Sei iscritto a questo evento</strong><br>
+                                    Stato: {{ user_registration.get_status_display }}
+                                </div>
+                            {% else %}
+                                <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                                    <strong>✓ Sei iscritto a questo evento</strong><br>
+                                    Stato: {{ user_registration.get_status_display }}
+                                </div>
+                            {% endif %}
                             <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
                         {% endif %}
                     {% else %}
@@ -208,6 +219,7 @@
                 <table style="width: 100%; margin-top: 1rem;">
                     <thead>
                         <tr>
+                            <th>Posizione</th>
                             <th>Nome</th>
                             <th>Email</th>
                             <th style="display: none; text-align: left;">Data Iscrizione</th>
@@ -216,8 +228,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for registration in pending_attendees %}
+                        {% for registration in pending_attendees|slice:":10" %}
                             <tr data-label="Partecipante">
+                                <td data-label="Posizione">
+                                    <span style="display: inline-block; text-align: center; font-weight: bold;">
+                                        {{ registration.get_queue_position }}°
+                                    </span>
+                                </td>
                                 <td data-label="Nome">{{ registration.user.get_full_name|default:registration.user.username }}</td>
                                 <td data-label="Email" style="word-break: break-all;">{{ registration.user.email }}</td>
                                 <td data-label="Data" style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
@@ -235,6 +252,9 @@
                             </tr>
                         {% endfor %}
                     </tbody>
+                    {% if pending_attendees|length > 10 %}
+                        <p>... e altri {{ pending_attendees|length|add:"-10" }} in coda</p>
+                    {% endif %}
                 </table>
             {% else %}
                 <p style="color: #666;">Nessun iscritto confermato.</p>

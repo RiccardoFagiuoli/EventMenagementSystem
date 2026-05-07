@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 class Event(models.Model):
     STATUS_CHOICES = [('draft', 'Bozza'), ('published', 'Pubblicato'), ('ongoing', 'In Corso'), ('completed', 'Completato'), ('cancelled', 'Annullato')]
@@ -25,6 +27,40 @@ class Event(models.Model):
         if self.max_attendees is None:
             return False
         return self.eventregistration_set.filter(status='confirmed').count() >= self.max_attendees
+
+    def promote_from_waiting_list(self):
+        """"Promuove il primo in lista d'attesa a 'confirmed' """
+        # 1. Se l'evento è ancora pieno, non fare nulla
+        if self.is_full():
+            return None
+        # 2. Se l'evento non ha limite di posti, non serve coda
+        if self.max_attendees is None:
+            return None
+        # 3. Cerca il primo in coda
+        next_in_line = self.eventregistration_set.filter(status='pending').order_by('registered_at').first()
+
+        # 4. Se trovato qualcuno, promuovilo a 'confirmed'
+        if next_in_line:
+            next_in_line.status = 'confirmed'
+            next_in_line.save()
+            return next_in_line
+
+        return None
+
+    def get_pending_position(self):
+        """Restituisce la posizione nella lista d'attesa"""
+        if self.status != 'pending':
+            return None
+
+        # Conta quanti pending sono più vecchi (registered_at minore) di questo
+        older_count = EventRegistration.objects.filter(
+            event=self.event,
+            status='pending',
+            registered_at__lt=self.registered_at
+        ).count()
+
+        # La posizione è quanti sono davanti + 1
+        return older_count + 1
 
     @property
     def get_confirmed_attendees_count(self):
@@ -51,3 +87,36 @@ class EventAttendance(models.Model):
     notes = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"{self.registration.user.username} - {self.registration.event.title} (Partecipato)"
+
+
+@receiver(pre_save, sender=Event)
+def delete_old_image_on_update(sender, instance, **kwargs):
+    """Elimina la vecchia immagine quando viene caricata una nuova"""
+    if not instance.pk:  # Se è un nuovo evento, esci
+        return
+
+    try:
+        old_instance = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        return
+
+    old_image = old_instance.image
+    new_image = instance.image
+
+    # Se c'è una nuova immagine e la vecchia esiste ed è diversa
+    if new_image and old_image and old_image.name != new_image.name:
+        old_image.delete(save=False)  # Elimina il file
+
+
+@receiver(pre_save, sender=Event)
+def handle_image_deletion(sender, instance, **kwargs):
+    """Gestisce la cancellazione dell'immagine"""
+    if not instance.pk:
+        return
+
+    # Se stai usando un campo personalizzato per segnare la cancellazione
+    # Puoi passare un attributo temporaneo dall'admin
+    if hasattr(instance, '_delete_image') and instance._delete_image:
+        if instance.image:
+            instance.image.delete(save=False)
+            instance.image = None

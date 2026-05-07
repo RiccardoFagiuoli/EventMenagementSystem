@@ -5,8 +5,103 @@
 {% block content %}
 <style>
     .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 768px) {
+
+    /* Stili per l'anteprima immagine */
+    .image-preview-container {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .image-preview {
+        margin-top: 0.5rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .image-preview img {
+        max-width: 300px;
+        max-height: 200px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    /* Container per immagine corrente con checkbox a destra */
+    .current-image {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: #e9ecef;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* Container per immagine e testo */
+    .current-image-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .current-image-info strong {
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .current-image-info img {
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 4px;
+        object-fit: cover;
+    }
+
+    /* Checkbox a destra */
+    .delete-image-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #f8d7da;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        margin-left: auto;
+    }
+
+    .delete-image-checkbox:hover {
+        background-color: #f5c6cb;
+    }
+
+    .delete-image-checkbox input {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        margin: 0;
+    }
+
+    @media (max-width: 600px) {
         .form-grid-2 { grid-template-columns: 1fr; }
+
+        .current-image {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .delete-image-checkbox {
+            margin-left: 0;
+            align-self: flex-start;
+            white-space: nowrap;
+        }
+
+        .current-image-info {
+            width: 100%;
+        }
     }
 </style>
 
@@ -72,8 +167,30 @@
         </div>
     </div>
 
+    <!-- CAMPO IMMAGINE CON ANTEPRIMA -->
     <div class="form-group">
         {{ form.image.label_tag }}
+        <!-- Anteprima nuova immagine -->
+        <div class="image-preview-container" id="newImagePreview" style="display: none;">
+            <div class="image-preview">
+                <strong>Anteprima:</strong><br>
+                <img id="previewImg" src="#" alt="Anteprima immagine">
+            </div>
+        </div>
+
+        <!-- Immagine corrente (solo in modifica) -->
+        {% if form.instance.pk and form.instance.image %}
+            <div class="current-image" id="currentImageWrapper">
+                <div class="current-image-info">
+                    <strong>Immagine corrente:</strong>
+                    <img src="{{ form.instance.image.url }}" alt="{{ form.instance.title }}">
+                </div>
+                <label class="delete-image-checkbox">
+                    <input type="checkbox" name="delete_image" id="deleteImageCheckbox">
+                    🗑️ Rimuovi immagine
+                </label>
+            </div>
+        {% endif %}
         {{ form.image }}
     </div>
 
@@ -82,4 +199,67 @@
         <a href="{% url 'events:event_list' %}" class="btn btn-secondary">Annulla</a>
     </div>
 </form>
+
+<script>
+    // Anteprima immagine quando viene selezionato un file
+    const imageInput = document.querySelector('#id_image');
+    const previewContainer = document.getElementById('newImagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const deleteCheckbox = document.getElementById('deleteImageCheckbox');
+    const currentImageWrapper = document.getElementById('currentImageWrapper');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                // Mostra anteprima
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+
+                // Se viene selezionata una nuova immagine, deseleziona la cancellazione
+                if (deleteCheckbox) {
+                    deleteCheckbox.checked = false;
+                }
+
+                // Ripristina l'opacità del wrapper corrente
+                if (currentImageWrapper) {
+                    currentImageWrapper.style.opacity = '1';
+                }
+            } else {
+                // Nessun file selezionato
+                previewContainer.style.display = 'none';
+                previewImg.src = '#';
+            }
+        });
+    }
+
+    // Gestione checkbox "Rimuovi immagine"
+    if (deleteCheckbox) {
+        deleteCheckbox.addEventListener('change', function(event) {
+            if (this.checked) {
+                // Se cancello l'immagine, mostra visivamente che verrà rimossa
+                if (currentImageWrapper) {
+                    currentImageWrapper.style.opacity = '0.5';
+                    currentImageWrapper.style.backgroundColor = '#f8d7da';
+                }
+                // Se c'è un nuovo file selezionato, resetta il campo
+                if (imageInput && imageInput.value) {
+                    imageInput.value = '';
+                    previewContainer.style.display = 'none';
+                }
+            } else {
+                // Ripristina lo stile originale
+                if (currentImageWrapper) {
+                    currentImageWrapper.style.opacity = '1';
+                    currentImageWrapper.style.backgroundColor = '#e9ecef';
+                }
+            }
+        });
+    }
+</script>
 {% endblock %}
