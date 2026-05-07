@@ -458,11 +458,12 @@ def calendar_events(request):
             'backgroundColor': 'white',
             'borderColor': '#667eea',
             'textColor': 'black',
+            'display': 'block',
             'classNames':['custom-border-registered'],
             'url': reverse('events:event_detail', kwargs={'pk': event.id})
         })
 
-    # 2. Eventi creati dall'utente (organizzatore)
+    # Eventi creati dall'utente (organizzatore)
     try:
         if request.user.profile.role == 'organizer':
             user_events = Event.objects.filter(
@@ -479,10 +480,11 @@ def calendar_events(request):
                     'backgroundColor': 'white',
                     'borderColor': '#764ba2',
                     'textColor': '#764ba2',
+                    'display': 'block',
                     'classNames':['custom-border-organized'],
                     'url': reverse('events:event_detail', kwargs={'pk': event.id})
                 })
     except UserProfile.DoesNotExist:
-        pass  # L'utente non ha un profilo organizzatore
+        pass
 
     return JsonResponse(events, safe=False)

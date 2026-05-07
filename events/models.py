@@ -60,6 +60,8 @@ class Event(models.Model):
         ).count()
 
         # La posizione è quanti sono davanti + 1
+        if older_count == None:
+            return 0
         return older_count + 1
 
     @property
