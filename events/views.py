@@ -51,6 +51,7 @@ class EventDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
         context['attendees'] = event.eventregistration_set.filter(status='confirmed')
+        context['pending_attendees'] = event.eventregistration_set.filter(status='pending')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.is_staff
 
         # Calcola se l'evento può essere ripristinato e il tempo rimanente
@@ -154,7 +155,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             # Se l'evento è già eliminato, eliminarlo definitivamente dal database
             event_title = event.title
             event.delete()
-            messages.success(request, f'Evento "{event_title}" eliminato definitivamente dal database.')
+            messages.success(request, f'Evento "{event_title}" eliminato definitivamente.')
         else:
             # Se l'evento non è eliminato, fare soft delete
             event.deleted_at = timezone.now()
@@ -165,6 +166,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
 
 def event_register(request, pk):
     """ View for registering a user to an event. """
@@ -181,20 +183,41 @@ def event_register(request, pk):
     try:
         registration = EventRegistration.objects.get(event=event, user=request.user)
         if registration.status == 'cancelled':
+            # Ri-iscrizione da cancellato
             if event.is_full():
-                messages.error(request, 'L\'evento è al completo.')
+                # Evento pieno → lista d'attesa
+                registration.status = 'pending'
+                registration.save()
+                messages.warning(request, 'Evento al completo. Sei stato aggiunto alla lista d\'attesa.')
             else:
-                registration.status = 'confirmed' if not event.is_full() else 'pending'
+                # Evento con posti → confermato
+                registration.status = 'confirmed'
                 registration.save()
                 messages.success(request, 'Iscrizione completata!')
-        else:
+        elif registration.status == 'pending':
+            messages.warning(request, 'Sei già in lista d\'attesa per questo evento.')
+        else:  # status == 'confirmed'
             messages.warning(request, 'Sei già registrato a questo evento.')
+
     except EventRegistration.DoesNotExist:
+        # Nuova registrazione
         if event.is_full():
-            messages.error(request, 'L\'evento è al completo.')
+            # Evento pieno → lista d'attesa
+            registration = EventRegistration.objects.create(
+                event=event,
+                user=request.user,
+                status='pending'
+            )
+            messages.warning(request, 'Evento al completo. Sei stato aggiunto alla lista d\'attesa.')
         else:
-            registration = EventRegistration.objects.create(event=event, user=request.user, status='confirmed' if not event.is_full() else 'pending')
+            # Evento con posti → confermato
+            registration = EventRegistration.objects.create(
+                event=event,
+                user=request.user,
+                status='confirmed'
+            )
             messages.success(request, 'Registrazione completata!')
+
     return redirect('events:event_detail', pk=pk)
 
 def event_unregister(request, pk):
@@ -297,6 +320,29 @@ def admin_unregister_user(request, event_id, registration_id):
      messages.success(request, f'Utente {user_name} discritto dall\'evento {event.title}.')
      return redirect('events:event_detail', pk=event_id)
 
+def admin_register_user(request, pk, registration_pk):
+    """View per admin per confermare utente dalla lista d'attesa"""
+    if not request.user.is_authenticated:
+        messages.error(request, 'È necessario essere loggati.')
+        return redirect('users:login')
+
+    event = get_object_or_404(Event, pk=pk, status='published')
+    registration = get_object_or_404(EventRegistration, pk=registration_pk, event=event)
+
+    # Controllo permessi
+    if not (request.user.is_staff or request.user == event.organizer):
+        messages.error(request, 'Non hai i permessi per questa azione.')
+        return redirect('events:event_detail', pk=pk)
+
+    # Conferma dalla lista d'attesa
+    if registration.status == 'pending':
+        registration.status = 'confirmed'
+        registration.save()
+        messages.success(request, f'{registration.user.username} è stato iscritto all\'evento!')
+    else:
+        messages.warning(request, 'Questo utente non è in lista d\'attesa.')
+    return redirect('events:event_detail', pk=pk)
+
 def deleted_events(request):
     """ View to display all deleted events (admin only). """
     if not request.user.is_authenticated:
@@ -370,6 +416,7 @@ def calendar_events(request):
             'backgroundColor': 'white',
             'borderColor': '#667eea',
             'textColor': 'black',
+            'classNames':['custom-border-registered'],
             'url': reverse('events:event_detail', kwargs={'pk': event.id})
         })
 
@@ -390,6 +437,7 @@ def calendar_events(request):
                     'backgroundColor': 'white',
                     'borderColor': '#764ba2',
                     'textColor': '#764ba2',
+                    'classNames':['custom-border-organized'],
                     'url': reverse('events:event_detail', kwargs={'pk': event.id})
                 })
     except UserProfile.DoesNotExist:

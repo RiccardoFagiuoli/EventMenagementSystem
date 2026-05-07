@@ -16,11 +16,20 @@ class EventForm(forms.ModelForm):
         end_date = cleaned_data.get('end_date')
         n_attendees = cleaned_data.get('max_attendees')
 
-        if n_attendees < 1:
-            raise forms.ValidationError('Numero di partecipanti deve essere maggiore di 0')
+        if n_attendees is not None and n_attendees < 0:
+            raise forms.ValidationError('Il numero di partecipanti deve essere maggiore di 0 o vuoto per posti illimitati')
 
         if start_date and end_date:
             if start_date >= end_date:
                 raise forms.ValidationError('La data e ora di inizio deve essere precedente alla data e ora di fine.')
 
         return cleaned_data
+
+    # Validazione dimensione immagine(max 2 MB)
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image:
+            if image.size > 2 * 1024 * 1024:
+                raise forms.ValidationError("L'immagine è troppo pesante (max 2MB).")
+        return image

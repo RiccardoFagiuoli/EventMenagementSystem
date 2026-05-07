@@ -3,7 +3,27 @@
 {% block title %}I Miei Eventi - Event Management System{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<style>
+    .organizer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .event-card-content { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem; }
+    .event-card-info { flex: 1; min-width: 200px; }
+    .event-card-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    @media (max-width: 768px) {
+        .organizer-header { flex-direction: column; align-items: flex-start; }
+        .organizer-header .btn { width: 100%; }
+        .event-card-content { flex-direction: column; }
+        .event-card-actions { width: 100%; flex-direction: row; flex-wrap: wrap; }
+        .event-card-actions .btn { flex: 1; min-width: 90px; }
+    }
+
+    @media (max-width: 480px) {
+        .event-card-actions { flex-direction: column; }
+        .event-card-actions .btn { width: 100%; }
+    }
+</style>
+
+<div class="organizer-header">
     <h2>{% if is_admin %}Tutti gli Eventi{% else %}I Miei Eventi{% endif %}</h2>
     {% if not is_admin %}
         <a href="{% url 'events:event_create' %}" class="btn">+ Crea Nuovo Evento</a>
@@ -13,8 +33,8 @@
 {% if events %}
     {% for event in events %}
         <div class="event-card">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div style="flex: 1;">
+            <div class="event-card-content">
+                <div class="event-card-info">
                     <h3 class="event-title">{{ event.title }}</h3>
                     {% if is_admin and user != event.organizer %}
                         <div style="background-color: #e2e3e5; padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; font-size: 0.9rem;">
@@ -25,6 +45,7 @@
                         <strong>📍 Luogo:</strong> {{ event.location }}<br>
                         <strong>📅 Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }} - {{ event.end_date|date:"H:i" }}<br>
                         <strong>👥 Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
+                        <strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}<br>
                         <strong>Stato:</strong>
                         <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem;
                             {% if event.status == 'published' %}background-color: #d4edda; color: #155724;
@@ -43,20 +64,20 @@
                     </div>
                     <p class="event-description">{{ event.description|truncatewords:30 }}</p>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-left: 1rem;">
+                <div class="event-card-actions">
                     <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="white-space: nowrap;">Dettagli</a>
-                    {% if not event.deleted_at %}
+                    {% if not event.deleted_at%}
                         <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="white-space: nowrap;">Modifica</a>
-                        <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap;">Elimina</a>
-                    {% elif is_admin %}
-                        {% if event.can_restore %}
-                            <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
-                        {% endif %}
-                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="white-space: nowrap;">Modifica</a>
-                        <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap;">Elimina</a>
                     {% elif event.can_restore %}
                         <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
                     {% endif %}
+                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap; ">
+                        {% if event.can_restore or not event.deleted_at%}
+                            Elimina
+                        {% else %}
+                            Elim. Def.
+                        {% endif %}
+                    </a>
                 </div>
             </div>
         </div>

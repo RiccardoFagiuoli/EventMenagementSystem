@@ -3,6 +3,13 @@
 {% block title %}{% if form.instance.pk %}Modifica{% else %}Crea{% endif %} Evento{% endblock %}
 
 {% block content %}
+<style>
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 768px) {
+        .form-grid-2 { grid-template-columns: 1fr; }
+    }
+</style>
+
 <h2>{% if form.instance.pk %}Modifica Evento{% else %}Crea Nuovo Evento{% endif %}</h2>
 
 {% if form.non_field_errors or form.errors %}
@@ -23,7 +30,7 @@
     </div>
 {% endif %}
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="form-group">
@@ -41,7 +48,7 @@
         {{ form.location }}
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div class="form-grid-2">
         <div class="form-group">
             {{ form.start_date.label_tag }}
             {{ form.start_date }}
@@ -53,7 +60,7 @@
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div class="form-grid-2">
         <div class="form-group">
             {{ form.max_attendees.label_tag }}
             {{ form.max_attendees }}
@@ -76,4 +83,3 @@
     </div>
 </form>
 {% endblock %}
-

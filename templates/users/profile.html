@@ -3,13 +3,20 @@
 {% block title %}Profilo Utente - Event Management System{% endblock %}
 
 {% block content %}
+<style>
+    .profile-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 768px) {
+        .profile-grid-2 { grid-template-columns: 1fr; }
+    }
+</style>
+
 <h2>Il Mio Profilo</h2>
 
 <div style="max-width: 800px;">
     <form method="post" style="margin-top: 2rem;">
         {% csrf_token %}
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="profile-grid-2">
             <div class="form-group">
                 <label for="first_name">Nome</label>
                 <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
@@ -36,7 +43,7 @@
             <textarea name="bio" id="bio">{{ profile.bio|default:'' }}</textarea>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="profile-grid-2">
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" value="{{ user.username }}" disabled style="background-color: #f0f0f0;">
@@ -70,8 +77,7 @@
     <div style="margin-top: 2rem; padding: 1.5rem; background-color: #f8d7da; border-radius: 4px; border-left: 4px solid #dc3545;">
         <h3 style="color: #721c24;">Sezione Pericolosa</h3>
         <p style="color: #721c24;">Gestisci le tue impostazioni di sicurezza.</p>
-        <button onclick="alert('Funzione di cambio password non ancora disponibile')" class="btn btn-danger">Cambia Password</button>
+        <button onclick="alert('Funzione di cambio password non ancora disponibile')" class="btn btn-danger" style="width: 100%;">Cambia Password</button>
     </div>
 </div>
 {% endblock %}
-

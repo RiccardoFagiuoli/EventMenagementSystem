@@ -44,7 +44,7 @@ def user_login(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Benvenuto {user.username}!')
-            return redirect('events:event_list')
+            return redirect('home')
         else:
             messages.error(request, 'Username o password non validi.')
     return render(request, 'users/login.html')
