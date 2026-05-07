@@ -114,6 +114,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Evento creato con successo!')
         return super().form_valid(form)
 
+
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """ Class-based generic view for updating events. """
     model = Event
@@ -128,14 +129,38 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == event.organizer or self.request.user.is_staff
 
     def form_valid(self, form):
+        event = self.get_object()  # Ottieni l'evento originale
+        old_image = event.image  # Salva la vecchia immagine
+
+        new_event = form.save(commit=False)
+
+        # GESTISCI CANCELLAZIONE IMMAGINE (checkbox)
+        if self.request.POST.get('delete_image') == 'on':
+            if old_image:
+                old_image.delete()  # Elimina il vecchio file
+                new_event.image = None
+                messages.info(self.request, 'Immagine rimossa.')
+
+        # GESTISCI SOSTITUZIONE IMMAGINE (se ne carica una nuova)
+        elif 'image' in self.request.FILES:
+            if old_image and old_image.name != self.request.FILES['image'].name:
+                old_image.delete()  # Elimina la vecchia immagine
+                messages.info(self.request, 'Immagine sostituita.')
+
         # Se l'evento è stato eliminato, ripristinalo
-        event = form.instance
-        if event.deleted_at:
-            event.deleted_at = None
+        if new_event.deleted_at:
+            new_event.deleted_at = None
             messages.success(self.request, 'Evento ripristinato e aggiornato con successo!')
         else:
             messages.success(self.request, 'Evento aggiornato con successo!')
-        return super().form_valid(form)
+
+        new_event.save()
+        form.save_m2m()  # Salva le relazioni many-to-many se ci sono
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Errore nel modulo. Controlla i dati inseriti.')
+        return super().form_invalid(form)
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """ Class-based generic view for deleting events. """

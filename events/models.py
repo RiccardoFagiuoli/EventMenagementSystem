@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 class Event(models.Model):
     STATUS_CHOICES = [('draft', 'Bozza'), ('published', 'Pubblicato'), ('ongoing', 'In Corso'), ('completed', 'Completato'), ('cancelled', 'Annullato')]
@@ -85,3 +87,36 @@ class EventAttendance(models.Model):
     notes = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"{self.registration.user.username} - {self.registration.event.title} (Partecipato)"
+
+
+@receiver(pre_save, sender=Event)
+def delete_old_image_on_update(sender, instance, **kwargs):
+    """Elimina la vecchia immagine quando viene caricata una nuova"""
+    if not instance.pk:  # Se è un nuovo evento, esci
+        return
+
+    try:
+        old_instance = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        return
+
+    old_image = old_instance.image
+    new_image = instance.image
+
+    # Se c'è una nuova immagine e la vecchia esiste ed è diversa
+    if new_image and old_image and old_image.name != new_image.name:
+        old_image.delete(save=False)  # Elimina il file
+
+
+@receiver(pre_save, sender=Event)
+def handle_image_deletion(sender, instance, **kwargs):
+    """Gestisce la cancellazione dell'immagine"""
+    if not instance.pk:
+        return
+
+    # Se stai usando un campo personalizzato per segnare la cancellazione
+    # Puoi passare un attributo temporaneo dall'admin
+    if hasattr(instance, '_delete_image') and instance._delete_image:
+        if instance.image:
+            instance.image.delete(save=False)
+            instance.image = None

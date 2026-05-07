@@ -280,7 +280,7 @@ reg, created = EventRegistration.objects.get_or_create(
         )
 
 if not event5.image:
-        image_path = 'event_images/morgagni_Hw8C2vI.jpg'
+        image_path = 'event_images/morgagni.jpg'
         event5.image = image_path
         event5.save()
         print(f"   ✅ Immagine associata a {event5.title}")
