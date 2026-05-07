@@ -72,7 +72,7 @@
                         <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="white-space: nowrap;">Ripristina</a>
                     {% endif %}
                     <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="white-space: nowrap; ">
-                        {% if event.can_restore or not event.deleted_at%}
+                        {% if not event.deleted_at%}
                             Elimina
                         {% else %}
                             Elim. Def.
