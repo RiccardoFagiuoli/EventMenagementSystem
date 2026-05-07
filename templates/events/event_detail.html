@@ -104,10 +104,10 @@
             <!-- MINIATURA DELL'IMMAGINE - AGGIUNTA QUI -->
             {% if event.image %}
                 <div class="event-thumbnail">
-                    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px;">
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 0 10px 2px dimgray">
                 </div>
             {% else %}
-                <div class="no-image" style="margin-bottom: 1rem;">
+                <div class="no-image" style="text-align: center; margin-bottom: 1rem; padding: 2px; border-radius: 4px; background-color: #f0f0f0; box-shadow: 0 0 10px 2px lightgray">
                     <span>📷 Nessuna immagine disponibile</span>
                 </div>
             {% endif %}
@@ -144,10 +144,17 @@
                                 <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti di nuovo a questo Evento</a>
                             {% endif %}
                         {% else %}
-                            <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                                <strong>✓ Sei iscritto a questo evento</strong><br>
-                                Stato: {{ user_registration.get_status_display }}
-                            </div>
+                            {% if user_registration.get_status_display == 'In Attesa' %}
+                                <div style="background-color: #fff3cd; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                                    <strong>✓ Sei iscritto a questo evento</strong><br>
+                                    Stato: {{ user_registration.get_status_display }}
+                                </div>
+                            {% else %}
+                                <div style="background-color: #d4edda; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                                    <strong>✓ Sei iscritto a questo evento</strong><br>
+                                    Stato: {{ user_registration.get_status_display }}
+                                </div>
+                            {% endif %}
                             <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
                         {% endif %}
                     {% else %}
