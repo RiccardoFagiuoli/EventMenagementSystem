@@ -35,9 +35,9 @@
             <div class="event-meta">
                 <strong>📍 Luogo:</strong> {{ event.location }}<br>
                 <strong>📅 Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }} - {{ event.end_date|date:"H:i" }}<br>
-                <strong>Organizzatore:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}<br>
-                <strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
-                {% if user.is_staff or user == event.organizer %}<strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}{% endif %}
+                <strong>👤 Organizzatore:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}<br>
+                <strong>👥 Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
+                {% if event.get_pending_attendees_count > 0 %}<strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}{% endif %}
             </div>
             <p class="event-description">{{ event.description|truncatewords:30 }}</p>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;" class="event-card-buttons">

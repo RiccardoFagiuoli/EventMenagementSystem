@@ -50,9 +50,12 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
-        context['attendees'] = event.eventregistration_set.filter(status='confirmed')
-        context['pending_attendees'] = event.eventregistration_set.filter(status='pending')
+        context['attendees'] = event.eventregistration_set.filter(status='confirmed').order_by('-registered_at')
+        context['pending_attendees'] = event.eventregistration_set.filter(status='pending').order_by('-registered_at')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.is_staff
+
+        context['pending_count'] = context['pending_attendees'].count()
+        context['confirmed_count'] = context['attendees'].count()
 
         # Calcola se l'evento può essere ripristinato e il tempo rimanente
         if event.deleted_at:
@@ -231,6 +234,12 @@ def event_unregister(request, pk):
         registration.status = 'cancelled'
         registration.save()
         messages.success(request, 'Cancellazione registrazione completata!')
+        # PROMUOVI DALLA LISTA D'ATTESA
+        promoted = event.promote_from_waiting_list()
+
+        # Messaggio di conferma promozione
+        if promoted:
+            promoted_name = promoted.user.get_full_name() or promoted.user.username
     except EventRegistration.DoesNotExist:
         messages.error(request, 'Non sei registrato a questo evento.')
     return redirect('events:event_detail', pk=pk)
@@ -301,7 +310,7 @@ def event_restore(request, pk):
     return redirect('events:organizer_events')
 
 def admin_unregister_user(request, event_id, registration_id):
-     """ View to unregister a user from an event (admin and organizer only). """
+     """ View to unregister a user from an event (admin and organizer only). Promuove il primo in coda """
      if not request.user.is_authenticated:
          messages.error(request, 'È necessario essere loggati.')
          return redirect('users:login')
@@ -318,6 +327,14 @@ def admin_unregister_user(request, event_id, registration_id):
      user_name = registration.user.username
      registration.delete()
      messages.success(request, f'Utente {user_name} discritto dall\'evento {event.title}.')
+
+     # PROMUOVI DALLA LISTA D'ATTESA
+     promoted = event.promote_from_waiting_list()
+
+     # Messaggio di conferma promozione
+     if promoted:
+         promoted_name = promoted.user.get_full_name() or promoted.user.username
+         messages.warning(request,f'🎉 Un posto si è liberato! {promoted_name} è stato promosso dalla lista d\'attesa.')
      return redirect('events:event_detail', pk=event_id)
 
 def admin_register_user(request, pk, registration_pk):

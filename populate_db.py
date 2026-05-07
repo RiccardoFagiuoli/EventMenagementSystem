@@ -180,7 +180,7 @@ event3, created = Event.objects.get_or_create(
         'location': 'Campus Scientifico, Sesto Fiorentino',
         'start_date': now + timedelta(days=60),
         'end_date': now + timedelta(days=60, hours=6),
-        'max_attendees': 30,
+        'max_attendees': 2,
         'status': 'published'
     }
 )
@@ -193,7 +193,7 @@ event4, created = Event.objects.get_or_create(
         'location': 'Innovation Hub, Via dei Servi',
         'start_date': now + timedelta(days=45),
         'end_date': now + timedelta(days=45, hours=5),
-        'max_attendees': 75,
+        'max_attendees': 30,
         'status': 'published'
     }
 )
@@ -233,7 +233,7 @@ event7, created = Event.objects.get_or_create(
         'location': 'Centro didattico Morgani - UNIFI, Firenze',
         'start_date': now - timedelta(days=20, hours=6),
         'end_date': now - timedelta(days=20),
-        'max_attendees': 60,
+        'max_attendees': 75,
         'status': 'published',
         'deleted_at': now - timedelta(days=21)  # Soft delete: evento marcato come eliminato
     }
@@ -244,24 +244,31 @@ events = [event1, event2, event3, event4, event5, event6, event7]
 attendees = [attendee1, attendee2, attendee3]
 
 for event in events:
-    for i, attendee in enumerate(attendees):
+    print(f"\nRegistrazioni per evento: {event.title} (max {event.max_attendees} partecipanti)")
+    for attendee in attendees:
+        # Conta quanti sono già confermati
+        confermati = EventRegistration.objects.filter(
+            event=event,
+            status='confirmed'
+        ).count()
+
+        # Decidi lo stato in base ai posti disponibili
+        if event.max_attendees is None or confermati < event.max_attendees:
+            stato_finale = 'confirmed'
+            if event.max_attendees:
+                print(f"   ✅ {attendee.username} → CONFERMATO (posto {confermati + 1}/{event.max_attendees})")
+            else:
+                print(f"   ✅ {attendee.username} → CONFERMATO (posto {confermati + 1}/illimitato)")
+        else:
+            stato_finale = 'pending'
+            print(f"   ⏳ {attendee.username} → IN LISTA D'ATTESA (evento pieno)")
+
+        # Crea o aggiorna la registrazione
         reg, created = EventRegistration.objects.get_or_create(
             event=event,
             user=attendee,
-            defaults={'status': 'confirmed' if i < 2 else 'pending'}
+            defaults={'status': stato_finale}
         )
-
-# Specific registrations for event5 (only 2 attendees: Luca Verdi and Anna Marini)
-EventRegistration.objects.get_or_create(
-    event=event5,
-    user=attendee1,  # Luca Verdi
-    defaults={'status': 'confirmed'}
-)
-EventRegistration.objects.get_or_create(
-    event=event5,
-    user=attendee2,  # Anna Marini
-    defaults={'status': 'confirmed'}
-)
 
 # Create some attendance records (mark some registrations as attended)
 registrations = EventRegistration.objects.filter(status='confirmed').order_by('-registered_at')[:3]

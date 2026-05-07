@@ -26,6 +26,40 @@ class Event(models.Model):
             return False
         return self.eventregistration_set.filter(status='confirmed').count() >= self.max_attendees
 
+    def promote_from_waiting_list(self):
+        """"Promuove il primo in lista d'attesa a 'confirmed' """
+        # 1. Se l'evento è ancora pieno, non fare nulla
+        if self.is_full():
+            return None
+        # 2. Se l'evento non ha limite di posti, non serve coda
+        if self.max_attendees is None:
+            return None
+        # 3. Cerca il primo in coda
+        next_in_line = self.eventregistration_set.filter(status='pending').order_by('registered_at').first()
+
+        # 4. Se trovato qualcuno, promuovilo a 'confirmed'
+        if next_in_line:
+            next_in_line.status = 'confirmed'
+            next_in_line.save()
+            return next_in_line
+
+        return None
+
+    def get_pending_position(self):
+        """Restituisce la posizione nella lista d'attesa"""
+        if self.status != 'pending':
+            return None
+
+        # Conta quanti pending sono più vecchi (registered_at minore) di questo
+        older_count = EventRegistration.objects.filter(
+            event=self.event,
+            status='pending',
+            registered_at__lt=self.registered_at
+        ).count()
+
+        # La posizione è quanti sono davanti + 1
+        return older_count + 1
+
     @property
     def get_confirmed_attendees_count(self):
         return self.eventregistration_set.filter(status='confirmed').count()
