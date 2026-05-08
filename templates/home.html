@@ -24,7 +24,7 @@
         .fc .fc-toolbar-title { font-size: 1.2rem; }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 500px) {
         .calendar-legend {
             flex-direction: column;
             align-items: center;
@@ -127,6 +127,11 @@
               left: 'prev,next today',
               center: 'title',
               right: 'listMonth,timeGridDay'
+            },
+          buttonText: {
+              today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+              day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+              list: window.innerWidth < 480 ? 'Lista' : 'Lista',
             },
             locale: 'it',
             firstDay: 1,

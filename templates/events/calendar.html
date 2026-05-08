@@ -16,62 +16,7 @@
         .calendar-legend { gap: 1rem; }
     }
 
-    @media (max-width: 600px) {
-        .home-buttons {
-            flex-direction: column;
-        }
-        .home-buttons .btn {
-            width: 100%;
-        }
-
-        /* Calendario - layout personalizzato */
-        .fc .fc-toolbar {
-            flex-wrap: wrap !important;
-            display: flex !important;
-            gap: 0.5rem !important;
-        }
-
-        /* Riga superiore: bottoni navigazione a sinistra, viste a destra */
-        .fc .fc-toolbar-chunk:first-child {
-            order: 1;
-            flex: 1;
-            display: flex !important;
-            justify-content: flex-start !important;
-        }
-
-        .fc .fc-toolbar-chunk:last-child {
-            order: 2;
-            flex: 1;
-            display: flex !important;
-            justify-content: flex-end !important;
-        }
-
-        /* Riga inferiore: titolo centrato */
-        .fc .fc-toolbar-chunk:nth-child(2) {
-            order: 3;
-            width: 100% !important;
-            text-align: center !important;
-            margin-top: 0.25rem !important;
-        }
-
-        .fc .fc-toolbar-title {
-            font-size: 1.2rem;
-            margin: 0 !important;
-        }
-
-        /* Bottoni più compatti su mobile */
-        .fc .fc-button {
-            padding: 0.35rem 0.6rem !important;
-            font-size: 0.8rem !important;
-        }
-
-        /* Assicura che i gruppi di bottoni non vadano a capo */
-        .fc .fc-button-group {
-            display: flex !important;
-        }
-    }
-
-    @media (max-width: 480px) {
+    @media (max-width: 650px) {
         .calendar-legend {
             flex-direction: column;
             align-items: center;
@@ -165,6 +110,13 @@ document.addEventListener('DOMContentLoaded', function() {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+    },
+  buttonText: {
+      today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+      month: window.innerWidth < 480 ? 'Mese' : 'Mese',
+      week: window.innerWidth < 480 ? 'Sett.' : 'Settimana',
+      day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+      list: window.innerWidth < 480 ? 'Lista' : 'Lista',
     },
     locale: 'it',
     firstDay: 1,
