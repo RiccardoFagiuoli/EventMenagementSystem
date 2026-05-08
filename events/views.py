@@ -19,7 +19,7 @@ class EventListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = Event.objects.filter(status='published', deleted_at__isnull=True).order_by('-start_date')
+        queryset = Event.objects.filter(status='published', deleted_at__isnull=True).order_by('start_date')
         query = self.request.GET.get('q')
         if query:
             queryset = queryset.filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(location__icontains=query))
@@ -50,8 +50,8 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
-        context['attendees'] = event.eventregistration_set.filter(status='confirmed').order_by('-registered_at')
-        context['pending_attendees'] = event.eventregistration_set.filter(status='pending').order_by('-registered_at')
+        context['attendees'] = event.eventregistration_set.filter(status='confirmed').order_by('registered_at')
+        context['pending_attendees'] = event.eventregistration_set.filter(status='pending').order_by('registered_at')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.is_staff
 
         context['pending_count'] = context['pending_attendees'].count()
@@ -120,13 +120,17 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
-    success_url = reverse_lazy('events:organizer_events')
+    #success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
             return False
         event = self.get_object()
         return self.request.user == event.organizer or self.request.user.is_staff
+
+    def get_success_url(self):
+        """Redirige alla pagina di dettaglio dell'evento dopo l'update"""
+        return reverse('events:event_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         event = self.get_object()  # Ottieni l'evento originale
@@ -155,7 +159,7 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             messages.success(self.request, 'Evento aggiornato con successo!')
 
         new_event.save()
-        form.save_m2m()  # Salva le relazioni many-to-many se ci sono
+        form.save_m2m()
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -166,7 +170,6 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """ Class-based generic view for deleting events. """
     model = Event
     template_name = 'events/event_confirm_delete.html'
-    success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
@@ -184,13 +187,15 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             event_title = event.title
             event.delete()
             messages.success(request, f'Evento "{event_title}" eliminato definitivamente.')
+            next_url = reverse('events:organizer_events')
         else:
             # Se l'evento non è eliminato, fare soft delete
             event.deleted_at = timezone.now()
             event.save()
             messages.success(request, 'Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni.')
+            next_url = reverse('events:event_detail', kwargs={'pk': event.pk})
 
-        return redirect(self.success_url)
+        return redirect(next_url)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -273,7 +278,7 @@ def user_registrations(request):
     """ View to display user's event registrations. """
     if not request.user.is_authenticated:
         return redirect('users:login')
-    registrations = EventRegistration.objects.filter(user=request.user).order_by('-registered_at')
+    registrations = EventRegistration.objects.filter(user=request.user).select_related('event').order_by('event__start_date')
     context = {'registrations': registrations, 'title': 'Le mie registrazioni'}
     return render(request, 'events/user_registrations.html', context)
 
@@ -297,7 +302,7 @@ def organizer_events(request):
     if is_admin:
         events = Event.objects.all().order_by('-start_date')
     else:
-        events = Event.objects.filter(organizer=request.user).order_by('-start_date')
+        events = Event.objects.filter(organizer=request.user).order_by('start_date')
     
     from django.utils import timezone
     for event in events:
@@ -332,7 +337,7 @@ def event_restore(request, pk):
     else:
         messages.warning(request, 'L\'evento non è eliminato.')
 
-    return redirect('events:organizer_events')
+    return redirect('events:event_detail', pk=pk)
 
 def admin_unregister_user(request, event_id, registration_id):
      """ View to unregister a user from an event (admin and organizer only). Promuove il primo in coda """

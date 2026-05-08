@@ -191,8 +191,15 @@
     </div>
 
     <div class="btn-group">
-        <button type="submit" class="btn">{% if form.instance.pk %}Aggiorna Evento{% else %}Crea Evento{% endif %}</button>
-        <a href="{% url 'events:event_list' %}" class="btn btn-secondary">Annulla</a>
+        <button type="submit" class="btn" style="border-radius: 4px">{% if form.instance.pk %}Aggiorna Evento{% else %}Crea Evento{% endif %}</button>
+        <!-- Pulsante Annulla con logica condizionale -->
+        {% if event %}
+            <!-- Se siamo in modifica (event esiste) → torna al detail -->
+            <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary" style="border-radius: 4px">Annulla</a>
+        {% else %}
+            <!-- Se siamo in creazione (event non esiste) → torna alla lista -->
+            <a href="{% url 'events:organizer_events' %}" class="btn btn-secondary" style="border-radius: 4px">Annulla</a>
+        {% endif %}
     </div>
 </form>
 

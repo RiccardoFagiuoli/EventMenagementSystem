@@ -4,23 +4,44 @@
 
 {% block content %}
 <style>
+    .action_btn_group{
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-self: center;
+    }
     @media (max-width: 768px) {
         table, thead, tbody, th, td, tr { display: block; width: 100%; }
-        thead { display: none; }
+        thead tr { display: none; }
         tr { background: white; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; }
-        td { padding: 0.75rem 1rem !important; text-align: left; border: none !important; border-bottom: 1px solid #ddd; position: relative; padding-left: 120px !important; }
+        td { display: flex !important; padding: 0.75rem 1rem !important; text-align: left; border-bottom: 1px solid #ddd; position: relative; padding-left: 120px !important; align-items: center; }
         td:last-child { border-bottom: none; }
         td::before {
-            content: attr(data-label);
+            content: attr(data-label)' :';
+            flex: 0 0 40%;
             position: absolute;
             left: 0;
             width: 110px;
             font-weight: bold;
-            background-color: #f5f5f5;
+            border-right: 3px solid #eee;
+            max-height: none !important;
+            height: 100% !important;
             padding: 0.75rem 0.5rem;
-            border-right: 1px solid #ddd;
+            align-self: center;
+        }
+        .action_btn_group{
+            flex-wrap: nowrap;
+            flex: stretch;
         }
         .btn { width: 100%; margin-bottom: 0.5rem; }
+    }
+
+    @media (max-width: 400px) {
+        .action_btn_group{
+            flex-wrap: wrap;
+        }
+
+        .btn { margin-bottom: 0.1rem; }
     }
 </style>
 
@@ -57,10 +78,12 @@
                         </td>
                         <td data-label="Data Iscr." style="display: none;">{{ registration.registered_at|date:"d/m/Y H:i" }}</td>
                         <td data-label="Azioni">
+                            <div class="action_btn_group">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Dettagli</a>
                             {% if registration.status != 'cancelled' %}
                                 <a href="{% url 'events:event_unregister' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
                             {% endif %}
+                            </div>
                         </td>
                     </tr>
                 {% endif %}
