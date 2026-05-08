@@ -150,8 +150,10 @@
         <div class="container">
             <div class="header-content">
                 <div class="header-logo">
-                    <img src="{% static 'favicon.ico' %}" alt="Event Management System Logo">
-                    <h1>Event Management System</h1>
+                    <a href="{% url 'home' %}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                        <img src="{% static 'favicon.ico' %}" alt="Event Management System Logo">
+                        <h1>Event Management System</h1>
+                    </a>
                 </div>
                 <div class="user-info">
                     {% if user.is_authenticated %}

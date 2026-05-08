@@ -11,6 +11,11 @@
     .legend-item { display: flex; align-items: center; gap: 0.5rem; }
     .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
     .fc .fc-toolbar-title {text-transform: capitalize !important;}
+    .btn:hover {
+        text-decoration: none !important;
+        box-shadow: 0 0 4px 1px dimgray !important;
+        color: white !important;
+    }
 
     @media (max-width: 768px) {
         .home-buttons { flex-direction: column; }
@@ -190,6 +195,12 @@
 
         .fc .fc-event {
             cursor: pointer;
+        }
+
+        .fc .fc-event:hover {
+            text-decoration: none !important;
+            box-shadow: 0 0 4px 1px dimgray !important;
+            color: white !important;
         }
 
         .fc .fc-event-title {
