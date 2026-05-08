@@ -19,7 +19,7 @@ class EventListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = Event.objects.filter(status='published', deleted_at__isnull=True).order_by('-start_date')
+        queryset = Event.objects.filter(status='published', deleted_at__isnull=True).order_by('start_date')
         query = self.request.GET.get('q')
         if query:
             queryset = queryset.filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(location__icontains=query))
@@ -50,8 +50,8 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
-        context['attendees'] = event.eventregistration_set.filter(status='confirmed').order_by('-registered_at')
-        context['pending_attendees'] = event.eventregistration_set.filter(status='pending').order_by('-registered_at')
+        context['attendees'] = event.eventregistration_set.filter(status='confirmed').order_by('registered_at')
+        context['pending_attendees'] = event.eventregistration_set.filter(status='pending').order_by('registered_at')
         context['can_view_attendees'] = self.request.user == event.organizer or self.request.user.is_staff
 
         context['pending_count'] = context['pending_attendees'].count()
@@ -273,7 +273,7 @@ def user_registrations(request):
     """ View to display user's event registrations. """
     if not request.user.is_authenticated:
         return redirect('users:login')
-    registrations = EventRegistration.objects.filter(user=request.user).order_by('-registered_at')
+    registrations = EventRegistration.objects.filter(user=request.user).select_related('event').order_by('event__start_date')
     context = {'registrations': registrations, 'title': 'Le mie registrazioni'}
     return render(request, 'events/user_registrations.html', context)
 

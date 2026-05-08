@@ -195,8 +195,8 @@
     </div>
 
     <div class="btn-group">
-        <button type="submit" class="btn">{% if form.instance.pk %}Aggiorna Evento{% else %}Crea Evento{% endif %}</button>
-        <a href="{% url 'events:event_list' %}" class="btn btn-secondary">Annulla</a>
+        <button type="submit" class="btn" style="border-radius: 4px">{% if form.instance.pk %}Aggiorna Evento{% else %}Crea Evento{% endif %}</button>
+        <a href="{% url 'events:event_list' %}" class="btn btn-secondary" style="border-radius: 4px">Annulla</a>
     </div>
 </form>
 
