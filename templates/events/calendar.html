@@ -455,7 +455,7 @@
               clearTimeout(tooltipTimeout);
               tooltipTimeout = setTimeout(() => {
                 showTooltip(eventEl, e.clientX, e.clientY, info);
-              }, 300); // Piccolo delay prima di mostrare
+              }, 180); // Piccolo delay prima di mostrare in ms
             });
 
             eventEl.addEventListener('mousemove', function(e) {
@@ -516,6 +516,22 @@
     .fc .fc-daygrid-event:hover {
         text-decoration: none !important;
         box-shadow: 0 0 4px 1px dimgray !important;
+    }
+
+    /* Linee verticali più eleganti */
+    .fc-timeGridWeek-view .fc-timegrid-col {
+        position: relative;
+    }
+
+    .fc-timeGridWeek-view .fc-timegrid-col::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 1px;transform: scaleX(0.5);
+        background: #e0e0e0;
+        z-index: 1;
     }
 
     .fc .fc-list-event:hover {
