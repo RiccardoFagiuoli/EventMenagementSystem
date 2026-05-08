@@ -120,13 +120,17 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
-    success_url = reverse_lazy('events:organizer_events')
+    #success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
             return False
         event = self.get_object()
         return self.request.user == event.organizer or self.request.user.is_staff
+
+    def get_success_url(self):
+        """Redirige alla pagina di dettaglio dell'evento dopo l'update"""
+        return reverse('events:event_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         event = self.get_object()  # Ottieni l'evento originale
@@ -155,7 +159,7 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             messages.success(self.request, 'Evento aggiornato con successo!')
 
         new_event.save()
-        form.save_m2m()  # Salva le relazioni many-to-many se ci sono
+        form.save_m2m()
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -166,7 +170,6 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """ Class-based generic view for deleting events. """
     model = Event
     template_name = 'events/event_confirm_delete.html'
-    success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
@@ -184,13 +187,15 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             event_title = event.title
             event.delete()
             messages.success(request, f'Evento "{event_title}" eliminato definitivamente.')
+            next_url = reverse('events:organizer_events')
         else:
             # Se l'evento non è eliminato, fare soft delete
             event.deleted_at = timezone.now()
             event.save()
             messages.success(request, 'Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni.')
+            next_url = reverse('events:event_detail', kwargs={'pk': event.pk})
 
-        return redirect(self.success_url)
+        return redirect(next_url)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -332,7 +337,7 @@ def event_restore(request, pk):
     else:
         messages.warning(request, 'L\'evento non è eliminato.')
 
-    return redirect('events:organizer_events')
+    return redirect('events:event_detail', pk=pk)
 
 def admin_unregister_user(request, event_id, registration_id):
      """ View to unregister a user from an event (admin and organizer only). Promuove il primo in coda """
