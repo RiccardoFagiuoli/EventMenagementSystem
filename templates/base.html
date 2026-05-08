@@ -86,6 +86,7 @@
 
         /* Mobile responsiveness */
         @media (max-width: 480px) {
+            .hide-on-mobile { display: none; }
             .header-logo { flex-direction: column; gap: 0.5rem; }
             .header-logo img { height: 60px; }
             .header-logo h1 { font-size: 1rem; }
@@ -188,7 +189,7 @@
                     <a href="{% url 'events:deleted_events' %}">Eventi Eliminati</a>
                 {% else %}
                     <a href="{% url 'events:user_registrations' %}">Le mie Registrazioni</a>
-                    <a href="{% url 'events:calendar_view' %}">Calendario</a>
+                    <a href="{% url 'events:calendar_view' %}" class="hide-on-mobile">Calendario</a>
                 {% endif %}
                 {% if user.profile.role == 'organizer' %}
                     <a href="{% url 'events:organizer_events' %}">I miei Eventi</a>

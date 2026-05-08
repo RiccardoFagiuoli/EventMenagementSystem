@@ -302,7 +302,7 @@ def organizer_events(request):
     if is_admin:
         events = Event.objects.all().order_by('-start_date')
     else:
-        events = Event.objects.filter(organizer=request.user).order_by('-start_date')
+        events = Event.objects.filter(organizer=request.user).order_by('start_date')
     
     from django.utils import timezone
     for event in events:
