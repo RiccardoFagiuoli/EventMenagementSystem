@@ -465,7 +465,10 @@ def calendar_events(request):
             'textColor': 'black',
             'display': 'block',
             'classNames':['custom-border-registered'],
-            'url': reverse('events:event_detail', kwargs={'pk': event.id})
+            'url': reverse('events:event_detail', kwargs={'pk': event.id}),
+            'extendedProps': {
+                'location': event.location,
+            }
         })
 
     # Eventi creati dall'utente (organizzatore)
@@ -487,7 +490,10 @@ def calendar_events(request):
                     'textColor': '#764ba2',
                     'display': 'block',
                     'classNames':['custom-border-organized'],
-                    'url': reverse('events:event_detail', kwargs={'pk': event.id})
+                    'url': reverse('events:event_detail', kwargs={'pk': event.id}),
+                    'extendedProps': {
+                        'location': event.location,
+                    }
                 })
     except UserProfile.DoesNotExist:
         pass

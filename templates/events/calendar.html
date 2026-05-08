@@ -16,6 +16,58 @@
             --day-header-small: 0.7rem;
         }
 
+        /* Stile per il tooltip personalizzato */
+        .event-tooltip {
+            position: fixed;
+            z-index: 9999;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .event-tooltip.show {
+            opacity: 1;
+        }
+
+        .event-tooltip .tooltip-time {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .event-tooltip .tooltip-title {
+            font-size: 1rem;
+            font-weight: bold;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .event-tooltip .tooltip-location {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .event-tooltip .tooltip-separator {
+            height: 1px;
+            background: rgba(255,255,255,0.3);
+            margin: 8px 0;
+        }
+
         .calendar-wrapper { max-width: 1000px; margin: 0 auto; }
         .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
         .legend-item { display: flex; align-items: center; gap: 0.5rem; }
@@ -60,16 +112,37 @@
             width: 100% !important;
         }
 
+        /* Troncamento verticale con ellissi */
         .fc .fc-event-title {
             font-size: var(--event-title-desktop) !important;
             transition: all 0.2s ease !important;
             font-weight: normal !important;
-            white-space: normal !important;
             color: black;
             line-height: 1.4 !important;
             word-wrap: break-word !important;
-            overflow: visible !important;
-            display: block !important;
+
+            /* Troncamento dopo massimo 2 righe */
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            max-height: calc(var(--event-title-desktop) * 1.4 * 2) !important;
+        }
+
+        /* Per gli eventi nella vista mese */
+        .fc-daygrid-event .fc-event-title {
+            -webkit-line-clamp: 2 !important;
+            max-height: calc(var(--event-title-desktop) * 1.4 * 2) !important;
+        }
+
+        /* Su schermi piccoli, solo 1 riga */
+        @media (max-width: 480px) {
+            .fc .fc-event-title,
+            .fc-daygrid-event .fc-event-title {
+                -webkit-line-clamp: 1 !important;
+                max-height: calc(var(--event-title-desktop) * 1.4) !important;
+            }
         }
 
         .fc .fc-daygrid-event {
@@ -101,6 +174,7 @@
             margin: 1px 0 !important;
             min-height: 28px !important;
             height: auto !important;
+            overflow: hidden !important;
         }
 
         .fc .fc-daygrid-day-frame {
@@ -262,6 +336,11 @@
             .fc .fc-daygrid-day-frame {
                 min-height: 60px !important;
             }
+
+            /* Su mobile non mostrare il tooltip */
+            .event-tooltip {
+                display: none !important;
+            }
         }
     </style>
 
@@ -282,11 +361,59 @@
         </div>
     </div>
 
+    <!-- Tooltip element -->
+    <div id="eventTooltip" class="event-tooltip"></div>
+
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar');
+      const tooltip = document.getElementById('eventTooltip');
+      let tooltipTimeout;
+
+      function showTooltip(event, mouseX, mouseY, eventInfo) {
+        // Formatta l'orario
+        let timeHtml = '';
+        if (eventInfo.event.start) {
+          const startTime = eventInfo.event.start.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+          let endTime = '';
+          if (eventInfo.event.end) {
+            endTime = ' - ' + eventInfo.event.end.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+          }
+          timeHtml = `<div class="tooltip-time">🕒 ${startTime}${endTime}</div>`;
+        }
+        let locationHtml = '';
+        if (eventInfo.event.extendedProps && eventInfo.event.extendedProps.location) {
+            locationHtml = `<div class="tooltip-location">📍 ${eventInfo.event.extendedProps.location}</div>`;
+        }
+
+        // Costruisci il contenuto del tooltip
+        tooltip.innerHTML = `${timeHtml}<div class="tooltip-title"> ${eventInfo.event.title}</div>${locationHtml}`;
+
+        // Posiziona il tooltip vicino al mouse
+        tooltip.classList.add('show');
+
+        // Calcola posizione (offset per non coprire il mouse)
+        let left = mouseX + 15;
+        let top = mouseY + 15;
+
+        // Evita che esca dai bordi
+        const tooltipRect = tooltip.getBoundingClientRect();
+        if (left + tooltipRect.width > window.innerWidth) {
+          left = mouseX - tooltipRect.width - 15;
+        }
+        if (top + tooltipRect.height > window.innerHeight) {
+          top = mouseY - tooltipRect.height - 15;
+        }
+
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+      }
+
+      function hideTooltip() {
+        tooltip.classList.remove('show');
+      }
 
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -316,6 +443,45 @@
         },
         eventClick: function(info) {
           window.location.href = info.event.url;
+        },
+        eventDidMount: function(info) {
+          // Aggiungi event listeners per il tooltip (solo su desktop)
+          if (window.innerWidth > 768) {
+            const eventEl = info.el;
+
+            eventEl.addEventListener('mouseenter', function(e) {
+              // Salva le informazioni dell'evento per usarle dopo
+              eventEl._eventInfo = info;
+              clearTimeout(tooltipTimeout);
+              tooltipTimeout = setTimeout(() => {
+                showTooltip(eventEl, e.clientX, e.clientY, info);
+              }, 300); // Piccolo delay prima di mostrare
+            });
+
+            eventEl.addEventListener('mousemove', function(e) {
+              if (tooltip.classList.contains('show')) {
+                // Aggiorna posizione mentre muovi il mouse
+                let left = e.clientX + 15;
+                let top = e.clientY + 15;
+
+                const tooltipRect = tooltip.getBoundingClientRect();
+                if (left + tooltipRect.width > window.innerWidth) {
+                  left = e.clientX - tooltipRect.width - 15;
+                }
+                if (top + tooltipRect.height > window.innerHeight) {
+                  top = e.clientY - tooltipRect.height - 15;
+                }
+
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+              }
+            });
+
+            eventEl.addEventListener('mouseleave', function() {
+              clearTimeout(tooltipTimeout);
+              hideTooltip();
+            });
+          }
         }
       });
 
@@ -346,9 +512,14 @@
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
     }
 
-    .fc .fc-event:hover {
+    .fc .fc-timegrid-event:hover,
+    .fc .fc-daygrid-event:hover {
         text-decoration: none !important;
         box-shadow: 0 0 4px 1px dimgray !important;
+    }
+
+    .fc .fc-list-event:hover {
+        background-color: lightgray !important;
     }
 
     .fc .fc-col-header-cell-cushion,
