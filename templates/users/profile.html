@@ -3,81 +3,237 @@
 {% block title %}Profilo Utente - Event Management System{% endblock %}
 
 {% block content %}
-<style>
-    .profile-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 768px) {
-        .profile-grid-2 { grid-template-columns: 1fr; }
-    }
-</style>
+    <style>
+        .btn:hover {
+            text-decoration: none !important;
+            box-shadow: 0 0 4px 1px dimgray !important;
+            color: white !important;
+        }
 
-<h2>Il Mio Profilo</h2>
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
 
-<div style="max-width: 800px;">
-    <form method="post" style="margin-top: 2rem;">
-        {% csrf_token %}
+        .profile-grid-2col {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
 
-        <div class="profile-grid-2">
-            <div class="form-group">
-                <label for="first_name">Nome</label>
-                <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
+        .col-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .col-activities {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .activities-card {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .password-card {
+            background: #f8d7da;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .password-card h3 {
+            color: #721c24;
+            margin-top: 0;
+        }
+
+        .password-card p {
+            color: #721c24;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            width: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid-2col {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .col-form {
+                order: 2;
+            }
+
+            .col-activities {
+                order: 1;
+            }
+
+            .col-activities {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .password-card {
+                order: 3;
+            }
+            .activities-card {
+                order: 1;
+            }
+
+            .profile-container {
+                padding: 0 0.5rem;
+            }
+        }
+    </style>
+
+    <div class="profile-container">
+        <h2 style="text-align: center; margin-bottom: 1rem;">Il Mio Profilo</h2>
+
+        <div class="profile-grid-2col">
+            <!-- Colonna 1: Form (su desktop a sinistra, su mobile al centro) -->
+            <div class="col-form">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="first_name">Nome</label>
+                            <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_name">Cognome</label>
+                            <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" value="{{ user.email }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone_number">Numero di Telefono</label>
+                        <input type="tel" name="phone_number" id="phone_number" value="{{ profile.phone_number|default:'' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bio">Biografia</label>
+                        <textarea name="bio" id="bio">{{ profile.bio|default:'' }}</textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" value="{{ user.username }}" disabled style="background-color: #f0f0f0;">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tipo di Utente</label>
+                            <input type="text" value="{{ profile.get_role_display }}" disabled style="background-color: #f0f0f0;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data Iscrizione</label>
+                        <input type="text" value="{{ user.date_joined|date:'d/m/Y H:i' }}" disabled style="background-color: #f0f0f0;">
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Salva Modifiche</button>
+                        <a href="{% url 'events:event_list' %}" class="btn btn-secondary" style="border-radius: 4px;">Annulla</a>
+                    </div>
+                </form>
             </div>
 
-            <div class="form-group">
-                <label for="last_name">Cognome</label>
-                <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
+            <!-- Colonna 2: Attività e Cambia Password (su desktop a destra, su mobile divisi) -->
+            <div class="col-activities">
+                <div class="activities-card">
+                    <h3>Riepilogo Attività</h3>
+                    <p><strong>Numero di iscrizioni:</strong> {{ user.event_registrations.count }}</p>
+                    {% if profile.role == 'organizer' %}
+                        <p><strong>Numero di eventi creati:</strong> {{ user.organized_events.count }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="password-card">
+                    <h3>Modifica Password</h3>
+                    <p>Gestisci le tue impostazioni di sicurezza.</p>
+                    <button onclick="alert('Funzione di cambio password non ancora disponibile')" class="btn btn-danger" style="width: 100%;">Cambia Password</button>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="{{ user.email }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="phone_number">Numero di Telefono</label>
-            <input type="tel" name="phone_number" id="phone_number" value="{{ profile.phone_number|default:'' }}">
-        </div>
-
-        <div class="form-group">
-            <label for="bio">Biografia</label>
-            <textarea name="bio" id="bio">{{ profile.bio|default:'' }}</textarea>
-        </div>
-
-        <div class="profile-grid-2">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" value="{{ user.username }}" disabled style="background-color: #f0f0f0;">
-            </div>
-
-            <div class="form-group">
-                <label>Tipo di Utente</label>
-                <input type="text" value="{{ profile.get_role_display }}" disabled style="background-color: #f0f0f0;">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Data Iscrizione</label>
-            <input type="text" value="{{ user.date_joined|date:'d/m/Y H:i' }}" disabled style="background-color: #f0f0f0;">
-        </div>
-
-        <div class="btn-group">
-            <button type="submit" class="btn">Salva Modifiche</button>
-            <a href="{% url 'events:event_list' %}" class="btn btn-secondary">Annulla</a>
-        </div>
-    </form>
-
-    <div style="margin-top: 3rem; padding: 1.5rem; background-color: #f9f9f9; border-radius: 4px;">
-        <h3>Riepilogo Attività</h3>
-        <p><strong>Numero di iscrizioni:</strong> {{ user.event_registrations.count }}</p>
-        {% if profile.role == 'organizer' %}
-            <p><strong>Numero di eventi creati:</strong> {{ user.organized_events.count }}</p>
-        {% endif %}
     </div>
-
-    <div style="margin-top: 2rem; padding: 1.5rem; background-color: #f8d7da; border-radius: 4px; border-left: 4px solid #dc3545;">
-        <h3 style="color: #721c24;">Sezione Pericolosa</h3>
-        <p style="color: #721c24;">Gestisci le tue impostazioni di sicurezza.</p>
-        <button onclick="alert('Funzione di cambio password non ancora disponibile')" class="btn btn-danger" style="width: 100%;">Cambia Password</button>
-    </div>
-</div>
 {% endblock %}
