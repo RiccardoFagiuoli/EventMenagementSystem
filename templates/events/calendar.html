@@ -3,212 +3,394 @@
 {% block title %}Calendario - Event Management System{% endblock %}
 
 {% block content %}
-<style>
-    .calendar-wrapper { max-width: 1000px; margin: 0 auto; }
-    .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
-    .legend-item { display: flex; align-items: center; gap: 0.5rem; }
-    .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
-    .fc .fc-toolbar-title {text-transform: capitalize !important;}
+    <style>
+        :root {
+            --event-title-desktop: 0.8rem;
+            --event-title-tablet: 0.75rem;
+            --event-title-mobile: 0.7rem;
+            --event-title-small: 0.65rem;
 
-    @media (max-width: 768px) {
-        .fc .fc-toolbar { flex-wrap: wrap; }
-        .fc .fc-toolbar-title { font-size: 1.2rem; }
-        .calendar-legend { gap: 1rem; }
-    }
-
-    @media (max-width: 650px) {
-        .calendar-legend {
-            flex-direction: column;
-            align-items: center;
-            gap: 0.8rem;
+            --day-header-desktop: 0.9rem;
+            --day-header-tablet: 0.8rem;
+            --day-header-mobile: 0.75rem;
+            --day-header-small: 0.7rem;
         }
 
-        .home-buttons {
-            flex-direction: column;
-        }
-        .home-buttons .btn {
-            width: 100%;
-        }
+        .calendar-wrapper { max-width: 1000px; margin: 0 auto; }
+        .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+        .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+        .fc .fc-toolbar-title {text-transform: capitalize !important;}
+        .fc .fc-col-header-cell {vertical-align: middle !important;}
 
-        /* Calendario */
-        .fc .fc-toolbar {
-            flex-wrap: wrap;
-            flex-direction: column !important;
+        .fc .fc-col-header-cell-cushion {
+            display: flex !important;
             align-items: center !important;
-            gap: 0.5rem !important;
+            justify-content: center !important;
+            min-height: 60px !important;
+            padding: 8px 4px !important;
+            font-size: var(--day-header-desktop) !important;
+            transition: all 0.2s ease !important;
+            font-weight: 500 !important;
+            text-transform: capitalize !important;
         }
 
-        /* Riga 1: bottoni navigazione (prev/today/next) */
-        .fc .fc-toolbar-chunk:first-child {
-            order: 1;
-            width: 100% !important;
+        .fc .fc-event-main {
             display: flex !important;
-            justify-content: center !important;
+            flex-direction: column !important;
         }
 
-        /* Riga 2: titolo/data */
-        .fc .fc-toolbar-chunk:last-child{
-            order: 2;
-            width: 100% !important;
-            justify-content: center !important;
-        }
-
-        /* Riga 3: bottoni viste (day/week/month/list) */
-        .fc .fc-toolbar-chunk:nth-child(2) {
-            order: 3;
-            width: 100% !important;
+        .fc .fc-event-main-frame {
             display: flex !important;
-            justify-content: center !important;
+            flex-direction: column !important;
         }
 
-        .fc .fc-toolbar-title {
-            font-size: 1.2rem;
-            margin: 0 !important;
+        .fc .fc-event-time {
+            font-size: calc(var(--event-title-desktop) * 0.85) !important;
+            color: black !important;
+            font-weight: normal !important;
+            margin-bottom: 2px !important;
+            display: block !important;
+            width: 100% !important;
+            text-align: left !important;
         }
 
-        .fc .fc-button {
-            padding: 0.35rem 0.7rem !important;
-            font-size: 0.8rem !important;
+        .fc .fc-event-title-container {
+            display: block !important;
+            width: 100% !important;
         }
 
-        .fc .fc-button-group {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
+        .fc .fc-event-title {
+            font-size: var(--event-title-desktop) !important;
+            transition: all 0.2s ease !important;
+            font-weight: normal !important;
+            white-space: normal !important;
+            color: black;
+            line-height: 1.4 !important;
+            word-wrap: break-word !important;
+            overflow: visible !important;
+            display: block !important;
         }
-    }
-</style>
 
-<div class="calendar-wrapper">
-    <h2 style="margin-bottom: 2rem;">📅 Mio Calendario Personale</h2>
+        .fc .fc-daygrid-event {
+            display: block !important;
+        }
 
-    <div id="calendar" style="background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+        .fc .fc-daygrid-event .fc-event-time {
+            float: none !important;
+            display: block !important;
+        }
 
-    <!-- Legenda colori calendario -->
-    <div class="calendar-legend">
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color: #667eea;"></span>
-            <span>Eventi a cui sei registrato</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color: #764ba2;"></span>
-            <span>Eventi che organizzi</span>
+        .fc .fc-daygrid-event .fc-event-title {
+            display: block !important;
+        }
+
+        .fc .fc-list-event-time {
+            font-size: calc(var(--event-title-desktop) * 0.9) !important;
+            font-weight: normal !important;
+        }
+
+        .fc .fc-list-event-title {
+            font-size: var(--event-title-desktop) !important;
+            font-weight: normal !important;
+        }
+
+        .fc .fc-event {
+            cursor: pointer;
+            padding: 4px 6px !important;
+            margin: 1px 0 !important;
+            min-height: 28px !important;
+            height: auto !important;
+        }
+
+        .fc .fc-daygrid-day-frame {
+            height: auto !important;
+            min-height: 100px !important;
+        }
+
+        .fc .fc-daygrid-day-events {
+            min-height: 60px !important;
+        }
+
+        .fc .fc-daygrid-day-number {
+            font-size: var(--day-header-desktop) !important;
+            font-weight: 500 !important;
+            color: black !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .fc .fc-timegrid-slot-label {
+            font-size: var(--day-header-desktop) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .fc .fc-timegrid-axis-cushion {
+            font-size: var(--day-header-desktop) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .fc .fc-list-day-text,
+        .fc .fc-list-day-side-text {
+            font-size: var(--day-header-desktop) !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            text-transform: capitalize !important;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --day-header-desktop: 0.8rem;
+                --event-title-desktop: 0.75rem;
+            }
+            .fc .fc-toolbar { flex-wrap: wrap; }
+            .fc .fc-toolbar-title { font-size: 1.2rem; }
+            .calendar-legend { gap: 1rem; }
+            .fc .fc-event {
+                padding: 3px 5px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 80px !important;
+            }
+        }
+
+        @media (max-width: 700px) {
+            :root {
+                --day-header-desktop: 0.75rem;
+                --event-title-desktop: 0.7rem;
+            }
+            .fc .fc-col-header-cell {
+                text-align: center !important;
+            }
+            .fc .fc-col-header-cell-cushion {
+                flex-direction: column !important;
+                gap: 3px !important;
+                padding: 6px 2px !important;
+                text-align: center !important;
+            }
+        }
+
+        @media (max-width: 675px) {
+            .calendar-legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .home-buttons {
+                flex-direction: column;
+            }
+            .home-buttons .btn {
+                width: 100%;
+            }
+
+            .fc .fc-toolbar {
+                flex-wrap: wrap;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+            }
+
+            .fc .fc-toolbar-chunk:first-child {
+                order: 1;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-chunk:nth-child(2) {
+                order: 2;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-chunk:last-child {
+                order: 3;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1.2rem;
+                margin: 0 !important;
+            }
+
+            .fc .fc-button {
+                padding: 0.35rem 0.7rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            .fc .fc-button-group {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --day-header-desktop: 0.7rem;
+                --event-title-desktop: 0.65rem;
+            }
+            .fc .fc-event {
+                padding: 2px 4px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 70px !important;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .fc .fc-col-header-cell {
+                text-align: center !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --day-header-desktop: 0.7rem;
+                --event-title-desktop: 0.65rem;
+            }
+            .fc .fc-col-header-cell-cushion {
+                min-height: 50px !important;
+                font-size: 0.7rem !important;
+                gap: 2px !important;
+                padding: 6px 1px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 60px !important;
+            }
+        }
+    </style>
+
+    <div class="calendar-wrapper">
+        <h2 style="margin-bottom: 2rem;">📅 Mio Calendario Personale</h2>
+
+        <div id="calendar" style="background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+
+        <div class="calendar-legend">
+            <div class="legend-item">
+                <span class="legend-dot" style="background-color: #667eea;"></span>
+                <span>Eventi a cui sei registrato</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background-color: #764ba2;"></span>
+                <span>Eventi che organizzi</span>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- FullCalendar JS -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const calendarEl = document.getElementById('calendar');
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
 
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
-    },
-  buttonText: {
-      today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
-      month: window.innerWidth < 480 ? 'Mese' : 'Mese',
-      week: window.innerWidth < 480 ? 'Sett.' : 'Settimana',
-      day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
-      list: window.innerWidth < 480 ? 'Lista' : 'Lista',
-    },
-    locale: 'it',
-    firstDay: 1,
-    height: 'auto',
-    events: {
-      url: '{% url "events:calendar_events" %}',
-      failure: function() {
-        alert('Errore nel caricamento degli eventi');
-      }
-    },
-    eventClick: function(info) {
-      // Reindirizza al dettaglio dell'evento quando viene cliccato
-      window.location.href = info.event.url;
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+        },
+        buttonText: {
+          today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+          month: window.innerWidth < 480 ? 'Mese' : 'Mese',
+          week: window.innerWidth < 480 ? 'Sett.' : 'Settimana',
+          day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+          list: window.innerWidth < 480 ? 'Lista' : 'Lista',
+        },
+        locale: 'it',
+        firstDay: 1,
+        height: 'auto',
+        contentHeight: 'auto',
+        displayEventTime: true,
+        eventDisplay: 'block',
+        events: {
+          url: '{% url "events:calendar_events" %}',
+          failure: function() {
+            alert('Errore nel caricamento degli eventi');
+          }
+        },
+        eventClick: function(info) {
+          window.location.href = info.event.url;
+        }
+      });
+
+      calendar.render();
+    });
+    </script>
+
+    <style>
+    .fc {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-  });
 
-  calendar.render();
-});
-</script>
+    .fc .fc-button-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: rgb(255 255 255 / 0.4);
+    }
 
-<style>
-.fc {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    .fc .fc-button-primary:hover {
+        background-color: #5568d3;
+        border-color: #5568d3;
+    }
 
-.fc .fc-button-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: rgb(255 255 255 / 0.4);
-}
+    .fc .fc-button-primary.fc-button-active {
+        border: 2px solid #333 !important;
+    }
 
-.fc .fc-button-primary:hover {
-    background-color: #5568d3;
-    border-color: #5568d3;
-}
+    .fc .fc-daygrid-day.fc-day-today {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    }
 
-.fc .fc-button-primary.fc-button-active {
-    border: 2px solid #333 !important;
-}
+    .fc .fc-event:hover {
+        text-decoration: none !important;
+        box-shadow: 0 0 4px 1px dimgray !important;
+    }
 
-.fc .fc-daygrid-day.fc-day-today {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-}
+    .fc .fc-col-header-cell-cushion,
+    .fc .fc-list-day-text,
+    .fc .fc-list-day-side-text {
+        color: black !important;
+        text-decoration: none !important;
+    }
 
-.fc .fc-event {
-    cursor: pointer;
-}
+    .fc-daygrid .custom-border-organized,
+    .fc-timegrid .custom-border-organized,
+    .fc-daygrid .custom-border-registered,
+    .fc-timegrid .custom-border-registered {
+        border-width: 2px !important;
+        border-style: solid !important;
+    }
 
-.fc .fc-event:hover {
-    text-decoration: none !important;
-    box-shadow: 0 0 4px 1px dimgray !important;
-    color: white !important;
-}
+    .custom-border-organized {
+        border-color: #764ba2 !important;
+    }
 
-.fc .fc-event-title {
-    font-weight: bold;
-    white-space: normal;
-    color: black;
-}
+    .custom-border-registered {
+        border-color: #667eea !important;
+    }
 
-.fc .fc-col-header-cell-cushion,
-.fc .fc-list-day-text,
-.fc .fc-list-day-side-text {
-    color: black !important;
-    font-weight: bold !important;
-    text-decoration: none !important;
-}
+    .fc .fc-daygrid-day-frame {
+        height: auto !important;
+        overflow: visible !important;
+    }
 
-.fc .fc-event-time{
-    color: black !important;
-    font-weight: 500 !important;
-}
+    .fc .fc-daygrid-body {
+        overflow: visible !important;
+    }
 
-.fc-daygrid .custom-border-organized,
-.fc-timegrid .custom-border-organized,
-.fc-daygrid .custom-border-registered,
-.fc-timegrid .custom-border-registered {
-    border-width: 2px !important;
-    border-style: solid !important;
-}
+    .fc .fc-daygrid-event {
+        white-space: normal !important;
+    }
 
-.custom-border-organized {
-    border-color: #764ba2 !important;
-}
-
-.custom-border-registered {
-    border-color: #667eea !important;
-}
-
-.fc .fc-daygrid-day-number {
-    color: black !important;  /* Blu scuro */
-    font-weight: 500 !important;
-    text-decoration: none !important;
-}
-</style>
+    .fc-direction-ltr .fc-daygrid-event .fc-event-time {
+        float: none !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    </style>
 {% endblock %}

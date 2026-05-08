@@ -3,6 +3,465 @@
 {% block title %}Home - Event Management System{% endblock %}
 
 {% block content %}
+    <style>
+        :root {
+            --event-title-desktop: 0.8rem;
+            --event-title-tablet: 0.75rem;
+            --event-title-mobile: 0.7rem;
+            --event-title-small: 0.65rem;
+
+            --day-header-desktop: 1.5rem;
+            --day-header-tablet: 1.3rem;
+            --day-header-mobile: 1.15rem;
+            --day-header-small: 1rem;
+        }
+
+        .home-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+        .home-buttons .btn { flex: 1; min-width: 150px; }
+        .home-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+        .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+        .fc .fc-toolbar-title {text-transform: capitalize !important;}
+        .btn:hover {
+            text-decoration: none !important;
+            box-shadow: 0 0 4px 1px dimgray !important;
+            color: white !important;
+        }
+
+        .fc .fc-col-header-cell-cushion {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 60px !important;
+            padding: 8px 4px !important;
+            font-size: var(--day-header-desktop) !important;
+            transition: all 0.2s ease !important;
+            font-weight: 500 !important;
+            text-transform: capitalize !important;
+        }
+
+        .fc .fc-event-main {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .fc .fc-event-main-frame {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .fc .fc-event-time {
+            font-size: calc(var(--event-title-desktop) * 0.85) !important;
+            color: black !important;
+            font-weight: normal !important;
+            margin-bottom: 2px !important;
+            display: block !important;
+            width: 100% !important;
+            text-align: left !important;
+        }
+
+        .fc .fc-event-title-container {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        .fc .fc-event-title {
+            font-size: var(--event-title-desktop) !important;
+            transition: all 0.2s ease !important;
+            font-weight: normal !important;
+            white-space: normal !important;
+            color: black;
+            line-height: 1.4 !important;
+            word-wrap: break-word !important;
+            overflow: visible !important;
+            display: block !important;
+        }
+
+        .fc .fc-daygrid-event {
+            display: block !important;
+        }
+
+        .fc .fc-daygrid-event .fc-event-time {
+            float: none !important;
+            display: block !important;
+        }
+
+        .fc .fc-daygrid-event .fc-event-title {
+            display: block !important;
+        }
+
+        .fc .fc-event {
+            cursor: pointer;
+            padding: 4px 6px !important;
+            margin: 1px 0 !important;
+            min-height: 28px !important;
+            height: auto !important;
+        }
+
+        .fc .fc-daygrid-day-frame {
+            height: auto !important;
+            min-height: 100px !important;
+        }
+
+        .fc .fc-daygrid-day-events {
+            min-height: 60px !important;
+        }
+
+        .fc .fc-daygrid-day-number {
+            font-size: var(--day-header-desktop) !important;
+            font-weight: 500 !important;
+            color: black !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .fc .fc-list-day-text,
+        .fc .fc-list-day-side-text {
+            font-size: var(--day-header-desktop) !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            text-transform: capitalize !important;
+        }
+
+        .fc .fc-timegrid-col-axis {
+            font-size: var(--day-header-desktop) !important;
+        }
+
+        .fc .fc-timegrid-axis-cushion {
+            font-size: var(--day-header-desktop) !important;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --day-header-desktop: 1rem;
+                --event-title-desktop: 0.75rem;
+            }
+            .home-buttons { flex-direction: column; }
+            .home-buttons .btn { width: 100%; }
+            .fc .fc-event {
+                padding: 3px 5px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 80px !important;
+            }
+        }
+
+        @media (max-width: 700px) {
+            :root {
+                --day-header-desktop: 0.9rem;
+                --event-title-desktop: 0.7rem;
+            }
+            .fc .fc-col-header-cell {
+                text-align: center !important;
+            }
+            .fc .fc-col-header-cell-cushion {
+                flex-direction: column !important;
+                gap: 3px !important;
+                padding: 6px 2px !important;
+                text-align: center !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --day-header-desktop: 0.85rem;
+                --event-title-desktop: 0.65rem;
+            }
+            .fc .fc-event {
+                padding: 2px 4px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 70px !important;
+            }
+
+            .calendar-legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .home-buttons {
+                flex-direction: column;
+            }
+            .home-buttons .btn {
+                width: 100%;
+            }
+
+            .fc .fc-toolbar {
+                flex-wrap: wrap;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+            }
+
+            .fc .fc-toolbar-chunk:first-child {
+                order: 1;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-chunk:nth-child(2) {
+                order: 2;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-chunk:last-child {
+                order: 3;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1.2rem;
+                margin: 0 !important;
+            }
+
+            .fc .fc-button {
+                padding: 0.35rem 0.7rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            .fc .fc-button-group {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .fc .fc-col-header-cell {
+                text-align: center !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --day-header-desktop: 0.8rem;
+                --event-title-desktop: 0.65rem;
+            }
+            .fc .fc-col-header-cell-cushion {
+                min-height: 50px !important;
+                font-size: 0.8rem !important;
+                gap: 2px !important;
+                padding: 6px 1px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 60px !important;
+            }
+        }
+    </style>
+
+    <div style="text-align: center; padding: 0;margin-top: 2rem; margin-left: auto; margin-right:auto;">
+        <h2>Benvenuto al Sistema di Gestione degli Eventi</h2>
+        <p style="font-size: 1.1rem; color: #666; margin: 1rem 0;">
+            Scopri, partecipa e organizza eventi straordinari
+        </p>
+    </div>
+
+    <!-- Calendario per utenti autenticati NON admin -->
+    {% if user.is_authenticated and not user.is_staff %}
+        <div style="max-width: 1200px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="margin-bottom: 1.5rem;">📅 I Tuoi Prossimi Eventi</h3>
+            <div id="calendar"></div>
+
+            <!-- Legenda colori calendario -->
+            {% if  user.profile.role == 'organizer' %}
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #667eea;"></span>
+                        <span>Eventi a cui sei registrato</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #764ba2;"></span>
+                        <span>Eventi che organizzi</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- FullCalendar JS -->
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const calendarEl = document.getElementById('calendar');
+
+              const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'listMonth',
+                headerToolbar: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'listMonth,timeGridDay'
+                },
+                buttonText: {
+                  today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+                  day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+                  list: window.innerWidth < 480 ? 'Lista' : 'Lista',
+                },
+                locale: 'it',
+                firstDay: 1,
+                height: 'auto',
+                contentHeight: 'auto',
+                displayEventTime: true,
+                eventDisplay: 'block',
+                events: {
+                  url: '{% url "events:calendar_events" %}',
+                  failure: function() {
+                    alert('Errore nel caricamento degli eventi');
+                  }
+                },
+                eventClick: function(info) {
+                  window.location.href = info.event.url;
+                }
+              });
+
+              calendar.render();
+            });
+        </script>
+
+        <style>
+            .fc {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .fc .fc-button-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-color: rgb(255 255 255 / 0.4);
+            }
+
+            .fc .fc-button-primary:hover {
+                background-color: #5568d3;
+                border-color: #5568d3;
+            }
+
+            .fc .fc-button-primary.fc-button-active {
+                border: 2px solid #333 !important;
+            }
+
+            .fc .fc-daygrid-day.fc-day-today {
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            }
+
+            .fc .fc-col-header-cell-cushion,
+            .fc .fc-list-day-text,
+            .fc .fc-list-day-side-text {
+                color: black !important;
+                text-decoration: none !important;
+            }
+
+            .fc-daygrid .custom-border-organized,
+            .fc-timegrid .custom-border-organized,
+            .fc-daygrid .custom-border-registered,
+            .fc-timegrid .custom-border-registered {
+                border-width: 2px !important;
+                border-style: solid !important;
+            }
+
+            .custom-border-organized {
+                border-color: #764ba2 !important;
+            }
+
+            .custom-border-registered {
+                border-color: #667eea !important;
+            }
+
+            .fc .fc-event {
+                cursor: pointer;
+            }
+
+            .fc .fc-event:hover {
+                text-decoration: none !important;
+                box-shadow: 0 0 4px 1px dimgray !important;
+                color: white !important;
+            }
+
+            .fc .fc-daygrid-day-frame {
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .fc .fc-daygrid-body {
+                overflow: visible !important;
+            }
+
+            .fc .fc-daygrid-event {
+                white-space: normal !important;
+            }
+
+            .fc-direction-ltr .fc-daygrid-event .fc-event-time {
+                float: none !important;
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .fc .fc-list-event-time {
+                font-size: calc(var(--event-title-desktop) * 0.9) !important;
+                font-weight: normal !important;
+            }
+
+            .fc .fc-list-event-title {
+                font-size: var(--event-title-desktop) !important;
+                font-weight: normal !important;
+            }
+
+            .fc .fc-timegrid-axis-cushion {
+                font-size: var(--day-header-desktop) !important;
+                font-weight: 500 !important;
+            }
+
+            .fc .fc-timegrid-slot-label-cushion {
+                font-size: var(--day-header-desktop) !important;
+            }
+        </style>
+    {% endif %}
+
+    <div style="text-align: center; padding: 0;margin-top: 1rem; margin-left: auto; margin-right:auto;">
+        {% if not user.is_authenticated %}
+            <div class="home-buttons">
+                <a href="{% url 'users:login' %}" class="btn">Accedi</a>
+                <a href="{% url 'users:register' %}" class="btn" style="background-color: #764ba2;">Registrati</a>
+            </div>
+        {% else %}
+            <div class="home-buttons">
+                {% if user.is_staff or user.profile.role == 'attendee' %}
+                    <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
+                {% else %}
+                    <a href="{% url 'events:event_list' %}" class="btn">Visualizza Eventi</a>
+                {% endif %}
+                {% if user.profile.role == 'organizer' %}
+                    <a href="{% url 'events:event_create' %}" class="btn" style="background-color: #764ba2;">Crea un Evento</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="home-features">
+        <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center;">
+            <h3>👥 Partecipa agli Eventi</h3>
+            <p>Scopri e registrati ai migliori eventi</p>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center;">
+            <h3>📅 Organizza Eventi</h3>
+            <p>Crea e gestisci i tuoi eventi con semplicità</p>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center;">
+            <h3>🎯 Traccia Presenze</h3>
+            <p>Monitora gli iscritti e le presenze ai tuoi eventi</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% comment %}
+{% extends 'base.html' %}
+
+{% block title %}Home - Event Management System{% endblock %}
+
+{% block content %}
 <style>
     .home-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
     .home-buttons .btn { flex: 1; min-width: 150px; }
@@ -251,3 +710,4 @@
     </div>
 </div>
 {% endblock %}
+{% endcomment %}
