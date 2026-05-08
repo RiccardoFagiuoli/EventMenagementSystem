@@ -12,6 +12,21 @@
         color: white !important;
     }
 
+    @media (min-width:769px) and (max-width:875px) {
+        td[data-label="Azioni"] div[style*="display: flex"] {
+            flex-direction: column !important;
+        }
+
+        td[data-label="Azioni"] div[style*="display: flex"] > div {
+            flex-direction: column !important;
+        }
+
+        td[data-label="Azioni"] a.btn {
+            width: 100% !important;
+            margin-bottom: 0;
+        }
+    }
+
     @media (max-width: 768px) {
         table, thead, tbody, th, td, tr { display: block; width: 100%; }
         thead { display: none; }
@@ -20,7 +35,6 @@
         td:last-child { border-bottom: none; }
         td::before {
             content: attr(data-label)' :';
-
             text-overflow: ellipsis;
             flex: 0 0 40%;
             position: absolute;
@@ -104,13 +118,13 @@
                             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; width: 100%;">
                                 {% if event.can_restore %}
                                     <div style="display: flex; gap: 0.5rem; width: 100%;">
-                                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0;">Ripristina</a>
-                                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0;">Modifica</a>
+                                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0; white-space: nowrap">Ripristina</a>
+                                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0; white-space: nowrap">Modifica</a>
                                     </div>
                                 {% endif %}
                                 <div style="display: flex; gap: 0.5rem; width: 100%;">
-                                    <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0;">Dettagli</a>
-                                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0;">
+                                    <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0; white-space: nowrap">Dettagli</a>
+                                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="flex: 1; padding: 0.5rem 1rem; font-size: 0.85rem; text-align: center; min-width: 0; white-space: nowrap">
                                         {% if event.can_restore %}
                                             Elimina
                                         {% else %}
