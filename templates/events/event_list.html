@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}Tutti gli Eventi - Event Management System{% endblock %}
 
@@ -173,11 +174,16 @@
                     <a href="{% url 'events:event_detail' event.pk %}" class="btn">Dettagli</a>
                     {% if request.user.is_authenticated %}
                         {% if not request.user.is_staff %}
-                            {% if event.pk in registered_events and user_registration.status != 'cancelled' %}
+
+                            {% with status=user_registrations_status|get_item:event.pk %}
+
+                            {% if event.pk in registered_events and status != 'cancelled' %}
                                 <a href="{% url 'events:event_unregister_confirm' event.pk %}" class="btn btn-success">✓ Iscritto</a>
                             {% else %}
                                 <a href="{% url 'events:event_register' event.pk %}" class="btn btn-secondary">Iscriviti</a>
                             {% endif %}
+
+                            {% endwith %}
                         {% endif %}
                     {% else %}
                         <a href="{% url 'users:login' %}" class="btn btn-secondary">Accedi per Iscriverti</a>

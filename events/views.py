@@ -31,6 +31,10 @@ class EventListView(ListView):
         if self.request.user.is_authenticated:
             user_registrations = EventRegistration.objects.filter(user=self.request.user).values_list('event_id', flat=True)
             context['registered_events'] = user_registrations
+
+
+            registrations_with_status = EventRegistration.objects.filter(user=self.request.user).values_list('event_id', 'status')
+            context['user_registrations_status'] = dict(registrations_with_status)
         return context
 
 class EventDetailView(DetailView):
