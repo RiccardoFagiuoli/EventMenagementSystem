@@ -441,19 +441,19 @@
 
         <!-- Quick Actions -->
         <div class="admin-quick-actions">
-            <a href="{% url 'events:event_create' %}" class="quick-action-card">
+            <a href="{% url 'events:event_create' %}" class="quick-action-card"  style="background: #667eea;">
                 <div class="quick-action-icon">✨</div>
                 <div class="quick-action-title">Crea Nuovo Evento</div>
             </a>
-            <a href="{% url 'events:event_list' %}" class="quick-action-card">
+            <a href="{% url 'events:event_list' %}" class="quick-action-card" style="background: #6b6dd2 ;">
                 <div class="quick-action-icon">📋</div>
                 <div class="quick-action-title">Gestisci Eventi</div>
             </a>
-            <a href="{% url 'users:user_list' %}" class="quick-action-card">
-                <div class="quick-action-icon">👥</div>
+            <a href="{% url 'users:user_list' %}" class="quick-action-card"  style="background: #705cba ;">
+                <div class="quick-action-icon">👨‍👩‍👧‍👦</div>
                 <div class="quick-action-title">Gestisci Utenti</div>
             </a>
-            <a href="{% url 'admin:index' %}" class="quick-action-card">
+            <a href="{% url 'admin:index' %}" class="quick-action-card" style="background: #764ba2;">
                 <div class="quick-action-icon">⚙️</div>
                 <div class="quick-action-title">Admin Panel</div>
             </a>
@@ -609,15 +609,18 @@
 
     {% elif user.is_authenticated and not user.is_staff %}
         <!-- Existing non-admin user view -->
-        <div style="text-align: center; padding: 0;margin-top: 0.5rem; margin-left: auto; margin-right:auto;">
-            <h2>Benvenuto nella tua area personale</h2>
+         <div class="admin-welcome">
+            <h2 style="margin-bottom: 0.5rem;">👋 Ciao, {{ user.username }}!</h2>
+            <p style="margin-bottom: 0; opacity: 0.95;">Benvenuto nella tua area personale.</p>
         </div>
 
         <div style="text-align: center; padding: 0;margin-top: 1rem; margin-left: auto; margin-right:auto;">
             <div class="home-buttons">
-                {% if user.is_staff or user.profile.role == 'attendee' %}
+                {% if user.is_staff %}
                     <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
-                    {% if not user.is_staff %} <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Le mie Iscrizioni</a>{%  endif %}
+                {% elif user.profile.role == 'attendee'  %}
+                    <a href="{% url 'events:event_list' %}" class="btn" style="background: #667eea;">Visualizza Eventi</a>
+                    <a href="{% url 'events:event_list' %}" class="btn" style="background:  #764ba2;">Le mie Iscrizioni</a>
                 {% else %}
                     <a href="{% url 'events:event_list' %}" class="btn">Visualizza Eventi</a>
                 {% endif %}
