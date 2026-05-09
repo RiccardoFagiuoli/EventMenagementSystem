@@ -10,6 +10,7 @@
 
     .btn:hover {
         text-decoration: none !important;
+        transform: translateY(-1px);
         box-shadow: 0 0 4px 1px dimgray !important;
         color: white !important;
     }
@@ -214,7 +215,7 @@
                                     Stato: {{ user_registration.get_status_display }}
                                 </div>
                             {% endif %}
-                            <a href="{% url 'events:event_unregister' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                            <a href="{% url 'events:event_unregister_confirm' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
                         {% endif %}
                     {% else %}
                         {% if event.is_full %}
@@ -267,7 +268,7 @@
                                     </td>
                                     {% if user.is_staff or user == event.organizer %}
                                         <td>
-                                            <a href="{% url 'events:admin_unregister_user' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
+                                            <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
                                         </td>
                                     {% endif %}
                                 </tr>
@@ -316,8 +317,8 @@
                                         </td>
                                         {% if user.is_staff or user == event.organizer %}
                                             <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                                <a href="{% url 'events:admin_unregister_user' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
-                                                <a href="{% url 'events:admin_register_user' event.pk registration.pk %}" class="btn" style="padding: 0.25rem 1rem; font-size: 0.85rem; background-color: #28a745; color: white; white-space: nowrap;">Iscrivi</a>
+                                                <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
+                                                <a href="{% url 'events:admin_register_confirm' event.pk registration.pk %}" class="btn" style="padding: 0.25rem 1rem; font-size: 0.85rem; background-color: #28a745; color: white; white-space: nowrap;">Iscrivi</a>
                                             </td>
                                         {% endif %}
                                     </tr>

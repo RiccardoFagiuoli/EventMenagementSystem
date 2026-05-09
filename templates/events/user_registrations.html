@@ -13,6 +13,7 @@
 
     .btn:hover {
         text-decoration: none !important;
+        transform: translateY(-1px);
         box-shadow: 0 0 4px 1px dimgray !important;
         color: white !important;
     }
@@ -88,7 +89,7 @@
                             <div class="action_btn_group">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Dettagli</a>
                             {% if registration.status != 'cancelled' %}
-                                <a href="{% url 'events:event_unregister' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
+                                <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Cancella</a>
                             {% endif %}
                             </div>
                         </td>

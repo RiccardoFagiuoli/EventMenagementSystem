@@ -253,6 +253,41 @@ def event_register(request, pk):
 
     return redirect('events:event_detail', pk=pk)
 
+
+@login_required
+def event_unregister_confirm(request, pk):
+    """Pagina di conferma per la disiscrizione da un evento"""
+    event = get_object_or_404(Event, pk=pk)
+
+    # Verifica che l'utente sia effettivamente registrato all'evento
+    try:
+        registration = EventRegistration.objects.get(event=event, user=request.user)
+    except EventRegistration.DoesNotExist:
+        messages.error(request, 'Non sei registrato a questo evento.')
+        return redirect('events:event_detail', pk=pk)
+
+    if request.method == 'POST':
+        # Conferma la disiscrizione
+        registration.status = 'cancelled'
+        registration.save()
+        messages.success(request, f'Sei stato disiscritto dall\'evento "{event.title}" con successo.')
+
+        # PROMUOVI DALLA LISTA D'ATTESA
+        promoted = event.promote_from_waiting_list()
+
+        if promoted:
+            promoted_name = promoted.user.get_full_name() or promoted.user.username
+            messages.info(request, f'{promoted_name} è stato promosso dalla lista d\'attesa!')
+
+        return redirect('events:event_detail', pk=pk)
+
+    # GET: mostra la pagina di conferma
+    context = {
+        'event': event,
+        'registration': registration,
+    }
+    return render(request, 'events/confirm_unregister.html', context)
+
 def event_unregister(request, pk):
     """ View for unregistering a user from an event. """
     if not request.user.is_authenticated:
@@ -339,6 +374,45 @@ def event_restore(request, pk):
 
     return redirect('events:event_detail', pk=pk)
 
+@login_required
+def admin_unregister_confirm(request, event_id, registration_id):
+    """Pagina di conferma per disiscrivere un utente da un evento (solo admin/organizzatore)"""
+    event = get_object_or_404(Event, pk=event_id)
+
+    # Permetti solo all'admin o all'organizzatore dell'evento
+    if not (request.user.is_staff or request.user == event.organizer):
+        messages.error(request, 'Accesso negato. Solo gli admin e l\'organizzatore possono eseguire questa azione.')
+        return redirect('events:event_list')
+
+    registration = get_object_or_404(EventRegistration, pk=registration_id, event=event)
+    user_to_unregister = registration.user
+
+    if request.method == 'POST':
+        # Conferma la disiscrizione
+        user_name = user_to_unregister.get_full_name() or user_to_unregister.username
+        registration.delete()
+        messages.success(request, f'✅ Utente {user_name} disiscritto dall\'evento "{event.title}" con successo.')
+
+        # PROMUOVI DALLA LISTA D'ATTESA
+        promoted = event.promote_from_waiting_list()
+
+        # Messaggio di conferma promozione
+        if promoted:
+            promoted_name = promoted.user.get_full_name() or promoted.user.username
+            messages.success(request,
+                             f'🎉 Un posto si è liberato! {promoted_name} è stato promosso dalla lista d\'attesa.')
+
+        return redirect('events:event_detail', pk=event_id)
+
+    # GET: mostra la pagina di conferma
+    context = {
+        'event': event,
+        'registration': registration,
+        'user_to_unregister': user_to_unregister,
+        'is_admin_action': True,
+    }
+    return render(request, 'events/confirm_unregister.html', context)
+
 def admin_unregister_user(request, event_id, registration_id):
      """ View to unregister a user from an event (admin and organizer only). Promuove il primo in coda """
      if not request.user.is_authenticated:
@@ -366,6 +440,42 @@ def admin_unregister_user(request, event_id, registration_id):
          promoted_name = promoted.user.get_full_name() or promoted.user.username
          messages.warning(request,f'🎉 Un posto si è liberato! {promoted_name} è stato promosso dalla lista d\'attesa.')
      return redirect('events:event_detail', pk=event_id)
+
+
+@login_required
+def admin_register_confirm(request, pk, registration_pk):
+    """Pagina di conferma per iscrivere un utente dalla lista d'attesa (solo admin/organizzatore)"""
+    event = get_object_or_404(Event, pk=pk, status='published')
+    registration = get_object_or_404(EventRegistration, pk=registration_pk, event=event)
+
+    # Controllo permessi
+    if not (request.user.is_staff or request.user == event.organizer):
+        messages.error(request, 'Non hai i permessi per questa azione.')
+        return redirect('events:event_detail', pk=pk)
+
+    # Verifica che l'utente sia effettivamente in lista d'attesa
+    if registration.status != 'pending':
+        messages.warning(request, 'Questo utente non è in lista d\'attesa.')
+        return redirect('events:event_detail', pk=pk)
+
+    if request.method == 'POST':
+        # Conferma l'iscrizione
+        registration.status = 'confirmed'
+        registration.save()
+
+        user_name = registration.user.get_full_name() or registration.user.username
+        messages.success(request, f'✅ {user_name} è stato iscritto all\'evento "{event.title}" con successo!')
+
+        return redirect('events:event_detail', pk=pk)
+
+    # GET: mostra la pagina di conferma
+    context = {
+        'event': event,
+        'registration': registration,
+        'user_to_register': registration.user,
+        'is_admin_register': True,
+    }
+    return render(request, 'events/confirm_register.html', context)
 
 def admin_register_user(request, pk, registration_pk):
     """View per admin per confermare utente dalla lista d'attesa"""
