@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+
+{% block title %}Dettagli Utente - {{ user_detail.username }}{% endblock %}
+
+{% block content %}
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .btn-sm {
+        white-space: nowrap;  /* Evita che il testo vada a capo */
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-name {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-role {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-top: 0.5rem;
+    }
+
+    .role-organizer {
+        background: #ffc107;
+        color: #333;
+    }
+
+    .role-attendee {
+        background: #28a745;
+        color: white;
+    }
+
+    .role-admin {
+        background: #dc3545;
+        color: white;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+    }
+
+    .info-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .info-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #667eea;
+        display: inline-block;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .info-item {
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #667eea;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .events-table {
+        background: white;
+        border-radius: 12px;
+        overflow-x: auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .events-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .events-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+    }
+
+    .events-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .events-table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .badge-confirmed {
+        background: #28a745;
+        color: white;
+    }
+
+    .badge-pending {
+        background: #ffc107;
+        color: #333;
+    }
+
+    .badge-cancelled {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-back:hover {
+        background: #5a6268;
+        color: white;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        text-decoration: none;
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-sm:hover {
+        background: #5568d3;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .profile-name {
+            font-size: 1.3rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <a href="{% url 'users:user_list' %}" class="btn-back">
+        ← Torna alla lista utenti
+    </a>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {% if user_detail.profile.avatar %}
+                <img src="{{ user_detail.profile.avatar.url }}" alt="{{ user_detail.username }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            {% else %}
+                👤
+            {% endif %}
+        </div>
+        <div class="profile-name">{{ user_detail.get_full_name|default:user_detail.username }}</div>
+        <div class="profile-email">{{ user_detail.email|default:"Email non impostata" }}</div>
+        <div class="profile-role 
+            {% if user_detail.is_staff %}role-admin
+            {% elif user_detail.profile.role == 'organizer' %}role-organizer
+            {% else %}role-attendee{% endif %}">
+            {% if user_detail.is_staff %}
+                Amministratore
+            {% elif user_detail.profile.role == 'organizer' %}
+                Organizzatore
+            {% else %}
+                Partecipante
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ events_organized.count|default:"0" }}</div>
+            <div class="stat-label">Eventi Creati</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ events_attending.count|default:"0" }}</div>
+            <div class="stat-label">Partecipazioni</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ user_detail.date_joined|date:"d/m/Y" }}</div>
+            <div class="stat-label">Registrato dal</div>
+        </div>
+        {% comment %}<div class="stat-card">
+            <div class="stat-number">
+                {% if user_detail.is_active %}
+                    ✅ Attivo
+                {% else %}
+                    ❌ Inattivo
+                {% endif %}
+            </div>
+            <div class="stat-label">Stato Account</div>
+        </div>{% endcomment %}
+    </div>
+
+    <!-- Informazioni Personali -->
+    <div class="info-section">
+        <h3 class="info-title">📋 Informazioni Personali</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Username</div>
+                <div class="info-value">{{ user_detail.username }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Nome</div>
+                <div class="info-value">{{ user_detail.first_name|default:"—" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Cognome</div>
+                <div class="info-value">{{ user_detail.last_name|default:"—" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ user_detail.email|default:"—" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Ultimo accesso</div>
+                <div class="info-value">{{ user_detail.last_login|date:"d/m/Y H:i"|default:"Mai" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Data registrazione</div>
+                <div class="info-value">{{ user_detail.date_joined|date:"d/m/Y H:i" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eventi Creati (solo per organizzatori) -->
+    {% if events_organized %}
+    <div class="info-section">
+        <h3 class="info-title">🎤 Eventi Creati</h3>
+        <div class="events-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titolo</th>
+                        <th>Data</th>
+                        <th>Luogo</th>
+                        <th>Partecipanti</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events_organized %}
+                    <tr>
+                        <td><strong>{{ event.title }}</strong></td>
+                        <td>{{ event.start_date|date:"d/m/Y H:i" }}</td>
+                        <td>{{ event.location|truncatechars:30 }}</td>
+                        <td>{{ event.eventregistration_set.count }}</td>
+                        <td>
+                            <a href="{% url 'events:event_detail' event.id %}" class="btn-sm">Vedi</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Eventi a cui partecipa -->
+    {% if events_attending %}
+    <div class="info-section">
+        <h3 class="info-title">📅 Partecipazioni ad Eventi</h3>
+        <div class="events-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titolo</th>
+                        <th>Data</th>
+                        <th>Luogo</th>
+                        <th>Organizzatore</th>
+                        <th>Stato</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in events_attending %}
+                    <tr>
+                        <td><strong>{{ registration.event.title }}</strong></td>
+                        <td>{{ registration.event.start_date|date:"d/m/Y H:i" }}</td>
+                        <td>{{ registration.event.location|truncatechars:30 }}</td>
+                        <td>{{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}</td>
+                        <td>
+                            <span class="badge badge-{{ registration.status }}">
+                                {% if registration.status == 'confirmed' %}✅ Confermato
+                                {% elif registration.status == 'pending' %}⏳ In attesa
+                                {% else %}❌ Cancellato{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'events:event_detail' registration.event.id %}" class="btn-sm">Vedi Evento</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Azioni Admin -->
+    <div class="info-section">
+        <h3 class="info-title">⚙️ Azioni</h3>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <a href="{% url 'admin:auth_user_change' user_detail.id %}" class="btn" style="background: #ffc107; color: #333;">
+                ✏️ Modifica Utente
+            </a>
+            <a href="{% url 'users:user_list' %}" class="btn" style="background: #6c757d;">
+                👥 Lista Utenti
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -188,6 +188,7 @@
             {% if user.is_authenticated %}
                 {% if user.is_staff %}
                     <a href="{% url 'events:deleted_events' %}">Eventi Eliminati</a>
+                    <a href="{% url 'events:event_create' %}">Crea Evento</a>
                 {% else %}
                     <a href="{% url 'events:user_registrations' %}">Le mie Registrazioni</a>
                     <a href="{% url 'events:calendar_view' %}">Calendario</a>

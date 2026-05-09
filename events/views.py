@@ -543,6 +543,44 @@ def deleted_events(request):
     context = {'deleted_events': deleted_events_list, 'title': 'Eventi Eliminati'}
     return render(request, 'events/deleted_events.html', context)
 
+def home(request):
+    """ Home page view """
+
+    # Contatori base
+    total_events = Event.objects.filter(deleted_at__isnull=True).count()
+    today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+
+    upcoming_events_count  = Event.objects.filter(
+        start_date__gte=today_start,
+        start_date__lte=today_end,
+        deleted_at__isnull=True
+    ).count()
+
+    # Tentativo di contare gli organizzatori (potrebbe fallire se non esiste)
+    try:
+        from users.models import UserProfile
+        total_organizers = UserProfile.objects.filter(role='organizer').count()
+        total_users = UserProfile.objects.count()
+    except:
+        total_organizers = 0
+
+    context = {
+        'total_events': total_events,
+        'total_users': total_users,
+        'total_attendees': EventRegistration.objects.filter(status='confirmed').count(),
+        'total_organizers': total_organizers,
+        'featured_events': Event.objects.filter(deleted_at__isnull=True).order_by('-created_at')[:3],
+        'upcoming_events': Event.objects.filter(
+            start_date__gte=timezone.now(),
+            deleted_at__isnull=True
+        ).order_by('start_date')[:5],
+        'upcoming_events_count': upcoming_events_count,
+        'now': timezone.now(),
+    }
+
+    return render(request, 'home.html', context)
+
 @login_required
 def calendar_view(request):
     """ View to display user's event calendar. """
