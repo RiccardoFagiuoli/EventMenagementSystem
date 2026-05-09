@@ -315,6 +315,10 @@ def user_registrations(request):
         return redirect('users:login')
     registrations = EventRegistration.objects.filter(user=request.user).select_related('event').order_by('event__start_date')
     context = {'registrations': registrations, 'title': 'Le mie registrazioni'}
+    user_regs = EventRegistration.objects.filter(user=request.user)
+    context['has_confirmed'] = user_regs.filter(status='confirmed').exists()
+    context['has_pending'] = user_regs.filter(status='pending').exists()
+    context['has_cancelled'] = user_regs.filter(status='cancelled').exists()
     return render(request, 'events/user_registrations.html', context)
 
 def organizer_events(request):

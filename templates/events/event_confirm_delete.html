@@ -20,18 +20,6 @@
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .warning-icon {
-        text-align: center;
-        font-size: 4rem;
-        margin-bottom: 1rem;
-    }
-
-    .danger-icon {
-        text-align: center;
-        font-size: 4rem;
-        margin-bottom: 1rem;
-    }
-
     .alert-box {
         padding: 1.5rem;
         border-radius: 8px;
@@ -222,9 +210,6 @@
             <p style="color: #721c24; font-weight: bold; margin-top: 0.5rem;">⚠️ Questa azione non può essere annullata e l'evento verrà rimosso permanentemente!</p>
         </div>
     {% else %}
-        <div class="warning-icon">
-            🗑️
-        </div>
         <div class="alert-box warning">
             <h2>⚠️ Conferma Eliminazione</h2>
             <p>Sei sicuro di voler eliminare l'evento <strong>"{{ event.title }}"</strong>?</p>
@@ -256,19 +241,13 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">{{ event.get_confirmed_attendees_count }}</div>
+                <div class="stat-number">{{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} /{{ event.max_attendees }}{% endif %}</div>
                 <div class="stat-label">Partecipanti confermati</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number">{{ event.get_pending_attendees_count }}</div>
                 <div class="stat-label">In lista d'attesa</div>
             </div>
-            {% if event.max_attendees %}
-            <div class="stat-card">
-                <div class="stat-number">{{ event.max_attendees }}</div>
-                <div class="stat-label">Posti totali</div>
-            </div>
-            {% endif %}
         </div>
     </div>
 

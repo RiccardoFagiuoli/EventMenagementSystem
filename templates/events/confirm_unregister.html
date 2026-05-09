@@ -21,18 +21,6 @@
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .warning-icon {
-        text-align: center;
-        font-size: 4rem;
-        margin-bottom: 1rem;
-    }
-
-    .admin-icon {
-        text-align: center;
-        font-size: 4rem;
-        margin-bottom: 1rem;
-    }
-
     .event-details {
         background: #f8f9fa;
         padding: 1.5rem;
@@ -56,7 +44,7 @@
         gap: 0.5rem;
     }
 
-    .user-info {
+    .profile-box {
         background: #e7f3ff;
         padding: 1rem;
         border-radius: 8px;
@@ -146,9 +134,6 @@
 
 <div class="confirm-container">
     {% if is_admin_action %}
-        <div class="admin-icon">
-            👤
-        </div>
         <h2 style="text-align: center; color: #dc3545; margin-bottom: 0.5rem;">
             Conferma Disiscrizione Utente
         </h2>
@@ -156,7 +141,7 @@
             Sei sicuro di voler disiscrivere questo utente dall'evento?
         </p>
 
-        <div class="user-info">
+        <div class="profile-box">
             <div class="event-info">
                 <span>👤</span>
                 <span><strong>Utente:</strong> {{ user_to_unregister.get_full_name|default:user_to_unregister.username }}</span>
@@ -173,9 +158,6 @@
             {% endif %}
         </div>
     {% else %}
-        <div class="warning-icon">
-            ⚠️
-        </div>
         <h2 style="text-align: center; color: #dc3545; margin-bottom: 0.5rem;">
             Conferma Disiscrizione
         </h2>

@@ -367,13 +367,15 @@
             </div>
         {% else %}
             <div class="home-buttons">
-                {% if user.is_staff or user.profile.role == 'attendee' %}
+                {% if user.profile.role == 'attendee' %}
                     <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
                 {% else %}
                     <a href="{% url 'events:event_list' %}" class="btn">Visualizza Eventi</a>
                 {% endif %}
                 {% if user.profile.role == 'organizer' %}
                     <a href="{% url 'events:event_create' %}" class="btn" style="background-color: #764ba2;">Crea un Evento</a>
+                {%  elif user.is_staff %}
+                    <a href="{% url 'events:deleted_events' %}" class="btn" style="background-color: #764ba2;">Eventi Eliminati</a>
                 {% endif %}
             </div>
         {% endif %}

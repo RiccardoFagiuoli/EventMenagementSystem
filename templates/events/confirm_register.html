@@ -44,7 +44,7 @@
         gap: 0.5rem;
     }
 
-    .user-info {
+    .profile-box {
         background: #e7f3ff;
         padding: 1rem;
         border-radius: 8px;
@@ -175,7 +175,7 @@
         Sei sicuro di voler iscrivere questo utente all'evento?
     </p>
 
-    <div class="user-info">
+    <div class="profile-box">
         <div class="event-info">
             <span>👤</span>
             <span><strong>Utente:</strong> {{ user_to_register.get_full_name|default:user_to_register.username }}</span>
@@ -243,7 +243,6 @@
         <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
             <li>Confermerà l'utente all'evento</li>
             <li>Cambierà lo stato da "In attesa" a "Confermato"</li>
-            <li>L'utente riceverà conferma via email (se configurato)</li>
         </ul>
     </div>
 
