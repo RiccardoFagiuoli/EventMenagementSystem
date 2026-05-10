@@ -385,9 +385,9 @@
                 <a href="{% url 'users:user_detail' organizer.id %}" class="btn-sm btn-view">
                     👁️ Vedi Dettagli
                 </a>
-                <a href="{% url 'events:event_list' %}?organizer={{ organizer.id }}" class="btn-sm btn-events">
+                {% comment %}<a href="{% url 'events:event_list' %}?organizer={{ organizer.id }}" class="btn-sm btn-events">
                     📅 I Suoi Eventi
-                </a>
+                </a>{% endcomment %}
                 <a href="{% url 'admin:auth_user_change' organizer.id %}" class="btn-sm btn-edit">
                     ✏️ Modifica
                 </a>
