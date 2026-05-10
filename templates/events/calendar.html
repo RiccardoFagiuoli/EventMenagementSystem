@@ -226,6 +226,20 @@
             .fc .fc-daygrid-day-frame {
                 min-height: 80px !important;
             }
+            
+            .event-tooltip {
+                display: block !important; /* Forziamo la visualizzazione anche su mobile */
+            }
+            .event-tooltip {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+                max-width: 260px;
+                z-index: 10000;
+            }
+
+            .event-tooltip .tooltip-title {
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 700px) {
@@ -337,10 +351,10 @@
                 min-height: 60px !important;
             }
 
-            /* Su mobile non mostrare il tooltip */
+            {% comment %}/* Su mobile non mostrare il tooltip */
             .event-tooltip {
                 display: none !important;
-            }
+            }{% endcomment %}
         }
     </style>
 
@@ -367,126 +381,201 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const calendarEl = document.getElementById('calendar');
-      const tooltip = document.getElementById('eventTooltip');
-      let tooltipTimeout;
+        document.addEventListener('DOMContentLoaded', function() {
+          const calendarEl = document.getElementById('calendar');
+          const tooltip = document.getElementById('eventTooltip');
+          let tooltipTimeout;
+          let longPressTimer;
+          let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-      function showTooltip(event, mouseX, mouseY, eventInfo) {
-        // Formatta l'orario
-        let timeHtml = '';
-        if (eventInfo.event.start) {
-          const startTime = eventInfo.event.start.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-          let endTime = '';
-          if (eventInfo.event.end) {
-            endTime = ' - ' + eventInfo.event.end.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-          }
-          timeHtml = `<div class="tooltip-time">🕒 ${startTime}${endTime}</div>`;
-        }
-        let locationHtml = '';
-        if (eventInfo.event.extendedProps && eventInfo.event.extendedProps.location) {
-            locationHtml = `<div class="tooltip-location">📍 ${eventInfo.event.extendedProps.location}</div>`;
-        }
-
-        // Costruisci il contenuto del tooltip
-        tooltip.innerHTML = `${timeHtml}<div class="tooltip-title"> ${eventInfo.event.title}</div>${locationHtml}`;
-
-        // Posiziona il tooltip vicino al mouse
-        tooltip.classList.add('show');
-
-        // Calcola posizione (offset per non coprire il mouse)
-        let left = mouseX + 15;
-        let top = mouseY + 15;
-
-        // Evita che esca dai bordi
-        const tooltipRect = tooltip.getBoundingClientRect();
-        if (left + tooltipRect.width > window.innerWidth) {
-          left = mouseX - tooltipRect.width - 15;
-        }
-        if (top + tooltipRect.height > window.innerHeight) {
-          top = mouseY - tooltipRect.height - 15;
-        }
-
-        tooltip.style.left = left + 'px';
-        tooltip.style.top = top + 'px';
-      }
-
-      function hideTooltip() {
-        tooltip.classList.remove('show');
-      }
-
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
-        },
-        buttonText: {
-          today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
-          month: window.innerWidth < 480 ? 'Mese' : 'Mese',
-          week: window.innerWidth < 480 ? 'Sett.' : 'Settimana',
-          day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
-          list: window.innerWidth < 480 ? 'Lista' : 'Lista',
-        },
-        locale: 'it',
-        firstDay: 1,
-        height: 'auto',
-        contentHeight: 'auto',
-        displayEventTime: true,
-        eventDisplay: 'block',
-        events: {
-          url: '{% url "events:calendar_events" %}',
-          failure: function() {
-            alert('Errore nel caricamento degli eventi');
-          }
-        },
-        eventClick: function(info) {
-          window.location.href = info.event.url;
-        },
-        eventDidMount: function(info) {
-          // Aggiungi event listeners per il tooltip (solo su desktop)
-          if (window.innerWidth > 768) {
-            const eventEl = info.el;
-
-            eventEl.addEventListener('mouseenter', function(e) {
-              // Salva le informazioni dell'evento per usarle dopo
-              eventEl._eventInfo = info;
-              clearTimeout(tooltipTimeout);
-              tooltipTimeout = setTimeout(() => {
-                showTooltip(eventEl, e.clientX, e.clientY, info);
-              }, 180); // Piccolo delay prima di mostrare in ms
-            });
-
-            eventEl.addEventListener('mousemove', function(e) {
-              if (tooltip.classList.contains('show')) {
-                // Aggiorna posizione mentre muovi il mouse
-                let left = e.clientX + 15;
-                let top = e.clientY + 15;
-
-                const tooltipRect = tooltip.getBoundingClientRect();
-                if (left + tooltipRect.width > window.innerWidth) {
-                  left = e.clientX - tooltipRect.width - 15;
-                }
-                if (top + tooltipRect.height > window.innerHeight) {
-                  top = e.clientY - tooltipRect.height - 15;
-                }
-
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = top + 'px';
+          function showTooltip(event, mouseX, mouseY, eventInfo) {
+            // Formatta l'orario
+            let timeHtml = '';
+            if (eventInfo.event.start) {
+              const startTime = eventInfo.event.start.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+              let endTime = '';
+              if (eventInfo.event.end) {
+                endTime = ' - ' + eventInfo.event.end.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
               }
-            });
+              timeHtml = `<div class="tooltip-time">🕒 ${startTime}${endTime}</div>`;
+            }
+            let locationHtml = '';
+            if (eventInfo.event.extendedProps && eventInfo.event.extendedProps.location) {
+                locationHtml = `<div class="tooltip-location">📍 ${eventInfo.event.extendedProps.location}</div>`;
+            }
 
-            eventEl.addEventListener('mouseleave', function() {
-              clearTimeout(tooltipTimeout);
-              hideTooltip();
-            });
+            // Costruisci il contenuto del tooltip
+            tooltip.innerHTML = `${timeHtml}<div class="tooltip-title"> ${eventInfo.event.title}</div>${locationHtml}`;
+
+            // Posiziona il tooltip vicino al mouse
+            tooltip.classList.add('show');
+
+            // Calcola posizione (offset per non coprire il mouse)
+            let left = mouseX + 15;
+            let top = mouseY + 15;
+
+            // Evita che esca dai bordi
+            const tooltipRect = tooltip.getBoundingClientRect();
+            if (left + tooltipRect.width > window.innerWidth) {
+              left = mouseX - tooltipRect.width - 15;
+            }
+            if (top + tooltipRect.height > window.innerHeight) {
+              top = mouseY - tooltipRect.height - 15;
+            }
+
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
           }
-        }
-      });
 
-      calendar.render();
-    });
+          function hideTooltip() {
+            tooltip.classList.remove('show');
+          }
+
+          function startLongPress(event, info) {
+            // Ottieni le coordinate del tocco
+            let clientX, clientY;
+            if (event.touches) {
+              clientX = event.touches[0].clientX;
+              clientY = event.touches[0].clientY;
+            } else {
+              clientX = event.clientX;
+              clientY = event.clientY;
+            }
+
+            longPressTimer = setTimeout(() => {
+              showTooltip(event, clientX, clientY, info);
+            }, 500); // 500ms di pressione prolungata
+          }
+
+          function cancelLongPress() {
+            if (longPressTimer) {
+              clearTimeout(longPressTimer);
+              longPressTimer = null;
+            }
+          }
+
+          const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+            },
+            buttonText: {
+              today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+              month: window.innerWidth < 480 ? 'Mese' : 'Mese',
+              week: window.innerWidth < 480 ? 'Sett.' : 'Settimana',
+              day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+              list: window.innerWidth < 480 ? 'Lista' : 'Lista',
+            },
+            locale: 'it',
+            firstDay: 1,
+            height: 'auto',
+            contentHeight: 'auto',
+            displayEventTime: true,
+            eventDisplay: 'block',
+            events: {
+              url: '{% url "events:calendar_events" %}',
+              failure: function() {
+                alert('Errore nel caricamento degli eventi');
+              }
+            },
+            eventClick: function(info) {
+              // Su dispositivi touch, se c'è stato un long press non eseguiamo la navigazione
+              if (isTouchDevice && longPressTimer === null) {
+                // Se il timer è null significa che abbiamo fatto un tap normale (non long press)
+                window.location.href = info.event.url;
+              } else if (!isTouchDevice) {
+                // Su desktop il click normale naviga subito
+                window.location.href = info.event.url;
+              }
+            },
+
+            eventDidMount: function(info) {
+                if (isTouchDevice) {
+                    // Gestione per dispositivi touch
+                    eventEl.addEventListener('touchstart', function (e) {
+                        // Previeni lo scroll durante il long press
+                        cancelLongPress();
+                        startLongPress(e, info);
+
+                        // Previeni anche il click immediato se stiamo facendo long press
+                        e.preventDefault();
+                    });
+
+                    eventEl.addEventListener('touchmove', function (e) {
+                        // Se l'utente sposta il dito, cancella il long press
+                        cancelLongPress();
+                    });
+
+                    eventEl.addEventListener('touchend', function (e) {
+                        // Cancella il timer del long press
+                        cancelLongPress();
+
+                        // Se è stato un tap corto (meno di 500ms), navighiamo
+                        // Nota: il timer qui è già stato cancellato, quindi longPressTimer è null
+                        if (longPressTimer === null) {
+                            // Piccolo delay per evitare conflitti
+                            setTimeout(() => {
+                                window.location.href = info.event.url;
+                            }, 50);
+                        }
+
+                        // Nascondi il tooltip dopo un po'
+                        setTimeout(() => {
+                            hideTooltip();
+                        }, 100);
+                    });
+
+                    // Previeni il context menu standard su long press
+                    eventEl.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                } else {
+                    // Aggiungi event listeners per il tooltip (solo su desktop)
+                    if (window.innerWidth > 768) {
+                        const eventEl = info.el;
+
+                        eventEl.addEventListener('mouseenter', function (e) {
+                            // Salva le informazioni dell'evento per usarle dopo
+                            eventEl._eventInfo = info;
+                            clearTimeout(tooltipTimeout);
+                            tooltipTimeout = setTimeout(() => {
+                                showTooltip(eventEl, e.clientX, e.clientY, info);
+                            }, 180); // Piccolo delay prima di mostrare in ms
+                        });
+
+                        eventEl.addEventListener('mousemove', function (e) {
+                            if (tooltip.classList.contains('show')) {
+                                // Aggiorna posizione mentre muovi il mouse
+                                let left = e.clientX + 15;
+                                let top = e.clientY + 15;
+
+                                const tooltipRect = tooltip.getBoundingClientRect();
+                                if (left + tooltipRect.width > window.innerWidth) {
+                                    left = e.clientX - tooltipRect.width - 15;
+                                }
+                                if (top + tooltipRect.height > window.innerHeight) {
+                                    top = e.clientY - tooltipRect.height - 15;
+                                }
+
+                                tooltip.style.left = left + 'px';
+                                tooltip.style.top = top + 'px';
+                            }
+                        });
+
+                        eventEl.addEventListener('mouseleave', function () {
+                            clearTimeout(tooltipTimeout);
+                            hideTooltip();
+                        });
+                    }
+                }
+            }
+          });
+
+          calendar.render();
+        });
     </script>
 
     <style>
