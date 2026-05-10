@@ -402,17 +402,17 @@
           function hapticFeedbackSuccess() {
             if ('vibrate' in navigator) {
               // Pattern: vibra, pausa, vibra (per indicare successo)
-              navigator.vibrate([50, 30, 50]);
+              navigator.vibrate(50);
             }
           }
 
-          // Funzione per feedback negativo/cancellazione
+          {% comment %}// Funzione per feedback negativo/cancellazione
           function hapticFeedbackCancel() {
             if ('vibrate' in navigator) {
               // Vibrazione breve singola
               navigator.vibrate(30);
             }
-          }
+          }{% endcomment %}
 
           function showTooltip(event, mouseX, mouseY, eventInfo) {
             // Feedback aptico quando si mostra il tooltip
