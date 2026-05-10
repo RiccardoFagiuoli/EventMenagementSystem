@@ -10,6 +10,7 @@ from .forms import EventForm
 from users.models import UserProfile
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+import datetime
 
 class EventListView(ListView):
     """ Class-based generic view for listing all published events. """
@@ -23,11 +24,80 @@ class EventListView(ListView):
         query = self.request.GET.get('q')
         if query:
             queryset = queryset.filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(location__icontains=query))
+            # Filtro di ricerca testuale
+            query = self.request.GET.get('q')
+
+        # Filtro per nome organizzatore (ricerca parziale)
+        organizer_name = self.request.GET.get('organizer_name')
+        if organizer_name:
+            queryset = queryset.filter(
+                Q(organizer__username__icontains=organizer_name)
+            )
+
+        # Filtro per data inizio (da data)
+        start_date_from = self.request.GET.get('start_date_from')
+        if start_date_from:
+            try:
+                start_date_from = datetime.strptime(start_date_from, '%d/%m/%Y').date()
+                queryset = queryset.filter(start_date__date__gte=start_date_from)
+            except ValueError:
+                pass
+
+        # Filtro per data inizio (a data)
+        start_date_to = self.request.GET.get('start_date_to')
+        if start_date_to:
+            try:
+                start_date_to = datetime.strptime(start_date_to, '%d/%m/%Y').date()
+                queryset = queryset.filter(start_date__date__lte=start_date_to)
+            except ValueError:
+                pass
+
+        # Filtro predefinito per data (eventi di oggi)
+        date_filter = self.request.GET.get('date_filter')
+        if date_filter == 'today':
+            today = timezone.now().date()
+            queryset = queryset.filter(start_date__date=today)
+        elif date_filter == 'upcoming':
+            queryset = queryset.filter(start_date__gte=timezone.now())
+        elif date_filter == 'past':
+            queryset = queryset.filter(start_date__lt=timezone.now())
+
+        # Filtro per organizzatore (selezione esatta dalla tendina)
+        organizer_filter = self.request.GET.get('organizer')
+        if organizer_filter:
+            queryset = queryset.filter(organizer__username=organizer_filter)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_events'] = Event.objects.filter(status='published').count()
+
+        # Filtri attuali per il template
+        context['current_query'] = self.request.GET.get('q', '')
+        context['current_date_filter'] = self.request.GET.get('date_filter', '')
+        context['current_organizer'] = self.request.GET.get('organizer', '')
+        context['current_organizer_name'] = self.request.GET.get('organizer_name', '')
+        context['current_start_date_from'] = self.request.GET.get('start_date_from', '')
+        context['current_start_date_to'] = self.request.GET.get('start_date_to', '')
+
+        # Lista di tutti gli organizzatori unici per il filtro a tendina
+        organizers_dict = {}
+        organizers_data = Event.objects.filter(
+            status='published',
+            deleted_at__isnull=True
+        ).values_list('organizer__username', 'organizer__first_name', 'organizer__last_name')
+
+        for username, first_name, last_name in organizers_data:
+            if username not in organizers_dict:  # Rimuove i duplicati manualmente
+                full_name = f"{first_name} {last_name}".strip()
+                organizers_dict[username] = {
+                    'username': username,
+                    'full_name': full_name if full_name else username
+                }
+
+        # Formatta i nomi degli organizzatori per il template
+        context['organizers'] = sorted(organizers_dict.values(), key=lambda x: x['full_name'])
+
         if self.request.user.is_authenticated:
             user_registrations = EventRegistration.objects.filter(user=self.request.user).values_list('event_id', flat=True)
             context['registered_events'] = user_registrations

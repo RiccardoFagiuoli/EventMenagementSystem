@@ -147,13 +147,184 @@
 
 <h2>Tutti gli Eventi Disponibili</h2>
 
-<form method="get" class="search-form">
+<div>
+<form method="get" class="search-form" style="margin-bottom: 0.5rem;">
     <input type="text" name="q" placeholder="Cerca eventi..." value="{{ request.GET.q }}" aria-label="Cerca eventi">
     <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Cerca</button>
 </form>
 
+<!-- SEZIONE FILTRI AVANZATI -->
+<div style="margin-bottom: 1.5rem; background: #e9ecef; border-radius: 8px; overflow: hidden;">
+    <!-- Header con toggle per mostrare/nascondere filtri avanzati -->
+    <div style="padding: 1rem; background: #e9ecef; cursor: pointer;" onclick="toggleFilters()">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <span id="toggleIcon">▼</span>
+            <strong style="font-size: 1.1rem;">🔍 Filtri</strong>
+        </div>
+    </div>
+
+    <!-- Contenuto filtri (toggleabile) -->
+    <div id="advancedFilters" style="padding: 1rem; display: none;">
+        <form method="get" id="filterForm">
+            <!-- Mantieni la ricerca testuale se presente -->
+            {% if current_query %}
+                <input type="hidden" name="q" value="{{ current_query }}">
+            {% endif %}
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+
+                <!-- Filtro rapido per data (tendina) -->
+                <div>
+                    <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">📅 Filtro rapido data</label>
+                    <select name="date_filter" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
+                        <option value="">Tutte le date</option>
+                        <option value="today" {% if current_date_filter == 'today' %}selected{% endif %}>📆 Eventi di oggi</option>
+                        <option value="upcoming" {% if current_date_filter == 'upcoming' %}selected{% endif %}>🚀 Eventi futuri</option>
+                        <option value="past" {% if current_date_filter == 'past' %}selected{% endif %}>📅 Eventi passati</option>
+                    </select>
+                </div>
+
+                <!-- Filtro per intervallo date - FORMATO ITALIANO -->
+                <div>
+                    <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">📅 Intervallo date</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <div style="flex: 1;">
+                            <input type="text"
+                                   name="start_date_from"
+                                   value="{{ current_start_date_from }}"
+                                   placeholder="GG/MM/AAAA"
+                                   pattern="\d{2}/\d{2}/\d{4}"
+                                   title="Formato: GG/MM/AAAA"
+                                   style="width: 100%; padding: 0.5rem; border: 1px solid #667eea; border-radius: 4px;">
+                        </div>
+                        <span style="align-self: center;">→</span>
+                        <div style="flex: 1;">
+                            <input type="text"
+                                   name="start_date_to"
+                                   value="{{ current_start_date_to }}"
+                                   placeholder="GG/MM/AAAA"
+                                   pattern="\d{2}/\d{2}/\d{4}"
+                                   title="Formato: GG/MM/AAAA"
+                                   style="width: 100%; padding: 0.5rem; border: 1px solid #667eea; border-radius: 4px;">
+                        </div>
+                    </div>
+                    <small style="color: #666; display: block; margin-top: 0.25rem;">Esempio: 25/12/2024</small>
+                </div>
+
+                <!-- Filtro per organizzatore (tendina) -->
+                <div>
+                    <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">👤 Organizzatore (seleziona)</label>
+                    <select name="organizer" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
+                        <option value="">Tutti gli organizzatori</option>
+                        {% for organizer in organizers %}
+                            <option value="{{ organizer.username }}" {% if current_organizer == organizer.username %}selected{% endif %}>
+                                {{ organizer.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Filtro per nome organizzatore (ricerca testuale) -->
+                <div>
+                    <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">👤 Nome organizzatore (cerca)</label>
+                    <input type="text" name="organizer_name" value="{{ current_organizer_name }}" placeholder="Cerca per nome utente, nome o cognome..." style="width: 100%; padding: 0.5rem; border: 1px solid #667eea; border-radius: 4px;" onchange="this.form.submit()">
+                </div>
+            </div>
+
+            <!-- Bottoni azione -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    🔄 Applica filtri
+                </button>
+                <button type="button" class="btn" style="background: #6c757d;" onclick="resetFilters()">
+                    🗑️ Reset tutti i filtri
+                </button>
+            </div>
+        </form>
+
+        <!-- Mostra filtri attivi -->
+        {% if current_date_filter or current_organizer or current_query or current_organizer_name or current_start_date_from or current_start_date_to %}
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #dee2e6;">
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                    <strong>Filtri attivi:</strong>
+                    {% if current_query %}
+                        <span style="background: #667eea; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            🔍 Ricerca: "{{ current_query }}"
+                        </span>
+                    {% endif %}
+                    {% if current_date_filter == 'today' %}
+                        <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            📆 Eventi di oggi
+                        </span>
+                    {% elif current_date_filter == 'upcoming' %}
+                        <span style="background: #17a2b8; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            🚀 Eventi futuri
+                        </span>
+                    {% elif current_date_filter == 'past' %}
+                        <span style="background: #6c757d; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            📅 Eventi passati
+                        </span>
+                    {% endif %}
+                    {% if current_start_date_from %}
+                        <span style="background: #007bff; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            📅 Dal: {{ current_start_date_from }}
+                        </span>
+                    {% endif %}
+                    {% if current_start_date_to %}
+                        <span style="background: #007bff; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            📅 Al: {{ current_start_date_to }}
+                        </span>
+                    {% endif %}
+                    {% if current_organizer %}
+                        {% for organizer in organizers %}
+                            {% if organizer.username == current_organizer %}
+                                <span style="background: #e83e8c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                                    👤 Organizzatore: {{ organizer.full_name }}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if current_organizer_name %}
+                        <span style="background: #fd7e14; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                            👤 Nome contiene: "{{ current_organizer_name }}"
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+
+
+<script>
+function toggleFilters() {
+    var filters = document.getElementById('advancedFilters');
+    var icon = document.getElementById('toggleIcon');
+    if (filters.style.display === 'none') {
+        filters.style.display = 'block';
+        icon.innerHTML = '▼';
+    } else {
+        filters.style.display = 'none';
+        icon.innerHTML = '▶';
+    }
+}
+
+function resetFilters() {
+    window.location.href = window.location.pathname;
+}
+
+// Mantieni i filtri aperti se ci sono filtri attivi
+{% if current_date_filter or current_organizer or current_query or current_organizer_name or current_start_date_from or current_start_date_to %}
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('advancedFilters').style.display = 'block';
+        document.getElementById('toggleIcon').innerHTML = '▼';
+    });
+{% endif %}
+</script>
+
 <p style="color: #666; margin-bottom: 1.5rem;">
-    Numero di Eventi: <strong>{{ total_events }}</strong>
+    Numero di Eventi: <strong>{{ events|length }}</strong>
 </p>
 
 {% if events %}
@@ -204,16 +375,48 @@
     {% endfor %}
 
     {% if is_paginated %}
-        <div style="text-align: center; margin: 2rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
-            {% if page_obj.has_previous %}
-                <a href="?page=1" class="btn btn-secondary">Prima</a>
-                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Precedente</a>
-            {% endif %}
-            <span style="padding: 0.5rem 1rem; align-self: center;">Pagina {{ page_obj.number }} di {{ page_obj.paginator.num_pages }}</span>
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Prossima</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Ultima</a>
-            {% endif %}
+    <div style="text-align: center; margin: 2rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+        {% if page_obj.has_previous %}
+            <a href="?page=1
+                {% if current_query %}&q={{ current_query }}{% endif %}
+                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
+            " class="btn btn-secondary">Prima</a>
+            <a href="?page={{ page_obj.previous_page_number }}
+                {% if current_query %}&q={{ current_query }}{% endif %}
+                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
+            " class="btn btn-secondary">Precedente</a>
+        {% endif %}
+
+        <span style="padding: 0.5rem 1rem; align-self: center;">
+            Pagina {{ page_obj.number }} di {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}
+                {% if current_query %}&q={{ current_query }}{% endif %}
+                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
+            " class="btn btn-secondary">Prossima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}
+                {% if current_query %}&q={{ current_query }}{% endif %}
+                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
+            " class="btn btn-secondary">Ultima</a>
+        {% endif %}
         </div>
     {% endif %}
 {% else %}
