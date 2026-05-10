@@ -929,8 +929,8 @@
                 tooltip.innerHTML = `${timeHtml}<div class="tooltip-title">${eventInfo.event.title}</div>${locationHtml}`;
                 tooltip.classList.add('show');
 
-                let left = mouseX + 15;
-                let top = mouseY - 70;
+                let left = mouseX - 50;
+                let top = mouseY - 100;
 
                 const tooltipRect = tooltip.getBoundingClientRect();
                 if (left + tooltipRect.width > window.innerWidth) {
