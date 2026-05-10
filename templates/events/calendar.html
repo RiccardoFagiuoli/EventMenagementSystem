@@ -389,7 +389,35 @@
           let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
           let currentTouchEvent = null;
 
+          // Funzione per il feedback aptico (vibrazione)
+          function hapticFeedback() {
+            // Verifica se il dispositivo supporta la vibrazione
+            if ('vibrate' in navigator) {
+              // Pattern di vibrazione: vibra per 50ms
+              navigator.vibrate(50);
+            }
+          }
+
+          // Funzione per feedback più lungo (esito positivo)
+          function hapticFeedbackSuccess() {
+            if ('vibrate' in navigator) {
+              // Pattern: vibra, pausa, vibra (per indicare successo)
+              navigator.vibrate([50, 30, 50]);
+            }
+          }
+
+          // Funzione per feedback negativo/cancellazione
+          function hapticFeedbackCancel() {
+            if ('vibrate' in navigator) {
+              // Vibrazione breve singola
+              navigator.vibrate(30);
+            }
+          }
+
           function showTooltip(event, mouseX, mouseY, eventInfo) {
+            // Feedback aptico quando si mostra il tooltip
+            hapticFeedbackSuccess();
+
             // Formatta l'orario
             let timeHtml = '';
             if (eventInfo.event.start) {
@@ -433,6 +461,9 @@
           }
 
           function startLongPress(event, info) {
+            // Feedback aptico all'inizio del long press (opzionale)
+            // hapticFeedback(); // Decommentare se si vuole vibrare anche all'inizio
+
             // Ottieni le coordinate del tocco
             let clientX, clientY;
             if (event.touches) {
@@ -492,6 +523,7 @@
               if (isTouchDevice) {
                 // Se longPressTimer è null, era un tap breve
                 if (longPressTimer === null && !tooltip.classList.contains('show')) {
+                  hapticFeedback(); // Feedback aptico al tap
                   window.location.href = info.event.url;
                 }
               } else {
@@ -526,6 +558,7 @@
                       Math.abs(e.touches[0].clientY - touchStartY) > 10) {
                     cancelLongPress();
                     hideTooltip();
+                    hapticFeedbackCancel(); // Feedback di cancellazione
                   }
                 });
 
@@ -536,15 +569,17 @@
                   if (touchDuration < 500 && longPressTimer !== null) {
                     // Era un tap breve, naviga
                     cancelLongPress();
+                    hapticFeedback(); // Feedback aptico per il tap
                     setTimeout(() => {
                       window.location.href = info.event.url;
                     }, 50);
                   } else {
                     // Era un long press, nascondi tooltip dopo un po'
                     cancelLongPress();
+                    // Il tooltip rimane per 2 secondi dopo il rilascio
                     setTimeout(() => {
                       hideTooltip();
-                    }, 2000); // Il tooltip rimane per 2 secondi dopo il rilascio
+                    }, 2000);
                   }
                 });
 
@@ -595,7 +630,7 @@
             console.log('Eventi caricati nel calendario');
           });
         });
-    </script>
+        </script>
 
     <style>
     .fc {
