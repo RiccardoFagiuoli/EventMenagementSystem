@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin Dashboard - Event Management System{% endblock %}
+{% block title %}Home - Event Management System{% endblock %}
 
 {% block content %}
     <style>
@@ -559,15 +559,15 @@
 
               function hapticFeedbackSuccess() {
                 if ('vibrate' in navigator) {
-                  navigator.vibrate([50, 30, 50]);
+                  navigator.vibrate(50);
                 }
               }
 
-              function hapticFeedbackCancel() {
+              {% comment %}function hapticFeedbackCancel() {
                 if ('vibrate' in navigator) {
                   navigator.vibrate(30);
                 }
-              }
+              }{% endcomment %}
 
               function showTooltip(event, mouseX, mouseY, eventInfo) {
                 hapticFeedbackSuccess();
@@ -589,8 +589,8 @@
                 tooltip.innerHTML = `${timeHtml}<div class="tooltip-title">${eventInfo.event.title}</div>${locationHtml}`;
                 tooltip.classList.add('show');
 
-                let left = mouseX + 15;
-                let top = mouseY + 15;
+                let left = mouseX;
+                let top = mouseY - 100;
 
                 const tooltipRect = tooltip.getBoundingClientRect();
                 if (left + tooltipRect.width > window.innerWidth) {
@@ -929,7 +929,7 @@
                 tooltip.innerHTML = `${timeHtml}<div class="tooltip-title">${eventInfo.event.title}</div>${locationHtml}`;
                 tooltip.classList.add('show');
 
-                let left = mouseX - 50;
+                let left = mouseX;
                 let top = mouseY - 100;
 
                 const tooltipRect = tooltip.getBoundingClientRect();
