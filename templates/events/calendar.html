@@ -461,8 +461,6 @@
           }
 
           function startLongPress(event, info) {
-            // Feedback aptico all'inizio del long press (opzionale)
-            // hapticFeedback(); // Decommentare se si vuole vibrare anche all'inizio
 
             // Ottieni le coordinate del tocco
             let clientX, clientY;
@@ -624,11 +622,6 @@
           });
 
           calendar.render();
-
-          // Debug per verificare il caricamento degli eventi
-          calendar.on('eventsSet', function() {
-            console.log('Eventi caricati nel calendario');
-          });
         });
         </script>
 

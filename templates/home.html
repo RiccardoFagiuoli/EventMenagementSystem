@@ -16,6 +16,1226 @@
             --day-header-small: 1rem;
         }
 
+        /* Stile per il tooltip personalizzato */
+        .event-tooltip {
+            position: fixed;
+            z-index: 9999;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .event-tooltip.show {
+            opacity: 1;
+        }
+
+        .event-tooltip .tooltip-time {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .event-tooltip .tooltip-title {
+            font-size: 1rem;
+            font-weight: bold;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .event-tooltip .tooltip-location {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .home-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+        .home-buttons .btn { flex: 1; min-width: 150px; }
+        .home-features {align-items: stretch; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .calendar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+        .legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+        .fc .fc-toolbar-title {text-transform: capitalize !important;}
+        .home-features > div,
+        .home-features > a {
+            display: flex;
+        }
+        .home-features > div > div,
+        .home-features > a > div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            text-decoration: none !important;
+            box-shadow: 0 0 4px 1px dimgray !important;
+            color: white !important;
+        }
+
+        .fc .fc-col-header-cell-cushion {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 60px !important;
+            padding: 8px 4px !important;
+            font-size: var(--day-header-desktop) !important;
+            transition: all 0.2s ease !important;
+            font-weight: 500 !important;
+            text-transform: capitalize !important;
+        }
+
+        .fc .fc-event-main {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .fc .fc-event-main-frame {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .fc .fc-event-time {
+            font-size: calc(var(--event-title-desktop) * 0.85) !important;
+            color: black !important;
+            font-weight: normal !important;
+            margin-bottom: 2px !important;
+            display: block !important;
+            width: 100% !important;
+            text-align: left !important;
+        }
+
+        .fc .fc-event-title-container {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        .fc .fc-event-title {
+            font-size: var(--event-title-desktop) !important;
+            transition: all 0.2s ease !important;
+            font-weight: normal !important;
+            white-space: normal !important;
+            color: black;
+            line-height: 1.4 !important;
+            word-wrap: break-word !important;
+            overflow: visible !important;
+            display: block !important;
+        }
+
+        .fc .fc-daygrid-event {
+            display: block !important;
+        }
+
+        .fc .fc-daygrid-event .fc-event-time {
+            float: none !important;
+            display: block !important;
+        }
+
+        .fc .fc-daygrid-event .fc-event-title {
+            display: block !important;
+        }
+
+        .fc .fc-event {
+            cursor: pointer;
+            padding: 4px 6px !important;
+            margin: 1px 0 !important;
+            min-height: 28px !important;
+            height: auto !important;
+        }
+
+        .fc .fc-daygrid-day-frame {
+            height: auto !important;
+            min-height: 100px !important;
+        }
+
+        .fc .fc-daygrid-day-events {
+            min-height: 60px !important;
+        }
+
+        .fc .fc-daygrid-day-number {
+            font-size: var(--day-header-desktop) !important;
+            font-weight: 500 !important;
+            color: black !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .fc .fc-list-day-text,
+        .fc .fc-list-day-side-text {
+            font-size: var(--day-header-desktop) !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            text-transform: capitalize !important;
+        }
+
+        .fc .fc-timegrid-col-axis {
+            font-size: var(--day-header-desktop) !important;
+        }
+
+        .fc .fc-timegrid-axis-cushion {
+            font-size: var(--day-header-desktop) !important;
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .admin-quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .quick-action-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .quick-action-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .quick-action-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-action-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .admin-welcome {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            color: white;
+            text-align: center;
+            margin: 1rem 0 2rem 0;
+        }
+
+        .recent-activity {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .activity-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            font-size: 1.2rem;
+            min-width: 30px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --day-header-desktop: 1rem;
+                --event-title-desktop: 0.75rem;
+            }
+            .home-buttons { flex-direction: column; }
+            .home-buttons .btn { width: 100%; }
+            .fc .fc-event {
+                padding: 3px 5px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 80px !important;
+            }
+            .admin-stats-grid {
+                gap: 1rem;
+            }
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            .admin-welcome {
+                padding: 1.5rem;
+            }
+
+            .event-tooltip {
+                display: block !important;
+                padding: 10px 14px;
+                font-size: 0.85rem;
+                max-width: 260px;
+                z-index: 10000;
+            }
+            .event-tooltip .tooltip-title {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 700px) {
+            :root {
+                --day-header-desktop: 0.9rem;
+                --event-title-desktop: 0.7rem;
+            }
+            .fc .fc-col-header-cell {
+                text-align: center !important;
+            }
+            .fc .fc-col-header-cell-cushion {
+                flex-direction: column !important;
+                gap: 3px !important;
+                padding: 6px 2px !important;
+                text-align: center !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --day-header-desktop: 0.85rem;
+                --event-title-desktop: 0.65rem;
+            }
+            .fc .fc-event {
+                padding: 2px 4px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 70px !important;
+            }
+
+            .calendar-legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .home-buttons {
+                flex-direction: column;
+            }
+            .home-buttons .btn {
+                width: 100%;
+            }
+
+            .fc .fc-toolbar {
+                flex-wrap: wrap;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+            }
+
+            .fc .fc-toolbar-chunk:first-child {
+                order: 1;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-chunk:nth-child(2) {
+                order: 2;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-chunk:last-child {
+                order: 3;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1.2rem;
+                margin: 0 !important;
+            }
+
+            .fc .fc-button {
+                padding: 0.35rem 0.7rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            .fc .fc-button-group {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .fc .fc-col-header-cell {
+                text-align: center !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --day-header-desktop: 0.8rem;
+                --event-title-desktop: 0.65rem;
+            }
+            .fc .fc-col-header-cell-cushion {
+                min-height: 50px !important;
+                font-size: 0.8rem !important;
+                gap: 2px !important;
+                padding: 6px 1px !important;
+            }
+            .fc .fc-daygrid-day-frame {
+                min-height: 60px !important;
+            }
+        }
+    </style>
+
+    <!-- Tooltip element -->
+    <div id="eventTooltip" class="event-tooltip"></div>
+
+    {% if user.is_authenticated and user.is_staff %}
+        <!-- Admin Welcome Section -->
+        <div class="admin-welcome">
+            <h2 style="margin-bottom: 0.5rem;">👋 Benvenuto, {{ user.username }}!</h2>
+            <p style="margin-bottom: 0; opacity: 0.95;">Sei nella dashboard di amministrazione. Da qui puoi gestire tutto il sistema.</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="admin-stats-grid">
+            <div class="stat-card" onclick="window.location.href='{% url 'events:event_list' %}'">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number">{{ total_events|default:"0" }}</div>
+                <div class="stat-label">Eventi Totali</div>
+            </div>
+            <div class="stat-card" onclick="window.location.href='{% url 'users:user_list' %}'">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">{{ total_users |default:"0" }}</div>
+                <div class="stat-label">Utenti Registrati</div>
+            </div>
+            <div class="stat-card" onclick="window.location.href='{% url 'events:event_list' %}?filter=upcoming'">
+                <div class="stat-icon">📅</div>
+                <div class="stat-number">{{ upcoming_events_count|default:"0" }}</div>
+                <div class="stat-label">Eventi di Oggi</div>
+            </div>
+            <div class="stat-card" onclick="window.location.href='{% url 'users:organizer_list' %}'">
+                <div class="stat-icon">🎤</div>
+                <div class="stat-number">{{ total_organizers|default:"0" }}</div>
+                <div class="stat-label">Organizzatori</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="admin-quick-actions">
+            <a href="{% url 'events:event_create' %}" class="quick-action-card" style="background: #667eea;">
+                <div class="quick-action-icon">✨</div>
+                <div class="quick-action-title">Crea Nuovo Evento</div>
+            </a>
+            <a href="{% url 'events:event_list' %}" class="quick-action-card" style="background: #6b6dd2 ;">
+                <div class="quick-action-icon">📋</div>
+                <div class="quick-action-title">Gestisci Eventi</div>
+            </a>
+            <a href="{% url 'users:user_list' %}" class="quick-action-card" style="background: #705cba ;">
+                <div class="quick-action-icon">👨‍👩‍👧‍👦</div>
+                <div class="quick-action-title">Gestisci Utenti</div>
+            </a>
+            <a href="{% url 'admin:index' %}" class="quick-action-card" style="background: #764ba2;">
+                <div class="quick-action-icon">⚙️</div>
+                <div class="quick-action-title">Admin Panel</div>
+            </a>
+        </div>
+
+        <!-- Recent Activity Section (Optional - requires backend) -->
+        <div class="recent-activity">
+            <h3 style="margin-bottom: 1rem;">🔄 Attività Recenti</h3>
+            <div class="activity-item">
+                <div class="activity-icon">📝</div>
+                <div class="activity-content">
+                    <div class="activity-title">Benvenuto nella dashboard admin!</div>
+                    <div class="activity-time">Ora</div>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">💡</div>
+                <div class="activity-content">
+                    <div class="activity-title">Suggerimento: Usa le card statistiche per navigare rapidamente</div>
+                    <div class="activity-time">Sempre</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FullCalendar JS -->
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const calendarEl = document.getElementById('calendar');
+              const tooltip = document.getElementById('eventTooltip');
+              let tooltipTimeout;
+              let longPressTimer;
+              let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+              let currentTouchEvent = null;
+
+              // Funzione per il feedback aptico (vibrazione)
+              function hapticFeedback() {
+                if ('vibrate' in navigator) {
+                  navigator.vibrate(50);
+                }
+              }
+
+              function hapticFeedbackSuccess() {
+                if ('vibrate' in navigator) {
+                  navigator.vibrate([50, 30, 50]);
+                }
+              }
+
+              function hapticFeedbackCancel() {
+                if ('vibrate' in navigator) {
+                  navigator.vibrate(30);
+                }
+              }
+
+              function showTooltip(event, mouseX, mouseY, eventInfo) {
+                hapticFeedbackSuccess();
+
+                let timeHtml = '';
+                if (eventInfo.event.start) {
+                  const startTime = eventInfo.event.start.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                  let endTime = '';
+                  if (eventInfo.event.end) {
+                    endTime = ' - ' + eventInfo.event.end.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                  }
+                  timeHtml = `<div class="tooltip-time">🕒 ${startTime}${endTime}</div>`;
+                }
+                let locationHtml = '';
+                if (eventInfo.event.extendedProps && eventInfo.event.extendedProps.location) {
+                    locationHtml = `<div class="tooltip-location">📍 ${eventInfo.event.extendedProps.location}</div>`;
+                }
+
+                tooltip.innerHTML = `${timeHtml}<div class="tooltip-title">${eventInfo.event.title}</div>${locationHtml}`;
+                tooltip.classList.add('show');
+
+                let left = mouseX + 15;
+                let top = mouseY + 15;
+
+                const tooltipRect = tooltip.getBoundingClientRect();
+                if (left + tooltipRect.width > window.innerWidth) {
+                  left = mouseX - tooltipRect.width - 15;
+                }
+                if (top + tooltipRect.height > window.innerHeight) {
+                  top = mouseY - tooltipRect.height - 15;
+                }
+
+                tooltip.style.left = Math.max(5, left) + 'px';
+                tooltip.style.top = Math.max(5, top) + 'px';
+              }
+
+              function hideTooltip() {
+                tooltip.classList.remove('show');
+              }
+
+              function startLongPress(event, info) {
+                let clientX, clientY;
+                if (event.touches) {
+                  clientX = event.touches[0].clientX;
+                  clientY = event.touches[0].clientY;
+                } else {
+                  clientX = event.clientX;
+                  clientY = event.clientY;
+                }
+
+                currentTouchEvent = { clientX, clientY, info };
+
+                longPressTimer = setTimeout(() => {
+                  if (currentTouchEvent) {
+                    showTooltip(event, currentTouchEvent.clientX, currentTouchEvent.clientY, currentTouchEvent.info);
+                  }
+                }, 500);
+              }
+
+              function cancelLongPress() {
+                if (longPressTimer) {
+                  clearTimeout(longPressTimer);
+                  longPressTimer = null;
+                }
+                currentTouchEvent = null;
+              }
+
+              if (calendarEl) {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                  initialView: 'listMonth',
+                  headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'listMonth,timeGridDay'
+                  },
+                  buttonText: {
+                    today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+                    day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+                    list: window.innerWidth < 480 ? 'Lista' : 'Lista',
+                  },
+                  locale: 'it',
+                  firstDay: 1,
+                  height: 'auto',
+                  contentHeight: 'auto',
+                  displayEventTime: true,
+                  eventDisplay: 'block',
+                  events: {
+                    url: '{% url "events:calendar_events" %}',
+                    failure: function() {
+                      alert('Errore nel caricamento degli eventi');
+                    }
+                  },
+                  eventClick: function(info) {
+                    if (isTouchDevice) {
+                      if (longPressTimer === null && !tooltip.classList.contains('show')) {
+                        window.location.href = info.event.url;
+                      }
+                    } else {
+                      window.location.href = info.event.url;
+                    }
+                  },
+                  eventDidMount: function(info) {
+                    const eventEl = info.el;
+
+                    if (isTouchDevice) {
+                      let touchStartTime = 0;
+                      let touchStartX = 0;
+                      let touchStartY = 0;
+
+                      eventEl.addEventListener('touchstart', function(e) {
+                        touchStartTime = Date.now();
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+
+                        cancelLongPress();
+                        startLongPress(e, info);
+                        e.preventDefault();
+                      });
+
+                      eventEl.addEventListener('touchmove', function(e) {
+                        if (Math.abs(e.touches[0].clientX - touchStartX) > 10 ||
+                            Math.abs(e.touches[0].clientY - touchStartY) > 10) {
+                          cancelLongPress();
+                          hideTooltip();
+                          hapticFeedbackCancel();
+                        }
+                      });
+
+                      eventEl.addEventListener('touchend', function(e) {
+                        const touchDuration = Date.now() - touchStartTime;
+
+                        if (touchDuration < 500 && longPressTimer !== null) {
+                          cancelLongPress();
+                          hapticFeedback();
+                          setTimeout(() => {
+                            window.location.href = info.event.url;
+                          }, 50);
+                        } else {
+                          cancelLongPress();
+                          setTimeout(() => {
+                            hideTooltip();
+                          }, 2000);
+                        }
+                      });
+
+                      eventEl.addEventListener('contextmenu', function(e) {
+                        e.preventDefault();
+                        return false;
+                      });
+                    } else {
+                      eventEl.addEventListener('mouseenter', function(e) {
+                        clearTimeout(tooltipTimeout);
+                        tooltipTimeout = setTimeout(() => {
+                          showTooltip(eventEl, e.clientX, e.clientY, info);
+                        }, 180);
+                      });
+
+                      eventEl.addEventListener('mousemove', function(e) {
+                        if (tooltip.classList.contains('show')) {
+                          let left = e.clientX + 15;
+                          let top = e.clientY + 15;
+
+                          const tooltipRect = tooltip.getBoundingClientRect();
+                          if (left + tooltipRect.width > window.innerWidth) {
+                            left = e.clientX - tooltipRect.width - 15;
+                          }
+                          if (top + tooltipRect.height > window.innerHeight) {
+                            top = e.clientY - tooltipRect.height - 15;
+                          }
+
+                          tooltip.style.left = Math.max(5, left) + 'px';
+                          tooltip.style.top = Math.max(5, top) + 'px';
+                        }
+                      });
+
+                      eventEl.addEventListener('mouseleave', function() {
+                        clearTimeout(tooltipTimeout);
+                        hideTooltip();
+                      });
+                    }
+                  }
+                });
+
+                calendar.render();
+              }
+            });
+        </script>
+
+        <style>
+            .fc {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .fc .fc-button-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-color: rgb(255 255 255 / 0.4);
+            }
+
+            .fc .fc-button-primary:hover {
+                background-color: #5568d3;
+                border-color: #5568d3;
+            }
+
+            .fc .fc-button-primary.fc-button-active {
+                border: 2px solid #333 !important;
+            }
+
+            .fc .fc-daygrid-day.fc-day-today {
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            }
+
+            .fc .fc-col-header-cell-cushion,
+            .fc .fc-list-day-text,
+            .fc .fc-list-day-side-text {
+                color: black !important;
+                text-decoration: none !important;
+            }
+
+            .fc .fc-event {
+                cursor: pointer;
+            }
+
+            .fc .fc-timegrid-event:hover{
+                text-decoration: none !important;
+                box-shadow: 0 0 4px 1px dimgray !important;
+            }
+
+            .fc .fc-list-event:hover {
+                background-color: lightgray !important;
+            }
+
+            .fc .fc-daygrid-day-frame {
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .fc .fc-daygrid-body {
+                overflow: visible !important;
+            }
+
+            .fc .fc-daygrid-event {
+                white-space: normal !important;
+            }
+
+            .fc-direction-ltr .fc-daygrid-event .fc-event-time {
+                float: none !important;
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .fc .fc-list-event-time {
+                font-size: calc(var(--event-title-desktop) * 0.9) !important;
+                font-weight: normal !important;
+            }
+
+            .fc .fc-list-event-title {
+                font-size: var(--event-title-desktop) !important;
+                font-weight: normal !important;
+            }
+
+            .fc .fc-timegrid-axis-cushion {
+                font-size: var(--day-header-desktop) !important;
+                font-weight: 500 !important;
+            }
+
+            .fc .fc-timegrid-slot-label-cushion {
+                font-size: var(--day-header-desktop) !important;
+            }
+        </style>
+
+    {% elif user.is_authenticated and not user.is_staff %}
+        <!-- Non-admin user view -->
+        <div class="admin-welcome">
+            <h2 style="margin-bottom: 0.5rem;">👋 Ciao, {{ user.username }}!</h2>
+            <p style="margin-bottom: 0; opacity: 0.95;">Benvenuto nella tua area personale.</p>
+        </div>
+
+        <div style="text-align: center; padding: 0;margin-top: 1rem; margin-left: auto; margin-right:auto;">
+            <div class="home-buttons">
+                {% if user.is_staff %}
+                    <a href="{% url 'events:event_list' %}" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Visualizza Eventi</a>
+                {% elif user.profile.role == 'attendee' %}
+                    <a href="{% url 'events:event_list' %}" class="btn" style="background: #667eea;">Visualizza Eventi</a>
+                    <a href="{% url 'events:event_list' %}" class="btn" style="background: #764ba2;">Le mie Iscrizioni</a>
+                {% else %}
+                    <a href="{% url 'events:event_list' %}" class="btn">Visualizza Eventi</a>
+                {% endif %}
+                {% if user.profile.role == 'organizer' %}
+                    <a href="{% url 'events:event_create' %}" class="btn" style="background-color: #764ba2;">Crea un Evento</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="max-width: 1200px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="margin-bottom: 1.5rem;">📅 I Tuoi Prossimi Eventi</h3>
+            <div id="calendar"></div>
+
+            {% if user.profile.role == 'organizer' %}
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #667eea;"></span>
+                        <span>Eventi a cui sei registrato</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #764ba2;"></span>
+                        <span>Eventi che organizzi</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const calendarEl = document.getElementById('calendar');
+              const tooltip = document.getElementById('eventTooltip');
+              let tooltipTimeout;
+              let longPressTimer;
+              let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+              let currentTouchEvent = null;
+
+              // Funzione per il feedback aptico (vibrazione)
+              function hapticFeedback() {
+                if ('vibrate' in navigator) {
+                  navigator.vibrate(50);
+                }
+              }
+
+              function hapticFeedbackSuccess() {
+                if ('vibrate' in navigator) {
+                  navigator.vibrate(50);
+                }
+              }
+
+              {% comment %}function hapticFeedbackCancel() {
+                if ('vibrate' in navigator) {
+                  navigator.vibrate(30);
+                }
+              }{% endcomment %}
+
+              function showTooltip(event, mouseX, mouseY, eventInfo) {
+                hapticFeedbackSuccess();
+
+                let timeHtml = '';
+                if (eventInfo.event.start) {
+                  const startTime = eventInfo.event.start.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                  let endTime = '';
+                  if (eventInfo.event.end) {
+                    endTime = ' - ' + eventInfo.event.end.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                  }
+                  timeHtml = `<div class="tooltip-time">🕒 ${startTime}${endTime}</div>`;
+                }
+                let locationHtml = '';
+                if (eventInfo.event.extendedProps && eventInfo.event.extendedProps.location) {
+                    locationHtml = `<div class="tooltip-location">📍 ${eventInfo.event.extendedProps.location}</div>`;
+                }
+
+                tooltip.innerHTML = `${timeHtml}<div class="tooltip-title">${eventInfo.event.title}</div>${locationHtml}`;
+                tooltip.classList.add('show');
+
+                let left = mouseX + 15;
+                let top = mouseY - 70;
+
+                const tooltipRect = tooltip.getBoundingClientRect();
+                if (left + tooltipRect.width > window.innerWidth) {
+                  left = mouseX - tooltipRect.width - 15;
+                }
+                if (top + tooltipRect.height > window.innerHeight) {
+                  top = mouseY - tooltipRect.height - 15;
+                }
+
+                tooltip.style.left = Math.max(5, left) + 'px';
+                tooltip.style.top = Math.max(5, top) + 'px';
+              }
+
+              function hideTooltip() {
+                tooltip.classList.remove('show');
+              }
+
+              function startLongPress(event, info) {
+                let clientX, clientY;
+                if (event.touches) {
+                  clientX = event.touches[0].clientX;
+                  clientY = event.touches[0].clientY;
+                } else {
+                  clientX = event.clientX;
+                  clientY = event.clientY;
+                }
+
+                currentTouchEvent = { clientX, clientY, info };
+
+                longPressTimer = setTimeout(() => {
+                  if (currentTouchEvent) {
+                    showTooltip(event, currentTouchEvent.clientX, currentTouchEvent.clientY, currentTouchEvent.info);
+                  }
+                }, 500);
+              }
+
+              function cancelLongPress() {
+                if (longPressTimer) {
+                  clearTimeout(longPressTimer);
+                  longPressTimer = null;
+                }
+                currentTouchEvent = null;
+              }
+
+              if (calendarEl) {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                  initialView: 'listMonth',
+                  headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'listMonth,timeGridDay'
+                  },
+                  buttonText: {
+                    today: window.innerWidth < 480 ? 'Oggi' : 'Oggi',
+                    day: window.innerWidth < 480 ? 'Giorno' : 'Giorno',
+                    list: window.innerWidth < 480 ? 'Lista' : 'Lista',
+                  },
+                  locale: 'it',
+                  firstDay: 1,
+                  height: 'auto',
+                  contentHeight: 'auto',
+                  displayEventTime: true,
+                  eventDisplay: 'block',
+                  events: {
+                    url: '{% url "events:calendar_events" %}',
+                    failure: function() {
+                      alert('Errore nel caricamento degli eventi');
+                    }
+                  },
+                  eventClick: function(info) {
+                    if (isTouchDevice) {
+                      if (longPressTimer === null && !tooltip.classList.contains('show')) {
+                        window.location.href = info.event.url;
+                      }
+                    } else {
+                      window.location.href = info.event.url;
+                    }
+                  },
+                  eventDidMount: function(info) {
+                    const eventEl = info.el;
+
+                    if (isTouchDevice) {
+                      let touchStartTime = 0;
+                      let touchStartX = 0;
+                      let touchStartY = 0;
+
+                      eventEl.addEventListener('touchstart', function(e) {
+                        touchStartTime = Date.now();
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+
+                        cancelLongPress();
+                        startLongPress(e, info);
+                        e.preventDefault();
+                      });
+
+                      eventEl.addEventListener('touchmove', function(e) {
+                        if (Math.abs(e.touches[0].clientX - touchStartX) > 10 ||
+                            Math.abs(e.touches[0].clientY - touchStartY) > 10) {
+                          cancelLongPress();
+                          hideTooltip();
+                          hapticFeedbackCancel();
+                        }
+                      });
+
+                      eventEl.addEventListener('touchend', function(e) {
+                        const touchDuration = Date.now() - touchStartTime;
+
+                        if (touchDuration < 500 && longPressTimer !== null) {
+                          cancelLongPress();
+                          hapticFeedback();
+                          setTimeout(() => {
+                            window.location.href = info.event.url;
+                          }, 50);
+                        } else {
+                          cancelLongPress();
+                          setTimeout(() => {
+                            hideTooltip();
+                          }, 2000);
+                        }
+                      });
+
+                      eventEl.addEventListener('contextmenu', function(e) {
+                        e.preventDefault();
+                        return false;
+                      });
+                    } else {
+                      eventEl.addEventListener('mouseenter', function(e) {
+                        clearTimeout(tooltipTimeout);
+                        tooltipTimeout = setTimeout(() => {
+                          showTooltip(eventEl, e.clientX, e.clientY, info);
+                        }, 180);
+                      });
+
+                      eventEl.addEventListener('mousemove', function(e) {
+                        if (tooltip.classList.contains('show')) {
+                          let left = e.clientX + 15;
+                          let top = e.clientY + 15;
+
+                          const tooltipRect = tooltip.getBoundingClientRect();
+                          if (left + tooltipRect.width > window.innerWidth) {
+                            left = e.clientX - tooltipRect.width - 15;
+                          }
+                          if (top + tooltipRect.height > window.innerHeight) {
+                            top = e.clientY - tooltipRect.height - 15;
+                          }
+
+                          tooltip.style.left = Math.max(5, left) + 'px';
+                          tooltip.style.top = Math.max(5, top) + 'px';
+                        }
+                      });
+
+                      eventEl.addEventListener('mouseleave', function() {
+                        clearTimeout(tooltipTimeout);
+                        hideTooltip();
+                      });
+                    }
+                  }
+                });
+
+                calendar.render();
+              }
+            });
+        </script>
+
+        <style>
+            .fc {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .fc .fc-button-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-color: rgb(255 255 255 / 0.4);
+            }
+
+            .fc .fc-button-primary:hover {
+                background-color: #5568d3;
+                border-color: #5568d3;
+            }
+
+            .fc .fc-button-primary.fc-button-active {
+                border: 2px solid #333 !important;
+            }
+
+            .fc .fc-daygrid-day.fc-day-today {
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            }
+
+            .fc .fc-col-header-cell-cushion,
+            .fc .fc-list-day-text,
+            .fc .fc-list-day-side-text {
+                color: black !important;
+                text-decoration: none !important;
+            }
+
+            .fc .fc-event {
+                cursor: pointer;
+            }
+
+            .fc .fc-timegrid-event:hover{
+                text-decoration: none !important;
+                box-shadow: 0 0 4px 1px dimgray !important;
+            }
+
+            .fc .fc-list-event:hover {
+                background-color: lightgray !important;
+            }
+
+            .fc .fc-daygrid-day-frame {
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .fc .fc-daygrid-body {
+                overflow: visible !important;
+            }
+
+            .fc .fc-daygrid-event {
+                white-space: normal !important;
+            }
+
+            .fc-direction-ltr .fc-daygrid-event .fc-event-time {
+                float: none !important;
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .fc .fc-list-event-time {
+                font-size: calc(var(--event-title-desktop) * 0.9) !important;
+                font-weight: normal !important;
+            }
+
+            .fc .fc-list-event-title {
+                font-size: var(--event-title-desktop) !important;
+                font-weight: normal !important;
+            }
+
+            .fc .fc-timegrid-axis-cushion {
+                font-size: var(--day-header-desktop) !important;
+                font-weight: 500 !important;
+            }
+
+            .fc .fc-timegrid-slot-label-cushion {
+                font-size: var(--day-header-desktop) !important;
+            }
+        </style>
+
+    {% else %}
+        <!-- Non-authenticated user view -->
+        <div style="text-align: center; padding: 0;margin-top: 2rem; margin-left: auto; margin-right:auto;">
+            <h2>Benvenuto al Sistema di Gestione degli Eventi</h2>
+            <p style="font-size: 1.1rem; color: #666; margin: 1rem 0;">
+                Scopri, partecipa e organizza eventi straordinari
+            </p>
+        </div>
+
+        <div style="text-align: center; padding: 0;margin-top: 1rem; margin-left: auto; margin-right:auto;">
+            <div class="home-buttons">
+                <a href="{% url 'users:login' %}" class="btn">Accedi</a>
+                <a href="{% url 'users:register' %}" class="btn" style="background-color: #764ba2;">Registrati</a>
+            </div>
+        </div>
+
+        <div class="home-features">
+            <a href="{% url 'users:login' %}" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
+                <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                    <h3>👥 Partecipa agli Eventi</h3>
+                    <p>Scopri e registrati ai migliori eventi</p>
+                </div>
+            </a>
+            <a href="{% url 'users:login' %}" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
+                <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                    <h3>📅 Organizza Eventi</h3>
+                    <p>Crea e gestisci i tuoi eventi con semplicità</p>
+                </div>
+            </a>
+            <a href="{% url 'users:login' %}" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
+                <div style="background: white; padding: 1.5rem; border-radius: 4px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                    <h3>🎯 Traccia Presenze</h3>
+                    <p>Monitora gli iscritti e le presenze ai tuoi eventi</p>
+                </div>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% comment %}
+{% extends 'base.html' %}
+
+{% block title %}Home - Event Management System{% endblock %}
+
+{% block content %}
+    <style>
+        :root {
+            --event-title-desktop: 0.8rem;
+            --event-title-tablet: 0.75rem;
+            --event-title-mobile: 0.7rem;
+            --event-title-small: 0.65rem;
+
+            --day-header-desktop: 1.5rem;
+            --day-header-tablet: 1.3rem;
+            --day-header-mobile: 1.15rem;
+            --day-header-small: 1rem;
+        }
+
         .home-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
         .home-buttons .btn { flex: 1; min-width: 150px; }
         .home-features {align-items: stretch; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
@@ -806,4 +2026,4 @@
             </a>
         </div>
     {% endif %}
-{% endblock %}
+{% endblock %}{% endcomment %}
