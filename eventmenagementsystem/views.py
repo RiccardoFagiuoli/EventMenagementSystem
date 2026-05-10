@@ -22,9 +22,27 @@ def home(request):
     except:
         total_organizers = 0
 
+    # Contatori specifici per l'utente loggato
+    if request.user.is_authenticated:
+        # Numero di eventi creati dall'utente (se è organizzatore)
+        total_organizer_events = Event.objects.filter(
+            organizer=request.user,
+            deleted_at__isnull=True
+        ).count()
+
+        # Numero di iscrizioni dell'utente
+        total_subscriptions = EventRegistration.objects.filter(
+            user=request.user
+        ).count()
+    else:
+        total_organizer_events = 0
+        total_subscriptions = 0
+
     context = {
         'total_events': total_events,
         'total_users': total_users,
+        'total_organizer_events': total_organizer_events,
+        'total_subscriptions': total_subscriptions,
         'total_attendees': EventRegistration.objects.filter(status='confirmed').count(),
         'upcoming_events_count': upcoming_events_count,
         'total_organizers': total_organizers,
