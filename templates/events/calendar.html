@@ -226,7 +226,7 @@
             .fc .fc-daygrid-day-frame {
                 min-height: 80px !important;
             }
-            
+
             .event-tooltip {
                 display: block !important; /* Forziamo la visualizzazione anche su mobile */
             }
@@ -387,6 +387,7 @@
           let tooltipTimeout;
           let longPressTimer;
           let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+          let currentTouchEvent = null;
 
           function showTooltip(event, mouseX, mouseY, eventInfo) {
             // Formatta l'orario
@@ -405,12 +406,12 @@
             }
 
             // Costruisci il contenuto del tooltip
-            tooltip.innerHTML = `${timeHtml}<div class="tooltip-title"> ${eventInfo.event.title}</div>${locationHtml}`;
+            tooltip.innerHTML = `${timeHtml}<div class="tooltip-title">${eventInfo.event.title}</div>${locationHtml}`;
 
-            // Posiziona il tooltip vicino al mouse
+            // Posiziona il tooltip
             tooltip.classList.add('show');
 
-            // Calcola posizione (offset per non coprire il mouse)
+            // Calcola posizione (offset per non coprire il mouse/dito)
             let left = mouseX + 15;
             let top = mouseY + 15;
 
@@ -423,8 +424,8 @@
               top = mouseY - tooltipRect.height - 15;
             }
 
-            tooltip.style.left = left + 'px';
-            tooltip.style.top = top + 'px';
+            tooltip.style.left = Math.max(5, left) + 'px';
+            tooltip.style.top = Math.max(5, top) + 'px';
           }
 
           function hideTooltip() {
@@ -442,9 +443,13 @@
               clientY = event.clientY;
             }
 
+            currentTouchEvent = { clientX, clientY, info };
+
             longPressTimer = setTimeout(() => {
-              showTooltip(event, clientX, clientY, info);
-            }, 500); // 500ms di pressione prolungata
+              if (currentTouchEvent) {
+                showTooltip(event, currentTouchEvent.clientX, currentTouchEvent.clientY, currentTouchEvent.info);
+              }
+            }, 500);
           }
 
           function cancelLongPress() {
@@ -452,6 +457,7 @@
               clearTimeout(longPressTimer);
               longPressTimer = null;
             }
+            currentTouchEvent = null;
           }
 
           const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -477,104 +483,117 @@
             events: {
               url: '{% url "events:calendar_events" %}',
               failure: function() {
+                console.error('Errore nel caricamento degli eventi');
                 alert('Errore nel caricamento degli eventi');
               }
             },
             eventClick: function(info) {
-              // Su dispositivi touch, se c'è stato un long press non eseguiamo la navigazione
-              if (isTouchDevice && longPressTimer === null) {
-                // Se il timer è null significa che abbiamo fatto un tap normale (non long press)
-                window.location.href = info.event.url;
-              } else if (!isTouchDevice) {
+              // Su dispositivi touch, solo se NON è stato un long press
+              if (isTouchDevice) {
+                // Se longPressTimer è null, era un tap breve
+                if (longPressTimer === null && !tooltip.classList.contains('show')) {
+                  window.location.href = info.event.url;
+                }
+              } else {
                 // Su desktop il click normale naviga subito
                 window.location.href = info.event.url;
               }
             },
-
             eventDidMount: function(info) {
-                if (isTouchDevice) {
-                    // Gestione per dispositivi touch
-                    eventEl.addEventListener('touchstart', function (e) {
-                        // Previeni lo scroll durante il long press
-                        cancelLongPress();
-                        startLongPress(e, info);
+              const eventEl = info.el;
 
-                        // Previeni anche il click immediato se stiamo facendo long press
-                        e.preventDefault();
-                    });
+              if (isTouchDevice) {
+                // Gestione per dispositivi touch
+                let touchStartTime = 0;
+                let touchStartX = 0;
+                let touchStartY = 0;
 
-                    eventEl.addEventListener('touchmove', function (e) {
-                        // Se l'utente sposta il dito, cancella il long press
-                        cancelLongPress();
-                    });
+                eventEl.addEventListener('touchstart', function(e) {
+                  touchStartTime = Date.now();
+                  touchStartX = e.touches[0].clientX;
+                  touchStartY = e.touches[0].clientY;
 
-                    eventEl.addEventListener('touchend', function (e) {
-                        // Cancella il timer del long press
-                        cancelLongPress();
+                  cancelLongPress();
+                  startLongPress(e, info);
 
-                        // Se è stato un tap corto (meno di 500ms), navighiamo
-                        // Nota: il timer qui è già stato cancellato, quindi longPressTimer è null
-                        if (longPressTimer === null) {
-                            // Piccolo delay per evitare conflitti
-                            setTimeout(() => {
-                                window.location.href = info.event.url;
-                            }, 50);
-                        }
+                  // Non prevenire default completamente, solo il context menu
+                  e.preventDefault();
+                });
 
-                        // Nascondi il tooltip dopo un po'
-                        setTimeout(() => {
-                            hideTooltip();
-                        }, 100);
-                    });
+                eventEl.addEventListener('touchmove', function(e) {
+                  // Se l'utente sposta il dito di più di 10px, cancella
+                  if (Math.abs(e.touches[0].clientX - touchStartX) > 10 ||
+                      Math.abs(e.touches[0].clientY - touchStartY) > 10) {
+                    cancelLongPress();
+                    hideTooltip();
+                  }
+                });
 
-                    // Previeni il context menu standard su long press
-                    eventEl.addEventListener('contextmenu', function (e) {
-                        e.preventDefault();
-                        return false;
-                    });
-                } else {
-                    // Aggiungi event listeners per il tooltip (solo su desktop)
-                    if (window.innerWidth > 768) {
-                        const eventEl = info.el;
+                eventEl.addEventListener('touchend', function(e) {
+                  const touchDuration = Date.now() - touchStartTime;
 
-                        eventEl.addEventListener('mouseenter', function (e) {
-                            // Salva le informazioni dell'evento per usarle dopo
-                            eventEl._eventInfo = info;
-                            clearTimeout(tooltipTimeout);
-                            tooltipTimeout = setTimeout(() => {
-                                showTooltip(eventEl, e.clientX, e.clientY, info);
-                            }, 180); // Piccolo delay prima di mostrare in ms
-                        });
+                  // Se è stato un tap breve (meno di 500ms e nessun long press attivato)
+                  if (touchDuration < 500 && longPressTimer !== null) {
+                    // Era un tap breve, naviga
+                    cancelLongPress();
+                    setTimeout(() => {
+                      window.location.href = info.event.url;
+                    }, 50);
+                  } else {
+                    // Era un long press, nascondi tooltip dopo un po'
+                    cancelLongPress();
+                    setTimeout(() => {
+                      hideTooltip();
+                    }, 2000); // Il tooltip rimane per 2 secondi dopo il rilascio
+                  }
+                });
 
-                        eventEl.addEventListener('mousemove', function (e) {
-                            if (tooltip.classList.contains('show')) {
-                                // Aggiorna posizione mentre muovi il mouse
-                                let left = e.clientX + 15;
-                                let top = e.clientY + 15;
+                // Previeni il context menu standard su long press
+                eventEl.addEventListener('contextmenu', function(e) {
+                  e.preventDefault();
+                  return false;
+                });
+              } else {
+                // Gestione per desktop con hover
+                eventEl.addEventListener('mouseenter', function(e) {
+                  clearTimeout(tooltipTimeout);
+                  tooltipTimeout = setTimeout(() => {
+                    showTooltip(eventEl, e.clientX, e.clientY, info);
+                  }, 180);
+                });
 
-                                const tooltipRect = tooltip.getBoundingClientRect();
-                                if (left + tooltipRect.width > window.innerWidth) {
-                                    left = e.clientX - tooltipRect.width - 15;
-                                }
-                                if (top + tooltipRect.height > window.innerHeight) {
-                                    top = e.clientY - tooltipRect.height - 15;
-                                }
+                eventEl.addEventListener('mousemove', function(e) {
+                  if (tooltip.classList.contains('show')) {
+                    let left = e.clientX + 15;
+                    let top = e.clientY + 15;
 
-                                tooltip.style.left = left + 'px';
-                                tooltip.style.top = top + 'px';
-                            }
-                        });
-
-                        eventEl.addEventListener('mouseleave', function () {
-                            clearTimeout(tooltipTimeout);
-                            hideTooltip();
-                        });
+                    const tooltipRect = tooltip.getBoundingClientRect();
+                    if (left + tooltipRect.width > window.innerWidth) {
+                      left = e.clientX - tooltipRect.width - 15;
                     }
-                }
+                    if (top + tooltipRect.height > window.innerHeight) {
+                      top = e.clientY - tooltipRect.height - 15;
+                    }
+
+                    tooltip.style.left = Math.max(5, left) + 'px';
+                    tooltip.style.top = Math.max(5, top) + 'px';
+                  }
+                });
+
+                eventEl.addEventListener('mouseleave', function() {
+                  clearTimeout(tooltipTimeout);
+                  hideTooltip();
+                });
+              }
             }
           });
 
           calendar.render();
+
+          // Debug per verificare il caricamento degli eventi
+          calendar.on('eventsSet', function() {
+            console.log('Eventi caricati nel calendario');
+          });
         });
     </script>
 
