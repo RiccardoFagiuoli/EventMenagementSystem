@@ -15,6 +15,54 @@
         color: white !important;
     }
 
+    .pagination-container {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .pagination-left {
+        justify-self: start;
+    }
+
+    .pagination-center {
+        text-align: center;
+        padding: 0.5rem 1rem;
+    }
+
+    .pagination-right {
+        justify-self: end;
+    }
+
+    .pagination-link {
+        background: none;
+        border: none;
+        color: black;
+        cursor: pointer;
+        padding: 0 0.5rem;
+        font: inherit;
+        text-decoration: none;
+    }
+
+    pagination-link:hover {
+        text-decoration: none !important;
+    }
+
+    .pagination-link-underline {
+        background: none;
+        border: none;
+        color: black;
+        cursor: pointer;
+        font: inherit;
+        text-decoration: underline !important;
+    }
+
+    .pagination-hidden {
+        visibility: hidden;
+    }
+
     .event-card {
         display: flex;
         gap: 1.5rem;
@@ -217,7 +265,7 @@
                     <select name="organizer" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
                         <option value="">Tutti gli organizzatori</option>
                         {% for organizer in organizers %}
-                            <option value="{{ organizer.username }}" {% if current_organizer == organizer.username %}selected{% endif %}>
+                            <option value="{{ organizer.get_full_name|default:organizer.username }}" {% if current_organizer == organizer.username %}selected{% endif %}>
                                 {{ organizer.username }}
                             </option>
                         {% endfor %}
@@ -237,7 +285,7 @@
                     🔄 Applica filtri
                 </button>
                 <button type="button" class="btn" style="background: #6c757d;" onclick="resetFilters()">
-                    🗑️ Reset tutti i filtri
+                    🗑️ Cancella filtri
                 </button>
             </div>
         </form>
@@ -323,7 +371,8 @@ function resetFilters() {
 {% endif %}
 </script>
 
-<p style="color: #666; margin-bottom: 1.5rem;">
+<p style="
+color: #666; margin-bottom: 1.5rem;">
     Eventi Trovati:
     <strong>
         {% if events %}
@@ -386,48 +435,59 @@ function resetFilters() {
     {% endfor %}
 
     {% if is_paginated %}
-    <div style="text-align: center; margin: 2rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
-        {% if page_obj.has_previous %}
-            <a href="?page=1
-                {% if current_query %}&q={{ current_query }}{% endif %}
-                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
-                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
-                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
-                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
-                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Inizio</a>
-            <a href="?page={{ page_obj.previous_page_number }}
-                {% if current_query %}&q={{ current_query }}{% endif %}
-                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
-                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
-                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
-                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
-                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Precedente</a>
-        {% endif %}
+        <div class="pagination-container">
+            <div class="pagination-left">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if current_query %}&q={{ current_query }}{% endif %}
+                        {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                        {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                        {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                        {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                        {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}"
+                        class="pagination-link">« <span class="pagination-link-underline">Inizio</span>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}
+                        {% if current_query %}&q={{ current_query }}{% endif %}
+                        {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                        {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                        {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                        {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                        {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}"
+                        class="pagination-link-underline">Precedente
+                    </a>
+                {% else %}
+                    <span class="pagination-hidden"> </span>
+                {% endif %}
+            </div>
 
-        <span style="padding: 0.5rem 1rem; align-self: center;">
-            Pagina {{ page_obj.number }} di {{ page_obj.paginator.num_pages }}
-        </span>
+            <span class="pagination-center">
+                Pagina {{ page_obj.number }} di {{ page_obj.paginator.num_pages }}
+            </span>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}
-                {% if current_query %}&q={{ current_query }}{% endif %}
-                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
-                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
-                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
-                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
-                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Prossima</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}
-                {% if current_query %}&q={{ current_query }}{% endif %}
-                {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
-                {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
-                {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
-                {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
-                {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Fine</a>
-        {% endif %}
+            <div class="pagination-right">
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}
+                        {% if current_query %}&q={{ current_query }}{% endif %}
+                        {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                        {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                        {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                        {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                        {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}"
+                        class="pagination-link-underline">Prossima</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}
+                        {% if current_query %}&q={{ current_query }}{% endif %}
+                        {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
+                        {% if current_organizer %}&organizer={{ current_organizer }}{% endif %}
+                        {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
+                        {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
+                        {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}"
+                        class="pagination-link">
+                        <span class="pagination-link-underline">Fine</span> »
+                    </a>
+                {% else %}
+                    <span class="pagination-hidden"> </span>
+                {% endif %}
+            </div>
         </div>
     {% endif %}
 {% else %}

@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -31,7 +32,9 @@ class EventListView(ListView):
         organizer_name = self.request.GET.get('organizer_name')
         if organizer_name:
             queryset = queryset.filter(
-                Q(organizer__username__icontains=organizer_name)
+                Q(organizer__username__icontains=organizer_name)|
+                Q(organizer__first_name__icontains=organizer_name) |
+                Q(organizer__last_name__icontains=organizer_name)
             )
 
         # Filtro per data inizio (da data)
@@ -383,16 +386,57 @@ def event_unregister(request, pk):
         messages.error(request, 'Non sei registrato a questo evento.')
     return redirect('events:event_detail', pk=pk)
 
+
 def user_registrations(request):
-    """ View to display user's event registrations. """
+    """ View to display user's event registrations with filters and pagination. """
     if not request.user.is_authenticated:
         return redirect('users:login')
-    registrations = EventRegistration.objects.filter(user=request.user).select_related('event').order_by('event__start_date')
-    context = {'registrations': registrations, 'title': 'Le mie registrazioni'}
-    user_regs = EventRegistration.objects.filter(user=request.user)
-    context['has_confirmed'] = user_regs.filter(status='confirmed').exists()
-    context['has_pending'] = user_regs.filter(status='pending').exists()
-    context['has_cancelled'] = user_regs.filter(status='cancelled').exists()
+
+    # Recupera parametri di filtro
+    status_filter = request.GET.get('status', 'all')
+    date_filter = request.GET.get('date', 'all')
+
+    # Query base
+    queryset = EventRegistration.objects.filter(user=request.user).select_related('event')
+
+    # Filtro per stato
+    if status_filter != 'all':
+        queryset = queryset.filter(status=status_filter)
+
+    # Filtro per data
+    now = timezone.now()
+    if date_filter == 'upcoming':
+        queryset = queryset.filter(event__start_date__gte=now)
+    elif date_filter == 'past':
+        queryset = queryset.filter(event__end_date__lt=now)
+    # 'all' = nessun filtro
+
+    # Ordina per data evento (più recenti prima)
+    queryset = queryset.order_by('status', '-event__start_date')
+
+    # Calcola statistiche per i gruppi (sul queryset totale senza filtri)
+    all_registrations = EventRegistration.objects.filter(user=request.user)
+
+    # Paginazione
+    from django.core.paginator import Paginator
+    paginator = Paginator(queryset, 10)  # 10 registrazioni per pagina
+    page_number = request.GET.get('page')
+    registrations_page = paginator.get_page(page_number)
+
+    has_confirmed = any(r.status == 'confirmed' for r in registrations_page)
+    has_pending = any(r.status == 'pending' for r in registrations_page)
+    has_cancelled = any(r.status == 'cancelled' for r in registrations_page)
+
+    context = {
+        'registrations': registrations_page,
+        'paginator': paginator,
+        'title': 'Le mie registrazioni',
+        'has_confirmed': has_confirmed,
+        'has_pending': has_pending,
+        'has_cancelled': has_cancelled,
+        'status_filter': status_filter,
+        'date_filter': date_filter,
+    }
     return render(request, 'events/user_registrations.html', context)
 
 def organizer_events(request):
@@ -408,22 +452,79 @@ def organizer_events(request):
     is_admin = request.user.is_staff
     
     if not is_organizer and not is_admin:
-        messages.error(request, 'Accesso negato. Solo gli organizzatori e gli admin possono visualizzare questa pagina.')
+        messages.error(request, 'Accesso negato. Solo gli organizzatori possono visualizzare questa pagina.')
         return redirect('events:event_list')
-    
+
+    # Recupera parametri di filtro
+    search_query = request.GET.get('search', '')
+    status_filter = request.GET.get('status', '')
+    date_filter = request.GET.get('date', '')
+    show_deleted = request.GET.get('show_deleted', '') == 'true'
+
     # Admin vede tutti gli eventi, gli organizzatori vedono solo i loro
     if is_admin:
-        events = Event.objects.all().order_by('-start_date')
+        queryset = Event.objects.all().order_by('start_date')
     else:
-        events = Event.objects.filter(organizer=request.user).order_by('start_date')
-    
-    from django.utils import timezone
-    for event in events:
+        queryset = Event.objects.filter(organizer=request.user).order_by('start_date')
+
+    # Filtro per elementi eliminati
+    if not show_deleted:
+        queryset = queryset.filter(deleted_at__isnull=True)
+
+    # Filtro ricerca
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(location__icontains=search_query)
+        )
+
+    # Filtro per stato
+    if status_filter:
+        queryset = queryset.filter(status=status_filter)
+
+    # Filtro per data
+    today = timezone.now().date()
+    now = timezone.now()
+    if date_filter == 'upcoming':
+        queryset = queryset.filter(start_date__date__gte=today)
+    elif date_filter == 'past':
+        queryset = queryset.filter(end_date__date__lt=today)
+    elif date_filter == 'ongoing':
+        queryset = queryset.filter(start_date__lte=now, end_date__gte=now)
+    # 'all' o vuoto = nessun filtro
+
+    # Ordinamento (diverso per admin e organizzatore)
+    if is_admin:
+        queryset = queryset.order_by('-start_date')  # Admin: più recenti prima
+    else:
+        if date_filter == 'past':
+            queryset = queryset.order_by('-start_date')  # Passati: più recenti prima
+        else:
+            queryset = queryset.order_by('start_date')  # Prossimi: più vicini prima
+
+    # Aggiungi proprietà can_restore
+    for event in queryset:
         if event.deleted_at:
             event.can_restore = (timezone.now() - event.deleted_at).days < 3
         else:
             event.can_restore = False
-    context = {'events': events, 'title': 'I miei eventi', 'is_admin': is_admin}
+
+    # Paginazione
+    paginator = Paginator(queryset, 10)  # 12 eventi per pagina
+    page_number = request.GET.get('page')
+    events_page = paginator.get_page(page_number)
+    context = {
+        'events': events_page,
+        'paginator': paginator,
+        'title': 'I Miei Eventi',
+        'is_admin': is_admin,
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'date_filter': date_filter,
+        'show_deleted': show_deleted,
+        'status_choices': Event._meta.get_field('status').choices,
+    }
     return render(request, 'events/organizer_events.html', context)
 
 def event_restore(request, pk):
