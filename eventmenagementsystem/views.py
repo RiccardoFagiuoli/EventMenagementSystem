@@ -10,10 +10,9 @@ def home(request):
     total_events = Event.objects.filter(deleted_at__isnull=True).count()
     total_users = User.objects.count()
     upcoming_events_count = Event.objects.filter(
-        start_date__date=timezone.now().date(),
-        start_date__gte=timezone.now(),
-        deleted_at__isnull=True
-    ).count()
+            start_date__date=timezone.now().date(),
+            deleted_at__isnull=True
+        ).order_by('start_date').count()
 
     # Tentativo di contare gli organizzatori (potrebbe fallire se non esiste)
     try:
@@ -48,9 +47,9 @@ def home(request):
         'total_organizers': total_organizers,
         'featured_events': Event.objects.filter(deleted_at__isnull=True).order_by('-created_at')[:3],
         'upcoming_events': Event.objects.filter(
-            start_date__gte=timezone.now(),
+            start_date__date=timezone.now().date(),
             deleted_at__isnull=True
-        ).order_by('start_date')[:5],
+        ).order_by('start_date')[:10],
         'now': timezone.now(),
     }
 

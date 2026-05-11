@@ -671,7 +671,7 @@ print(f"Nuovi organizzatori: {organizer3.username}, {organizer4.username}, {orga
 print(f"Nuovi partecipanti: {attendee4.username}, {attendee5.username}, {attendee6.username}, {attendee7.username}, {attendee8.username}")
 print(f"Nuovi eventi creati: {len(new_events)}")
 print("="*50)
-
+#-----------------------
 print(f"\n📌 Eventi eliminati (soft delete):")
 deleted_events = Event.objects.filter(deleted_at__isnull=False)
 for event in deleted_events:

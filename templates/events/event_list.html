@@ -324,7 +324,18 @@ function resetFilters() {
 </script>
 
 <p style="color: #666; margin-bottom: 1.5rem;">
-    Numero di Eventi: <strong>{{ events|length }}</strong>
+    Eventi Trovati:
+    <strong>
+        {% if events %}
+            {% if paginator and paginator.count > events|length %}
+                {{ paginator.count }}
+            {% else %}
+                {{ events|length }}
+            {% endif %}
+        {% else %}
+            Nessun evento trovato
+        {% endif %}
+    </strong>
 </p>
 
 {% if events %}
@@ -384,7 +395,7 @@ function resetFilters() {
                 {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
                 {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
                 {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " class="btn btn-secondary">Prima</a>
+            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Inizio</a>
             <a href="?page={{ page_obj.previous_page_number }}
                 {% if current_query %}&q={{ current_query }}{% endif %}
                 {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
@@ -392,7 +403,7 @@ function resetFilters() {
                 {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
                 {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
                 {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " class="btn btn-secondary">Precedente</a>
+            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Precedente</a>
         {% endif %}
 
         <span style="padding: 0.5rem 1rem; align-self: center;">
@@ -407,7 +418,7 @@ function resetFilters() {
                 {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
                 {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
                 {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " class="btn btn-secondary">Prossima</a>
+            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Prossima</a>
             <a href="?page={{ page_obj.paginator.num_pages }}
                 {% if current_query %}&q={{ current_query }}{% endif %}
                 {% if current_date_filter %}&date_filter={{ current_date_filter }}{% endif %}
@@ -415,11 +426,11 @@ function resetFilters() {
                 {% if current_organizer_name %}&organizer_name={{ current_organizer_name }}{% endif %}
                 {% if current_start_date_from %}&start_date_from={{ current_start_date_from }}{% endif %}
                 {% if current_start_date_to %}&start_date_to={{ current_start_date_to }}{% endif %}
-            " class="btn btn-secondary">Ultima</a>
+            " style="align-self: center;background: none; border: none; color: black; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; outline: none; box-shadow: none;">Fine</a>
         {% endif %}
         </div>
     {% endif %}
 {% else %}
-    <p style="text-align: center; padding: 2rem; color: #666;">Nessun evento disponibile in questo momento.</p>
+    <p style="text-align: center; padding: 2rem; color: #666;">Nessun evento disponibile.</p>
 {% endif %}
 {% endblock %}
