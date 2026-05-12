@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import os
+import sys
+
 import django
 from datetime import timedelta
 from django.utils import timezone
@@ -672,6 +674,22 @@ print(f"Nuovi partecipanti: {attendee4.username}, {attendee5.username}, {attende
 print(f"Nuovi eventi creati: {len(new_events)}")
 print("="*50)
 #-----------------------
+import subprocess
+
+print("\n📸 Avvio generatore immagini placeholder...")
+try:
+    result = subprocess.run(
+        [sys.executable, "generate_event_images.py"],
+        capture_output=True,
+        text=True,
+        encoding='utf-8'
+    )
+    print(result.stdout)
+    if result.stderr:
+        print("⚠️ Warning:", result.stderr)
+except Exception as e:
+    print(f"❌ Errore: {e}")
+
 print(f"\n📌 Eventi eliminati (soft delete):")
 deleted_events = Event.objects.filter(deleted_at__isnull=False)
 for event in deleted_events:

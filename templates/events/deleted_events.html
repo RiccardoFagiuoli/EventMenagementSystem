@@ -80,7 +80,7 @@
 </div>
 
 {% if deleted_events %}
-    <div style="background: white; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background: white; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor:pointer;" onclick="window.location.href='{% url 'events:event_detail' event.pk %}'">
         <table style="width: 100%;">
             <thead>
                 <tr style="background-color: #f5f5f5;">

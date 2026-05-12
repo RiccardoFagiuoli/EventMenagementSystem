@@ -366,7 +366,7 @@
         {% if status_filter == 'all' %}<div class="section-header">📋 Registrazioni effettuate:</div>{%  endif %}
         {% for registration in registrations %}
             {% if not registration.event.deleted_at and registration.status == 'confirmed' %}
-                <div class="event-card">
+                <div class="event-card" onclick="window.location.href='{% url 'events:event_detail' registration.event.pk %}'" style="cursor: pointer;">
                     <div class="event-card-content">
                         <div class="event-card-info">
                             <h3 class="event-title">{{ registration.event.title }}</h3>
@@ -397,7 +397,7 @@
         {% if status_filter == 'all' %}<div class="section-header">⏳ Eventi in cui sei in attesa:</div>{% endif %}
         {% for registration in registrations %}
             {% if not registration.event.deleted_at and registration.status == 'pending' %}
-                <div class="event-card">
+                <div class="event-card" onclick="window.location.href='{% url 'events:event_detail' registration.event.pk %}'" style="cursor: pointer;">
                     <div class="event-card-content">
                         <div class="event-card-info">
                             <h3 class="event-title">{{ registration.event.title }}</h3>
@@ -428,7 +428,7 @@
         {% if status_filter == 'all' %}<div class="section-header">❌ Eventi da cui ti sei disiscritto:</div>{% endif %}
         {% for registration in registrations %}
             {% if not registration.event.deleted_at and registration.status == 'cancelled' %}
-                <div class="event-card">
+                <div class="event-card" onclick="window.location.href='{% url 'events:event_detail' registration.event.pk %}'" style="cursor: pointer;">
                     <div class="event-card-content">
                         <div class="event-card-info">
                             <h3 class="event-title">{{ registration.event.title }}</h3>
