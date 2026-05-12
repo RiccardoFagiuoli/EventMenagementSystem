@@ -14,10 +14,6 @@
         box-shadow: 0 0 4px 1px dimgray !important;
         color: white !important;
     }
-    .event-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
 
     .pagination-container {
         display: grid;
@@ -72,7 +68,18 @@
         gap: 1.5rem;
         align-items: center;
         margin-bottom: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
     }
+
+    .event-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
 
     .event-content {
         flex: 2;
@@ -406,7 +413,7 @@ color: #666; margin-bottom: 1.5rem;">
                 </div>
                 <p class="event-description">{{ event.description|truncatewords:30 }}</p>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;" class="event-card-buttons">
-                    <a href="{% url 'events:event_detail' event.pk %}" class="btn">Dettagli</a>
+                    <a href="{% url 'events:event_detail' event.pk %}" class="btn" style="display: none">Dettagli</a>
                     {% if request.user.is_authenticated %}
                         {% if not request.user.is_staff %}
 

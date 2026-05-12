@@ -199,6 +199,7 @@
 
     .event-card-actions {
         display: flex;
+        align-self: center;
         flex-direction: column;
         gap: 0.5rem;
         min-width: 120px;
@@ -410,7 +411,7 @@
                 </div>
 
                 <div class="event-card-actions">
-                    <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">👁️ Dettagli</a>
+                    <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary" style="display: none">👁️ Dettagli</a>
 
                     {% if not event.deleted_at %}
                         <a href="{% url 'events:event_update' event.pk %}" class="btn btn-primary">✏️ Modifica</a>
