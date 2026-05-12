@@ -254,10 +254,19 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         event = self.get_object()
         return self.request.user == event.organizer or self.request.user.is_staff
 
+    def get_context_data(self, **kwargs):
+        """Aggiunge il parametro next al contesto del template"""
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', '')
+        return context
+
     def post(self, request, *args, **kwargs):
         """Questo metodo gestisce le richieste POST (soft delete o hard delete)"""
         event = self.get_object()
         from django.utils import timezone
+
+
+        next_url = request.POST.get('next') or request.GET.get('next', '')
 
         if event.deleted_at:
             # Se l'evento è già eliminato, eliminarlo definitivamente dal database
@@ -270,9 +279,9 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             event.deleted_at = timezone.now()
             event.save()
             messages.success(request, 'Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni.')
-            next_url = reverse('events:event_detail', kwargs={'pk': event.pk})
+            default_url = reverse('events:event_detail', kwargs={'pk': event.pk})
 
-        return redirect(next_url)
+        return redirect(next_url or default_url)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -280,6 +289,8 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def event_register(request, pk):
     """ View for registering a user to an event. """
+    back_url = request.META.get('HTTP_REFERER', '/events/')
+
     if not request.user.is_authenticated:
         messages.error(request, 'È necessario essere loggati per registrarsi.')
         return redirect('users:login')
@@ -288,7 +299,7 @@ def event_register(request, pk):
     # Controlla se l'utente è il creatore dell'evento
     if request.user == event.organizer:
         messages.error(request, 'Non puoi iscriverti al tuo stesso evento.')
-        return redirect('events:event_detail', pk=pk)
+        return redirect(f"{back_url}#iscrizione-section")
 
     try:
         registration = EventRegistration.objects.get(event=event, user=request.user)
@@ -328,7 +339,7 @@ def event_register(request, pk):
             )
             messages.success(request, 'Registrazione completata!')
 
-    return redirect('events:event_detail', pk=pk)
+    return redirect(f"{back_url}#iscrizione-section")
 
 
 @login_required
@@ -343,6 +354,8 @@ def event_unregister_confirm(request, pk):
         messages.error(request, 'Non sei registrato a questo evento.')
         return redirect('events:event_detail', pk=pk)
 
+    next_url = request.GET.get('next', '')
+
     if request.method == 'POST':
         # Conferma la disiscrizione
         registration.status = 'cancelled'
@@ -356,12 +369,14 @@ def event_unregister_confirm(request, pk):
             promoted_name = promoted.user.get_full_name() or promoted.user.username
             messages.info(request, f'{promoted_name} è stato promosso dalla lista d\'attesa!')
 
-        return redirect('events:event_detail', pk=pk)
+
+        return redirect(next_url or reverse('events:event_detail', args=[pk]))
 
     # GET: mostra la pagina di conferma
     context = {
         'event': event,
         'registration': registration,
+        'next_url' : next_url,
     }
     return render(request, 'events/confirm_unregister.html', context)
 
@@ -547,6 +562,8 @@ def event_restore(request, pk):
 
     event = get_object_or_404(Event, pk=pk)
 
+    next_url = request.GET.get('next', '')
+
     # Permetti sia all'organizzatore che agli admin
     if not (request.user == event.organizer or request.user.is_staff):
         messages.error(request, 'Non hai i permessi per ripristinare questo evento.')
@@ -563,7 +580,7 @@ def event_restore(request, pk):
     else:
         messages.warning(request, 'L\'evento non è eliminato.')
 
-    return redirect('events:event_detail', pk=pk)
+    return redirect(next_url or reverse('events:event_detail', args=[pk]))
 
 @login_required
 def admin_unregister_confirm(request, event_id, registration_id):

@@ -409,9 +409,9 @@ color: #666; margin-bottom: 1.5rem;">
                             {% with status=user_registrations_status|get_item:event.pk %}
 
                             {% if event.pk in registered_events and status != 'cancelled' %}
-                                <a href="{% url 'events:event_unregister_confirm' event.pk %}" class="btn btn-success">✓ Iscritto</a>
+                                <a href="{% url 'events:event_unregister_confirm' event.pk %}?next={{ request.path }}" class="btn btn-success">✓ Iscritto</a>
                             {% else %}
-                                <a href="{% url 'events:event_register' event.pk %}" class="btn btn-secondary">Iscriviti</a>
+                                <a href="{% url 'events:event_register' event.pk %}" class="btn btn-secondary" id="subscription-section">Iscriviti</a>
                             {% endif %}
 
                             {% endwith %}

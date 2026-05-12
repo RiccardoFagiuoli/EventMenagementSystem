@@ -215,7 +215,7 @@
                                     Stato: {{ user_registration.get_status_display }}
                                 </div>
                             {% endif %}
-                            <a href="{% url 'events:event_unregister_confirm' event.pk %}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                            <a href="{% url 'events:event_unregister_confirm' event.pk %}?next={{ request.path }}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
                         {% endif %}
                     {% else %}
                         {% if event.is_full %}
@@ -268,7 +268,7 @@
                                     </td>
                                     {% if user.is_staff or user == event.organizer %}
                                         <td>
-                                            <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
+                                            <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}?next={{ request.path }}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
                                         </td>
                                     {% endif %}
                                 </tr>
@@ -338,6 +338,50 @@
 </div>
 
 <div style="margin-top: 2rem;">
-    <a href="javascript:history.back()" class="btn btn-secondary"> ← Indietro </a>
+    <a href="#" onclick="smartBack(event)" class="btn btn-secondary"> ← Indietro </a>
 </div>
+
+<script>
+    // Salva la provenienza SOLO la prima volta che visiti la pagina
+    (function() {
+        const eventId = window.location.pathname.match(/\/event\/(\d+)/)?.[1];
+        if (eventId) {
+            const storageKey = `event_${eventId}_original_from`;
+
+            // Salva solo se non esiste già E se siamo arrivati da un referrer valido
+            if (!sessionStorage.getItem(storageKey) && document.referrer &&
+                !document.referrer.includes('/event/') &&
+                !document.referrer.includes('/delete/') &&
+                !document.referrer.includes('/unregister/')) {
+                sessionStorage.setItem(storageKey, document.referrer);
+            }
+        }
+    })();
+
+    function smartBack(event) {
+        event.preventDefault(); // Previene la navigazione immediata
+
+        const eventId = window.location.pathname.match(/\/event\/(\d+)/)?.[1];
+        if (eventId) {
+            const storageKey = `event_${eventId}_original_from`;
+            const originalFrom = sessionStorage.getItem(storageKey);
+
+            if (originalFrom) {
+                sessionStorage.removeItem(storageKey);
+                window.location.href = originalFrom;
+                return;
+            }
+        }
+
+        // Fallback: salta le pagine indesiderate
+        const referrer = document.referrer;
+        if (referrer.includes('/delete/') ||
+            referrer.includes('/unregister/confirm/') ||
+            referrer.includes('/register/confirm/')) {
+            window.history.go(-3);
+        } else {
+            window.history.back();
+        }
+    }
+</script>
 {% endblock %}

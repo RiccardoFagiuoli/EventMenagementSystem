@@ -384,7 +384,7 @@
                         </div>
                         <div class="event-card-actions">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn">👁️ Dettagli</a>
-                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}" class="btn btn-danger">🗑️ Cancella</a>
+                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">🗑️ Cancella</a>
                         </div>
                     </div>
                 </div>
@@ -415,7 +415,7 @@
                         </div>
                         <div class="event-card-actions">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn">👁️ Dettagli</a>
-                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}" class="btn btn-danger">🗑️ Cancella</a>
+                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">🗑️ Cancella</a>
                         </div>
                     </div>
                 </div>

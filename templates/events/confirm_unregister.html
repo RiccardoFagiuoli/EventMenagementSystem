@@ -231,7 +231,7 @@
                     ✓ Sì, voglio disiscrivermi
                 {% endif %}
             </button>
-            <a href="{% url 'events:event_detail' pk=event.pk %}" class="btn-cancel">
+            <a href="{{ next_url|default:request.META.HTTP_REFERER}}" class="btn-cancel">
                 ✗ No, torna indietro
             </a>
         </div>

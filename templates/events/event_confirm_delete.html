@@ -274,6 +274,9 @@
 
     <form method="post" style="box-shadow: none;">
         {% csrf_token %}
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
         <div class="button-group">
                 <button type="submit" class="btn btn-danger">
                     {% if event.deleted_at %}
@@ -282,95 +285,10 @@
                         🗑️ Sì, Elimina Evento
                     {% endif %}
                 </button>
-            <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">
+            <a href="{{ next|default:request.META.HTTP_REFERER}}" class="btn btn-secondary">
                 ✗ No, Torna Indietro
             </a>
         </div>
     </form>
 </div>
 {% endblock %}
-
-{% comment %}
-{% extends 'base.html' %}
-
-{% block title %}Elimina "{{ event.title }}"{% endblock %}
-
-{% block content %}
-<style>
-    .btn:hover {
-        text-decoration: none !important;
-        transform: translateY(-1px);
-        box-shadow: 0 0 4px 1px dimgray !important;
-        color: white !important;
-    }
-
-    .delete-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 2rem;
-    align-items: center;
-}
-
-.delete-buttons form {
-    box-shadow: none;
-    flex: 1;
-    margin: 0;
-    display: flex;
-}
-
-.delete-buttons .btn {
-    flex: 1;
-    min-width: 150px;
-    min-height: 48px;
-    height: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1rem;
-    box-sizing: border-box;
-}
-
-    @media (max-width: 480px) {
-        .delete-buttons { flex-direction: column; align-items: stretch;}
-        .delete-buttons .btn { width: 100%; }
-    }
-</style>
-
-{% if event.deleted_at %}
-<div style="background-color: #f8d7da; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; border-left: 4px solid #dc3545;">
-    <h2 style="color: #721c24;">⚠️ Eliminazione Permanente</h2>
-    <p>Sei sicuro di voler <strong>eliminare definitivamente</strong> l'evento <strong>"{{ event.title }}"</strong>?</p>
-    <p style="color: #721c24; font-weight: bold;">Questa azione non può essere annullata e l'evento verrà rimosso permanentemente!</p>
-</div>
-{% else %}
-<div style="background-color: #fff3cd; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; border-left: 4px solid #ffc107;">
-    <h2 style="color: #856404;">⚠️ Conferma Eliminazione</h2>
-    <p>Sei sicuro di voler eliminare l'evento <strong>"{{ event.title }}"</strong>?</p>
-    <p style="color: #856404; font-weight: bold;">Potrai ripristinarlo entro 3 giorni.</p>
-</div>
-{% endif %}
-
-<div class="event-card">
-    <h3>{{ event.title }}</h3>
-    {% if event.deleted_at %}
-        <p style="color: #dc3545; font-weight: bold;">🗑️ Stato: Eliminato</p>
-    {% endif %}
-    <p><strong>Luogo:</strong> {{ event.location }}</p>
-    <p><strong>Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }}</p>
-    <p><strong>Iscritti:</strong> {{ event.get_confirmed_attendees_count }}</p>
-
-    <div class="delete-buttons">
-        <form method="post" style="display: block;">
-            {% csrf_token %}
-            {% if event.deleted_at %}
-                <button type="submit" class="btn btn-danger w-100">Sì, Elimina Definitivamente</button>
-            {% else %}
-                <button type="submit" class="btn btn-danger w-100">Sì, Elimina Evento</button>
-            {% endif %}
-        </form>
-        <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary w-100" style="height: auto">Annulla</a>
-    </div>
-</div>
-{% endblock %}
-{% endcomment %}
