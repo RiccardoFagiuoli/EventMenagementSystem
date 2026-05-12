@@ -28,11 +28,25 @@
     }
 
     /* Filtri e ricerca */
+    .search-bar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-bar input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
     .filters-section {
         background: white;
         padding: 1.5rem;
         border-radius: 8px;
-        margin-bottom: 2rem;
+        margin-bottom: 0.5rem;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
@@ -61,10 +75,8 @@
     }
 
     .results-info {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
         padding: 0.75rem;
-        background: #f8f9fa;
-        border-radius: 4px;
         font-size: 0.9rem;
     }
 
@@ -268,14 +280,28 @@
 <!-- Filtri -->
 <div class="filters-section">
     <form method="get" action="" id="filterForm">
+         <!-- Mantieni i parametri esistenti -->
+        {% if search_query %}
+            <input type="hidden" name="search" value="{{ search_query }}">
+        {% endif %}
+
+        <!-- Search Bar DENTRO il form -->
+        <div class="search-bar">
+            <input type="text"
+                   name="search"
+                   placeholder="Cerca per titolo, descrizione, luogo o organizzatore..."
+                   value="{{ search_query }}">
+            <button type="submit" class="btn btn-primary">🔍 Cerca</button>
+        </div>
+
         <div class="filter-group">
             <div class="filter-item">
                 <label>📊 Stato:</label>
                 <select aria-label="status_filter" name="status" onchange="this.form.submit()">
                     <option value="all" {% if status_filter == 'all' or not status_filter %}selected{% endif %}>Tutti</option>
-                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confermati</option>
+                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confermato</option>
                     <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>In attesa</option>
-                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancellati</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancellato</option>
                 </select>
             </div>
 
@@ -283,24 +309,24 @@
                 <label>📅 Data:</label>
                 <select aria-label="date_filter" name="date" onchange="this.form.submit()">
                     <option value="all" {% if date_filter == 'all' or not date_filter %}selected{% endif %}>Tutti</option>
-                    <option value="upcoming" {% if date_filter == 'upcoming' %}selected{% endif %}>Prossimi</option>
-                    <option value="past" {% if date_filter == 'past' %}selected{% endif %}>Passati</option>
+                    <option value="upcoming" {% if date_filter == 'upcoming' %}selected{% endif %}>Eventi futuri</option>
+                    <option value="past" {% if date_filter == 'past' %}selected{% endif %}>Eventi passati</option>
                 </select>
             </div>
 
-            {% if status_filter and status_filter != 'all' or date_filter and date_filter != 'all' %}
+            {% if search_query or status_filter and status_filter != 'all' or date_filter and date_filter != 'all' %}
                 <a href="{% url 'events:user_registrations' %}" class="clear-filters btn btn-sm btn-secondary">🗑️ Cancella filtri</a>
             {% endif %}
         </div>
     </form>
-    {% if status_filter and status_filter != 'all' or date_filter and date_filter != 'all' %}
+    {% if search_query or status_filter and status_filter != 'all' or date_filter and date_filter != 'all' %}
     <div style="margin-top: 0.5rem; padding: 0 1rem;">
         <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
             <strong>🔍 Filtri attivi:</strong>
             {% if status_filter and status_filter != 'all' %}
                     {% if status_filter == 'confirmed' %}
                         <span style="background: #d4edda; color: #155724; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
-                            ✅ Confermati
+                            ✅ Confermato
                         </span>
                     {% elif status_filter == 'pending' %}
                         <span style="background: #fff3cd; color: #856404; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
@@ -308,7 +334,7 @@
                         </span>
                     {% elif status_filter == 'cancelled' %}
                         <span style="background: #f8d7da; color: #721c24; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
-                            ❌ Cancellati
+                            ❌ Cancellato
                         </span>
                     {% endif %}
             {% endif %}
@@ -317,6 +343,11 @@
                     {% if date_filter == 'upcoming' %}🚀 Eventi futuri
                     {% elif date_filter == 'past' %}📅 Eventi passati
                     {% endif %}
+                </span>
+            {% endif %}
+            {% if search_query %}
+                <span style="background: #667eea; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                    🔎 Titolo: "{{ search_query }}"
                 </span>
             {% endif %}
         </div>
@@ -332,7 +363,7 @@
 {% if registrations %}
     <!-- Sezione Registrazioni Confermate -->
     {% if has_confirmed %}
-        <div class="section-header">📋 Registrazioni effettuate:</div>
+        {% if status_filter == 'all' %}<div class="section-header">📋 Registrazioni effettuate:</div>{%  endif %}
         {% for registration in registrations %}
             {% if not registration.event.deleted_at and registration.status == 'confirmed' %}
                 <div class="event-card">
@@ -342,6 +373,7 @@
                             <div class="event-meta">
                                 <strong>📍 Luogo:</strong> {{ registration.event.location }}<br>
                                 <strong>📅 Data:</strong> {{ registration.event.start_date|date:"d/m/Y H:i" }} - {{ registration.event.end_date|date:"H:i" }}<br>
+                                <strong>👤 Organizzatore:</strong> {{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}<br>
                                 <strong>📝 Data Iscrizione:</strong> {{ registration.registered_at|date:"d/m/Y H:i" }}<br>
                                 <strong>🏷️ Status:</strong>
                                 <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #d4edda; color: #155724;">
@@ -362,7 +394,7 @@
 
     <!-- Sezione Registrazioni in Attesa -->
     {% if has_pending %}
-        <div class="section-header">⏳ Eventi in cui sei in attesa:</div>
+        {% if status_filter == 'all' %}<div class="section-header">⏳ Eventi in cui sei in attesa:</div>{% endif %}
         {% for registration in registrations %}
             {% if not registration.event.deleted_at and registration.status == 'pending' %}
                 <div class="event-card">
@@ -372,6 +404,7 @@
                             <div class="event-meta">
                                 <strong>📍 Luogo:</strong> {{ registration.event.location }}<br>
                                 <strong>📅 Data:</strong> {{ registration.event.start_date|date:"d/m/Y H:i" }} - {{ registration.event.end_date|date:"H:i" }}<br>
+                                <strong>👤 Organizzatore:</strong> {{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}<br>
                                 <strong>📝 Data Iscrizione:</strong> {{ registration.registered_at|date:"d/m/Y H:i" }}<br>
                                 <strong>🏷️ Status:</strong>
                                 <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #fff3cd; color: #856404;">
@@ -392,7 +425,7 @@
 
     <!-- Sezione Registrazioni Cancellate -->
     {% if has_cancelled %}
-        <div class="section-header">❌ Eventi da cui ti sei disiscritto:</div>
+        {% if status_filter == 'all' %}<div class="section-header">❌ Eventi da cui ti sei disiscritto:</div>{% endif %}
         {% for registration in registrations %}
             {% if not registration.event.deleted_at and registration.status == 'cancelled' %}
                 <div class="event-card">
@@ -402,6 +435,7 @@
                             <div class="event-meta">
                                 <strong>📍 Luogo:</strong> {{ registration.event.location }}<br>
                                 <strong>📅 Data:</strong> {{ registration.event.start_date|date:"d/m/Y H:i" }} - {{ registration.event.end_date|date:"H:i" }}<br>
+                                <strong>👤 Organizzatore:</strong> {{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}<br>
                                 <strong>📝 Data Iscrizione:</strong> {{ registration.registered_at|date:"d/m/Y H:i" }}<br>
                                 <strong>🏷️ Status:</strong>
                                 <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #f8d7da; color: #721c24;">
@@ -426,10 +460,12 @@
             <div class="pagination-left">
                 {% if registrations.has_previous %}
                     <a href="?page=1
+                        {% if search_query %}&search={{ search_query }}{% endif %}
                         {% if status_filter and status_filter != 'all' %}&status={{ status_filter }}{% endif %}
                         {% if date_filter and date_filter != 'all' %}&date={{ date_filter }}{% endif %}
                     " class="pagination-link">« <span class="pagination-link-underline">Inizio</span></a>
                     <a href="?page={{ registrations.previous_page_number }}
+                        {% if search_query %}&search={{ search_query }}{% endif %}
                         {% if status_filter and status_filter != 'all' %}&status={{ status_filter }}{% endif %}
                         {% if date_filter and date_filter != 'all' %}&date={{ date_filter }}{% endif %}
                     " class="pagination-link-underline">Precedente</a>
@@ -483,5 +519,15 @@
     document.getElementById('filterForm').addEventListener('change', function() {
         this.submit();
     });
+
+    // Per il bottone di ricerca (evita invio doppio)
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    }
 </script>
 {% endblock %}

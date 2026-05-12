@@ -265,8 +265,8 @@
                     <select name="organizer" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
                         <option value="">Tutti gli organizzatori</option>
                         {% for organizer in organizers %}
-                            <option value="{{ organizer.get_full_name|default:organizer.username }}" {% if current_organizer == organizer.username %}selected{% endif %}>
-                                {{ organizer.username }}
+                            <option value="{{ organizer.username }}" {% if current_organizer == organizer.username %}selected{% endif %}>
+                                {{ organizer.full_name }}
                             </option>
                         {% endfor %}
                     </select>

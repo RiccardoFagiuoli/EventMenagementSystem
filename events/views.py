@@ -417,6 +417,17 @@ def user_registrations(request):
     # Calcola statistiche per i gruppi (sul queryset totale senza filtri)
     all_registrations = EventRegistration.objects.filter(user=request.user)
 
+    search_query = request.GET.get('search', '')
+    if search_query:
+        queryset = queryset.filter(
+            Q(event__title__icontains=search_query) |
+            Q(event__description__icontains=search_query) |
+            Q(event__location__icontains=search_query) |
+            Q(event__organizer__username__icontains=search_query) |
+            Q(event__organizer__first_name__icontains=search_query) |
+            Q(event__organizer__last_name__icontains=search_query)
+        )
+
     # Paginazione
     from django.core.paginator import Paginator
     paginator = Paginator(queryset, 10)  # 10 registrazioni per pagina
@@ -436,6 +447,7 @@ def user_registrations(request):
         'has_cancelled': has_cancelled,
         'status_filter': status_filter,
         'date_filter': date_filter,
+        'search_query': search_query,
     }
     return render(request, 'events/user_registrations.html', context)
 
