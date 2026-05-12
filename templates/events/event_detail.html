@@ -268,7 +268,7 @@
                                     </td>
                                     {% if user.is_staff or user == event.organizer %}
                                         <td>
-                                            <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}?next={{ request.path }}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
+                                            <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}?next={{ request.path }}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">✗ Disiscrivi</a>
                                         </td>
                                     {% endif %}
                                 </tr>
@@ -317,8 +317,8 @@
                                         </td>
                                         {% if user.is_staff or user == event.organizer %}
                                             <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                                <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">Disiscrivi</a>
-                                                <a href="{% url 'events:admin_register_confirm' event.pk registration.pk %}" class="btn" style="padding: 0.25rem 1rem; font-size: 0.85rem; background-color: #28a745; color: white; white-space: nowrap;">Iscrivi</a>
+                                                <a href="{% url 'events:admin_unregister_confirm' event.pk registration.pk %}" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; white-space: nowrap;">✗ Disiscrivi</a>
+                                                <a href="{% url 'events:admin_register_confirm' event.pk registration.pk %}" class="btn" style="padding: 0.25rem 1rem; font-size: 0.85rem; background-color: #28a745; color: white; white-space: nowrap;">✓ Iscrivi</a>
                                             </td>
                                         {% endif %}
                                     </tr>

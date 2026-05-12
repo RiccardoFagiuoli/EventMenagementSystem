@@ -19,6 +19,8 @@
         align-items: center;
         gap: 1rem;
         margin: 2rem 0;
+        box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+        border-radius: 5rem;
     }
 
     .pagination-left {
@@ -44,7 +46,7 @@
         text-decoration: none;
     }
 
-    pagination-link:hover {
+    .pagination-link:hover {
         text-decoration: none !important;
     }
 
@@ -62,13 +64,6 @@
     }
 
     /* Filtri e ricerca */
-    .filters-section {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
 
     .search-bar {
         display: flex;
@@ -191,6 +186,15 @@
         color: #333;
     }
 
+    .event-status{
+        display: inline-block;
+        flex-wrap: wrap;
+    }
+
+    .event-status span:nth-child(2) {
+        margin-left: 0.5rem;
+    }
+
     .event-description {
         margin: 0.5rem 0 0 0;
         color: #666;
@@ -257,6 +261,12 @@
 
     /* Responsive */
     @media (max-width: 768px) {
+        .pagination-left{
+            font-size: 0.9rem !important;
+        }
+        .pagination-right{
+            font-size: 0.9rem !important;
+        }
         .organizer-header {
             flex-direction: column;
             align-items: flex-start;
@@ -295,12 +305,74 @@
     }
 
     @media (max-width: 480px) {
+        .pagination-left a:first-child{
+            font-size: 0 !important;
+            text-decoration: none !important ;
+            margin-right: 1rem !important;
+        }
+
+        .pagination-left a:first-child:after{
+            text-decoration: none !important ;
+            content: '«';
+            font-size: 1.8rem;
+        }
+
+        .pagination-left a:nth-child(2) {
+            font-size: 0 !important;
+            text-decoration: none !important ;
+        }
+
+        .pagination-left a:nth-child(2):after {
+            text-decoration: none !important ;
+            content: '<' !important;
+            font-size: 1.5rem !important;
+        }
+
+        .pagination-right a:first-child{
+            font-size: 0 !important;
+            text-decoration: none !important ;
+        }
+
+        .pagination-right a:first-child:after{
+            text-decoration: none !important ;
+            content: '>';
+            font-size: 1.5rem;
+        }
+
+        .pagination-right a:nth-child(2) {
+            font-size: 0 !important;
+            text-decoration: none !important ;
+            margin-left: 1rem !important;
+        }
+
+        .pagination-right a:nth-child(2):after {
+            text-decoration: none !important ;
+            content: '»' !important;
+            font-size: 1.8rem !important;
+        }
+
         .event-card-actions {
             flex-direction: column;
         }
 
         .search-bar {
             flex-direction: column;
+        }
+    }
+
+    @media (max-width: 365px) {
+        .event-status {
+            flex-direction: column;
+        }
+        .event-status span{
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0.5rem 0 0 0;
+            align-self:  flex-start;
+        }
+
+        .event-status span:nth-child(2) {
+            margin-left: 0;
         }
     }
 </style>
@@ -329,7 +401,7 @@
         <div class="filter-group">
             <div class="filter-item">
                 <label>📊 Stato:</label>
-                <select name="status" onchange="this.form.submit()">
+                <select aria-label="status" name="status" onchange="this.form.submit()">
                     <option value="">Tutti</option>
                     {% for value, label in status_choices %}
                         <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>
@@ -341,7 +413,7 @@
 
             <div class="filter-item">
                 <label>📅 Data:</label>
-                <select name="date" onchange="this.form.submit()">
+                <select aria-label="date" name="date" onchange="this.form.submit()">
                     <option value="all" {% if date_filter == 'all' or not date_filter %}selected{% endif %}>Tutti</option>
                     <option value="upcoming" {% if date_filter == 'upcoming' %}selected{% endif %}>Prossimi</option>
                     <option value="ongoing" {% if date_filter == 'ongoing' %}selected{% endif %}>In corso</option>
@@ -390,6 +462,7 @@
                         <strong>👥 Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
                         <strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}<br>
                         <strong>🏷️ Stato:</strong>
+                        <div class="event-status">
                         <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;
                             {% if event.status == 'published' %}background-color: #d4edda; color: #155724;
                             {% elif event.status == 'draft' %}background-color: #fff3cd; color: #856404;
@@ -401,10 +474,11 @@
                         </span>
 
                         {% if event.deleted_at %}
-                            <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #f8d7da; color: #721c24; margin-left: 0.5rem;">
+                            <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #f8d7da; color: #721c24;">
                                 🗑️ Eliminato il {{ event.deleted_at|date:"d/m/Y" }}
                             </span>
                         {% endif %}
+                        </div>
                     </div>
 
                     <p class="event-description">{{ event.description|truncatewords:30 }}</p>

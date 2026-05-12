@@ -21,7 +21,10 @@
         align-items: center;
         gap: 1rem;
         margin: 2rem 0;
+        box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+        border-radius: 5rem;
     }
+
 
     .pagination-left {
         justify-self: start;
@@ -46,7 +49,7 @@
         text-decoration: none;
     }
 
-    pagination-link:hover {
+    .pagination-link:hover {
         text-decoration: none !important;
     }
 
@@ -146,6 +149,12 @@
 
 
     @media (max-width: 768px) {
+        .pagination-left{
+            font-size: 0.9rem;
+        }
+        .pagination-right{
+            font-size: 0.9rem;
+        }
         .event-card {
             flex-direction: column;
             align-items: flex-start;
@@ -196,6 +205,52 @@
     }
 
     @media (max-width: 480px) {
+        .pagination-left a:first-child{
+            font-size: 0 !important;
+            text-decoration: none !important ;
+            margin-right: 1rem !important;
+        }
+
+        .pagination-left a:first-child:after{
+            text-decoration: none !important ;
+            content: '«';
+            font-size: 1.8rem;
+        }
+
+        .pagination-left a:nth-child(2) {
+            font-size: 0 !important;
+            text-decoration: none !important ;
+        }
+
+        .pagination-left a:nth-child(2):after {
+            text-decoration: none !important ;
+            content: '<' !important;
+            font-size: 1.5rem !important;
+        }
+
+        .pagination-right a:first-child{
+            font-size: 0 !important;
+            text-decoration: none !important ;
+        }
+
+        .pagination-right a:first-child:after{
+            text-decoration: none !important ;
+            content: '>';
+            font-size: 1.5rem;
+        }
+
+        .pagination-right a:nth-child(2) {
+            font-size: 0 !important;
+            text-decoration: none !important ;
+            margin-left: 1rem !important;
+        }
+
+        .pagination-right a:nth-child(2):after {
+            text-decoration: none !important ;
+            content: '»' !important;
+            font-size: 1.8rem !important;
+        }
+
         .search-form { flex-direction: column; gap: 0.5rem; }
         .search-form input { min-width: 100%; }
         .search-form button { width: 100%; }
@@ -235,7 +290,7 @@
                 <!-- Filtro rapido per data (tendina) -->
                 <div>
                     <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">📅 Filtro rapido data</label>
-                    <select name="date_filter" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
+                    <select aria-label="date_filter" name="date_filter" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
                         <option value="">Tutte le date</option>
                         <option value="today" {% if current_date_filter == 'today' %}selected{% endif %}>📆 Eventi di oggi</option>
                         <option value="upcoming" {% if current_date_filter == 'upcoming' %}selected{% endif %}>🚀 Eventi futuri</option>
@@ -273,7 +328,7 @@
                 <!-- Filtro per organizzatore (tendina) -->
                 <div>
                     <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">👤 Organizzatore (seleziona)</label>
-                    <select name="organizer" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
+                    <select aria-label="organizer_filter" name="organizer" onchange="this.form.submit()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #667eea;">
                         <option value="">Tutti gli organizzatori</option>
                         {% for organizer in organizers %}
                             <option value="{{ organizer.username }}" {% if current_organizer == organizer.username %}selected{% endif %}>
@@ -286,7 +341,7 @@
                 <!-- Filtro per nome organizzatore (ricerca testuale) -->
                 <div>
                     <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">👤 Nome organizzatore (cerca)</label>
-                    <input type="text" name="organizer_name" value="{{ current_organizer_name }}" placeholder="Cerca per nome utente, nome o cognome..." style="width: 100%; padding: 0.5rem; border: 1px solid #667eea; border-radius: 4px;" onchange="this.form.submit()">
+                    <input aria-label="organizer_name" type="text" name="organizer_name" value="{{ current_organizer_name }}" placeholder="Cerca per nome utente, nome o cognome..." style="width: 100%; padding: 0.5rem; border: 1px solid #667eea; border-radius: 4px;" onchange="this.form.submit()">
                 </div>
             </div>
 
@@ -358,8 +413,8 @@
 
 <script>
 function toggleFilters() {
-    var filters = document.getElementById('advancedFilters');
-    var icon = document.getElementById('toggleIcon');
+    let filters = document.getElementById('advancedFilters');
+    let icon = document.getElementById('toggleIcon');
     if (filters.style.display === 'none') {
         filters.style.display = 'block';
         icon.innerHTML = '▼';
@@ -420,9 +475,9 @@ color: #666; margin-bottom: 1.5rem;">
                             {% with status=user_registrations_status|get_item:event.pk %}
 
                             {% if event.pk in registered_events and status != 'cancelled' %}
-                                <a href="{% url 'events:event_unregister_confirm' event.pk %}?next={{ request.path }}" class="btn btn-success">✓ Iscritto</a>
+                                <a href="{% url 'events:event_unregister_confirm' event.pk %}?next={{ request.path }}" class="btn btn-danger">✗ Disiscriviti</a>
                             {% else %}
-                                <a href="{% url 'events:event_register' event.pk %}" class="btn btn-secondary" id="subscription-section">Iscriviti</a>
+                                <a href="{% url 'events:event_register' event.pk %}" class="btn btn-success" id="subscription-section">✓ Iscriviti</a>
                             {% endif %}
 
                             {% endwith %}

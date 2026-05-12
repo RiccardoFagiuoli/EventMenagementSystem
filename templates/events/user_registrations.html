@@ -14,13 +14,6 @@
         gap: 1rem;
     }
 
-    .action_btn_group {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        align-self: center;
-    }
-
     .btn:hover {
         text-decoration: none !important;
         transform: translateY(-1px);
@@ -155,6 +148,8 @@
         align-items: center;
         gap: 1rem;
         margin: 2rem 0;
+        box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+        border-radius: 5rem;
     }
 
     .pagination-left {
@@ -235,6 +230,12 @@
     }
 
     @media (max-width: 768px) {
+        .pagination-left{
+            font-size: 0.9rem !important;
+        }
+        .pagination-right{
+            font-size: 0.9rem !important;
+        }
         .organizer-header {
             flex-direction: column;
             align-items: flex-start;
@@ -269,6 +270,58 @@
     }
 
     @media (max-width: 480px) {
+
+        .pagination-left a:first-child{
+            font-size: 0 !important;
+            text-decoration: none !important ;
+            margin-right: 1rem !important;
+        }
+
+        .pagination-left a:first-child:after{
+            text-decoration: none !important ;
+            content: '«';
+            font-size: 1.8rem;
+        }
+
+        .pagination-left a:nth-child(2){
+            font-size: 0 !important;
+            text-decoration: none !important ;
+
+        }
+
+        .pagination-left a:nth-child(2):after {
+            text-decoration: none !important ;
+            content: '<' !important;
+            font-size: 1.5rem !important;
+        }
+
+        .pagination-right a:first-child{
+            font-size: 0 !important;
+            text-decoration: none !important ;
+        }
+
+        .pagination-right a:first-child:after{
+            text-decoration: none !important ;
+            content: '>';
+            font-size: 1.5rem;
+        }
+
+        .pagination-right a:nth-child(2) {
+            font-size: 0 !important;
+            text-decoration: none !important ;
+            margin-left: 1rem !important;
+        }
+
+        .pagination-right a:nth-child(2):after {
+            text-decoration: none !important ;
+            content: '»' !important;
+            font-size: 1.8rem !important;
+        }
+
+        .search-bar{
+            flex-direction: column;
+        }
+
         .event-card-actions {
             flex-direction: column;
         }
@@ -291,9 +344,10 @@
         <div class="search-bar">
             <input type="text"
                    name="search"
+                   aria-label="search_bar"
                    placeholder="Cerca per titolo, descrizione, luogo o organizzatore..."
                    value="{{ search_query }}">
-            <button type="submit" class="btn btn-primary">🔍 Cerca</button>
+            <button type="submit" class="btn btn-primary" style="max-height: 50px; transform: translateY(8px)">🔍 Cerca</button>
         </div>
 
         <div class="filter-group">
@@ -386,7 +440,7 @@
                         </div>
                         <div class="event-card-actions">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn display-filter">👁️ Dettagli</a>
-                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">🗑️ Cancella</a>
+                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">✗️ Disiscriviti</a>
                         </div>
                     </div>
                 </div>
@@ -417,7 +471,7 @@
                         </div>
                         <div class="event-card-actions">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn display-filter">👁️ Dettagli</a>
-                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">🗑️ Cancella</a>
+                            <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">✗ Disiscriviti</a>
                         </div>
                     </div>
                 </div>
@@ -448,7 +502,7 @@
                         </div>
                         <div class="event-card-actions">
                             <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn btn-secondary display-filter">👁️ Dettagli</a>
-                            <a href="{% url 'events:event_register' registration.event.pk %}" class="btn btn-success">✅ Iscriviti</a>
+                            <a href="{% url 'events:event_register' registration.event.pk %}" class="btn btn-success">✓ Iscriviti</a>
                         </div>
                     </div>
                 </div>
