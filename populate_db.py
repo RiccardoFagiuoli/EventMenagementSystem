@@ -208,7 +208,7 @@ event5, created = Event.objects.get_or_create(
     defaults={
         'description': 'Corso di progettazione e produzione multimediale',
         'organizer': organizer2,
-        'location': 'Centro didattico Morgani - UNIFI, Firenze',
+        'location': 'Centro didattico Morgagni - UNIFI, Firenze',
         'start_date': now + timedelta(days=10),
         'end_date': now + timedelta(days=10, hours=3),
         'max_attendees': 2,

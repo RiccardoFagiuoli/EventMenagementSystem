@@ -108,14 +108,14 @@
     {% if user == event.organizer or user.is_staff %}
         <div class="detail-actions">
             {% if not event.deleted_at %}
-                <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary">Modifica</a>
-                <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">Elimina</a>
+                <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✏️ Modifica</a>
+                <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">🗑️ Elimina</a>
             {% else %}
                 {% if can_restore %}
-                    <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">Ripristina</a>
-                    <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary">Modifica</a>
+                    <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">♻️ Ripristina</a>
+                    <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✏️ Modifica</a>
                 {% endif %}
-                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">Elimina Def.</a>
+                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="background: #ff0000">💀 Elimina Def.</a>
             {% endif %}
         </div>
     {% endif %}

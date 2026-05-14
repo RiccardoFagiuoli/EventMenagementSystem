@@ -24,7 +24,13 @@ class EventListView(ListView):
         queryset = Event.objects.filter(status='published', deleted_at__isnull=True).order_by('start_date')
         query = self.request.GET.get('q')
         if query:
-            queryset = queryset.filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(location__icontains=query))
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(location__icontains=query) |
+                Q(organizer__username__icontains=query)|
+                Q(organizer__first_name__icontains=query) |
+                Q(organizer__last_name__icontains=query))
             # Filtro di ricerca testuale
             query = self.request.GET.get('q')
 

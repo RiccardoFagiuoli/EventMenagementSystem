@@ -263,7 +263,7 @@
 
 <div>
 <form method="get" class="search-form" style="margin-bottom: 0.5rem;">
-    <input type="text" name="q" placeholder="Cerca eventi..." value="{{ request.GET.q }}" aria-label="Cerca eventi">
+    <input type="text" name="q" placeholder="Cerca per titolo, descrizione, luogo o organizzatore..." value="{{ request.GET.q }}" aria-label="Cerca eventi">
     <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Cerca</button>
 </form>
 
@@ -338,18 +338,18 @@
                     </select>
                 </div>
 
-                <!-- Filtro per nome organizzatore (ricerca testuale) -->
+                {% comment %}<!-- Filtro per nome organizzatore (ricerca testuale) -->
                 <div>
                     <label style="font-weight: bold; display: block; margin-bottom: 0.5rem;">👤 Nome organizzatore (cerca)</label>
                     <input aria-label="organizer_name" type="text" name="organizer_name" value="{{ current_organizer_name }}" placeholder="Cerca per nome utente, nome o cognome..." style="width: 100%; padding: 0.5rem; border: 1px solid #667eea; border-radius: 4px;" onchange="this.form.submit()">
-                </div>
+                </div>{% endcomment %}
             </div>
 
             <!-- Bottoni azione -->
             <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
-                <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                {% comment %}<button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     🔄 Applica filtri
-                </button>
+                </button>{% endcomment %}
                 <button type="button" class="btn" style="background: #6c757d;" onclick="resetFilters()">
                     🗑️ Cancella filtri
                 </button>

@@ -278,13 +278,11 @@
             <input type="hidden" name="next" value="{{ next }}">
         {% endif %}
         <div class="button-group">
-                <button type="submit" class="btn btn-danger">
                     {% if event.deleted_at %}
-                        💀 Sì, Elimina Definitivamente
+                        <button type="submit" class="btn btn-danger" style="background: #ff0000">💀 Sì, Elimina Definitivamente</button>
                     {% else %}
-                        🗑️ Sì, Elimina Evento
+                        <button type="submit" class="btn btn-danger">🗑️ Sì, Elimina Evento</button>
                     {% endif %}
-                </button>
             <a href="{{ next|default:request.META.HTTP_REFERER}}" class="btn btn-secondary">
                 ✗ No, Torna Indietro
             </a>
