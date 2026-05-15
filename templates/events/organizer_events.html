@@ -488,7 +488,7 @@
                     {% comment %}<a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">👁️ Dettagli</a>{% endcomment %}
 
                     {% if not event.deleted_at %}
-                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-primary">✎ Modifica</a>
+                        <a href="{% url 'events:event_update' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-primary">✎ Modifica</a>
                         <a href="{% url 'events:event_delete' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-danger">✖ Elimina</a>
                     {% elif event.can_restore %}
                         <a href="{% url 'events:event_restore' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-success">⭯ Ripristina</a>

@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.utils import timezone
+
 
 class Event(models.Model):
     STATUS_CHOICES = [('draft', 'Bozza'), ('published', 'Pubblicato'), ('ongoing', 'In Corso'), ('completed', 'Completato'), ('cancelled', 'Annullato')]
@@ -39,7 +41,7 @@ class Event(models.Model):
         # Cerca il primo in coda
         next_in_line = self.eventregistration_set.filter(status='pending').order_by('registered_at').first()
 
-        # Se trovato qualcuno, promuovilo a 'confirmed'
+        # Se trovato qualcuno, promuovi 'confirmed'
         if next_in_line:
             next_in_line.status = 'confirmed'
             next_in_line.save()

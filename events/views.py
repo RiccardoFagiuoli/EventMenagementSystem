@@ -186,6 +186,31 @@ class EventCreateView(LoginRequiredMixin, CreateView):
         except UserProfile.DoesNotExist:
             return False
 
+    def get_success_url(self):
+        """Redirige alla pagina di dettaglio dell'evento dopo l'update"""
+        next_url = self.request.POST.get('next') or self.request.GET.get('next')
+        if next_url:
+            return next_url
+        return reverse('events:event_detail', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Recupera l'URL di ritorno (priorità: GET > POST > default)
+        next_url = self.request.GET.get('next') or self.request.POST.get('next')
+
+        # Se non c'è next_url, determina il default basato sul contesto
+        if not next_url:
+            # Default: torna alla lista degli eventi dell'organizzatore
+            next_url = reverse('events:organizer_events')
+
+        context['next_url'] = next_url
+
+        # Opzionale: aggiungi anche il referer come fallback
+        context['http_referer'] = self.request.META.get('HTTP_REFERER', '')
+
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         if not self.test_func():
             messages.error(request, 'Solo gli organizzatori possono creare eventi.')
@@ -198,12 +223,11 @@ class EventCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView,):
     """ Class-based generic view for updating events. """
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
-    #success_url = reverse_lazy('events:organizer_events')
 
     def test_func(self):
         if not self.request.user.is_authenticated:
@@ -213,7 +237,28 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         """Redirige alla pagina di dettaglio dell'evento dopo l'update"""
+        next_url = self.request.POST.get('next') or self.request.GET.get('next')
+        if next_url:
+            return next_url
         return reverse('events:event_detail', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Recupera l'URL di ritorno (priorità: GET > POST > default)
+        next_url = self.request.GET.get('next') or self.request.POST.get('next')
+
+        # Se non c'è next_url, determina il default basato sul contesto
+        if not next_url:
+            # Default: torna alla lista degli eventi dell'organizzatore
+            next_url = reverse('events:organizer_events')
+
+        context['next_url'] = next_url
+
+        # Opzionale: aggiungi anche il referer come fallback
+        context['http_referer'] = self.request.META.get('HTTP_REFERER', '')
+
+        return context
 
     def form_valid(self, form):
         event = self.get_object()  # Ottieni l'evento originale
