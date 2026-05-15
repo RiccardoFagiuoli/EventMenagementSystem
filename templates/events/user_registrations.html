@@ -439,7 +439,7 @@
                             <p class="event-description">{{ registration.event.description|truncatewords:30 }}</p>
                         </div>
                         <div class="event-card-actions">
-                            <a href="{% url 'events:event_detail' registration.event.pk %}" class="btn display-filter">👁️ Dettagli</a>
+                            {% comment %}<a href="{% url 'events:event_detail' registration.event.pk %}" class="btn">👁️ Dettagli</a>{% endcomment %}
                             <a href="{% url 'events:event_unregister_confirm' registration.event.pk %}?next={{ request.path }}" class="btn btn-danger">✗️ Disiscriviti</a>
                         </div>
                     </div>

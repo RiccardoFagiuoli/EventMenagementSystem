@@ -108,14 +108,14 @@
     {% if user == event.organizer or user.is_staff %}
         <div class="detail-actions">
             {% if not event.deleted_at %}
-                <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✏️ Modifica</a>
-                <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">🗑️ Elimina</a>
+                <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✎ Modifica</a>
+                <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">✖ Elimina</a>
             {% else %}
                 {% if can_restore %}
-                    <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">♻️ Ripristina</a>
-                    <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✏️ Modifica</a>
+                    <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">⭯ Ripristina</a>
+                    <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">✎ Modifica</a>
                 {% endif %}
-                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="background: #ff0000">💀 Elimina Def.</a>
+                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="background: #ff0000">✖ Elimina Def.</a>
             {% endif %}
         </div>
     {% endif %}
@@ -199,9 +199,9 @@
                                 <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
                                     <strong>⚠️ Questo evento è al completo</strong>
                                 </div>
-                                <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: #e0a800;">Mettiti in coda</a>
+                                <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: #e0a800;">𖨆𐀪𖠋𐦂 Mettiti in coda</a>
                             {% else %}
-                                <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti di nuovo a questo Evento</a>
+                                <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">✓ Iscriviti di nuovo a questo Evento</a>
                             {% endif %}
                         {% else %}
                             {% if user_registration.get_status_display == 'In Attesa' %}
@@ -215,16 +215,16 @@
                                     Stato: {{ user_registration.get_status_display }}
                                 </div>
                             {% endif %}
-                            <a href="{% url 'events:event_unregister_confirm' event.pk %}?next={{ request.path }}" class="btn btn-danger" style="width: 100%; text-align: center;">Cancella Iscrizione</a>
+                            <a href="{% url 'events:event_unregister_confirm' event.pk %}?next={{ request.path }}" class="btn btn-danger" style="width: 100%; text-align: center;">✗️ Disiscriviti</a>
                         {% endif %}
                     {% else %}
                         {% if event.is_full %}
                             <div style="background-color: #f8d7da; padding: 1rem; border-radius: 4px;">
                                 <strong>⚠️ Questo evento è al completo</strong>
                             </div>
-                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: #e0a800;">Mettiti in coda</a>
+                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: #e0a800;">⏱ Mettiti in coda</a>
                         {% else %}
-                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">Iscriviti a questo Evento</a>
+                            <a href="{% url 'events:event_register' event.pk %}" class="btn" style="width: 100%; text-align: center;">✓ Iscriviti a questo Evento</a>
                         {% endif %}
                     {% endif %}
                 {% elif event.is_full %}

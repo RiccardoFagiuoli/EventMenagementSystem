@@ -117,7 +117,6 @@
     {% for event in deleted_events %}
         <div class="personalize-hover" style="margin-bottom:1rem;background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;" onclick="window.location.href='{% url 'events:event_detail' event.pk %}'">
 
-
             <!-- Contenuto principale: dettagli a sinistra, bottoni a destra -->
             <div class="event-content">
                 <!-- Dettagli evento (sinistra) -->
@@ -151,11 +150,11 @@
                 <!-- Bottoni (destra) -->
                 <div class="event-actions">
                     {% if event.can_restore %}
-                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">️️♻️ Ripristina</a>
-                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color: white;">✏️ Modifica</a>
+                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">️️⭯ Ripristina</a>
+                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color: white;">✎ Modifica</a>
                     {% endif %}
                     {% comment %}<a href="{% url 'events:event_detail' event.pk %}" class="btn btn-info">📄 Dettagli</a>{% endcomment %}
-                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">💀 Elim. Def.</a>
+                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger" style="background: #ff0000">✖ Elim. Def.</a>
                 </div>
             </div>
         </div>
