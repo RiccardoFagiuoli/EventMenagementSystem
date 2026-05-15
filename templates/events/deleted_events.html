@@ -4,12 +4,191 @@
 
 {% block content %}
 <style>
+    .btn:hover {
+        text-decoration: none !important;
+        transform: translateY(-1px);
+        box-shadow: 0 0 4px 1px dimgray !important;
+        color: white !important;
+    }
+    .personalize-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 10px 4px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Layout desktop: titolo + timer sulla stessa riga */
+    .event-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1rem 0 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .event-header h3 {
+        margin: 0;
+        flex: 1;
+    }
+    .timer-badge {
+        flex-shrink: 0;
+        margin: 0.5rem 0.5rem;
+    }
+
+    /* Layout desktop: contenitore principale con due colonne */
+    .event-content {
+        display: flex;
+        padding: 0 1rem 1rem 1rem;
+        gap: 2rem;
+    }
+    .event-details {
+        flex: 2;
+    }
+    .event-actions {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    .event-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Descrizione sotto i dettagli */
+    .event-description {
+        padding: 0.5rem 0;
+    }
+
+    /* Mobile: colonne diventano righe, bottoni sotto */
+    @media (max-width: 768px) {
+        .event-content {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .event-actions {
+            flex-direction: column;
+        }
+
+        .event-actions .btn {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .event-actions .btn:last-child {
+            margin-bottom: 0;
+        }
+
+        /* I gruppi di bottoni si impilano verticalmente */
+        .btn-group-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-group-mobile .btn {
+            margin-bottom: 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .event-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .timer-badge {
+            align-self: flex-start;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+        }
+    }
+</style>
+
+<div style="margin-bottom: 2rem;">
+    <h2>🗑️ Eventi Eliminati</h2>
+    <p style="color: #666; margin-top: 0.5rem;">Elenco di tutti gli eventi in soft delete. Puoi ripristinarli entro 3 giorni dall'eliminazione.</p>
+</div>
+
+{% if deleted_events %}
+    {% for event in deleted_events %}
+        <div class="personalize-hover" style="margin-bottom:1rem;background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;" onclick="window.location.href='{% url 'events:event_detail' event.pk %}'">
+
+
+            <!-- Contenuto principale: dettagli a sinistra, bottoni a destra -->
+            <div class="event-content">
+                <!-- Dettagli evento (sinistra) -->
+                <div class="event-details">
+                <!-- Header con titolo -->
+                    <div class="event-header">
+                        <h3>{{ event.title }}</h3>
+                    </div>
+                    <div class="timer-badge">
+                        {% if event.can_restore %}
+                            <div style="background-color: #d4edda; padding: 0.5rem 1rem; border-radius: 4px; color: #155724; font-weight: bold; text-align: center;">
+                                ⏱️ {{ event.restore_days }}g {{ event.restore_hours }}h {{ event.restore_minutes }}m
+                            </div>
+                        {% else %}
+                            <div style="background-color: #f8d7da; padding: 0.5rem 1rem; border-radius: 4px; color: #721c24; font-weight: bold; text-align: center;">
+                                ⚠️ SCADUTO
+                            </div>
+                        {% endif %}
+                    </div>
+                    <strong>📍 Luogo:</strong> {{ event.location }}<br>
+                    <strong>📅 Data:</strong> {{ event.start_date|date:"d/m/Y H:i" }} - {{ event.end_date|date:"H:i" }}<br>
+                    <strong>👤 Organizzatore:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}<br>
+                    <strong>👥 Iscritti:</strong> {{ event.get_confirmed_attendees_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}<br>
+                    {% if event.get_pending_attendees_count > 0 %}<strong>⚠️ In attesa:</strong> {{ event.get_pending_attendees_count }}{% endif %}
+                    <!-- Descrizione sotto i dettagli -->
+                    <div class="event-description">
+                        {{ event.description|truncatewords:30 }}
+                    </div>
+                </div>
+
+                <!-- Bottoni (destra) -->
+                <div class="event-actions">
+                    {% if event.can_restore %}
+                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">️️♻️ Ripristina</a>
+                        <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color: white;">✏️ Modifica</a>
+                    {% endif %}
+                    {% comment %}<a href="{% url 'events:event_detail' event.pk %}" class="btn btn-info">📄 Dettagli</a>{% endcomment %}
+                    <a href="{% url 'events:event_delete' event.pk %}" class="btn btn-danger">💀 Elim. Def.</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div style="background-color: #d4edda; padding: 2rem; border-radius: 4px; text-align: center; color: #155724;">
+        <strong>✓ Nessun evento eliminato</strong><br>
+        <p style="margin-top: 0.5rem;">Tutti gli eventi sono attivi e disponibili.</p>
+    </div>
+{% endif %}
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
+</div>
+{% endblock %}
+
+{% comment %}
+{% extends 'base.html' %}
+
+{% block title %}Eventi Eliminati - Event Management System{% endblock %}
+
+{% block content %}
+<style>
 
     .btn:hover {
         text-decoration: none !important;
         transform: translateY(-1px);
         box-shadow: 0 0 4px 1px dimgray !important;
         color: white !important;
+    }
+    .personalize-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 10px 4px 8px rgba(0,0,0,0.15);
     }
 
     @media (min-width:769px) and (max-width:875px) {
@@ -85,9 +264,9 @@
                     <th style="padding: 1rem; text-align: left;">Azioni</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style=" margin-bottom:1rem;">
                 {% for event in deleted_events %}
-                    <tr style="border-bottom: 1px solid #ddd;">
+                    <tr  class="personalize-hover" style="border-bottom: 1px solid #ddd;" onclick="window.location.href='{% url 'events:event_detail' event.pk %}'">
                         <td style="padding: 1rem;" data-label="Evento">
                             <strong>{{ event.title }}</strong><br>
                             <span style="color: #666; font-size: 0.9rem;">{{ event.location }}</span>
@@ -145,3 +324,4 @@
     <a href="{% url 'events:event_list' %}" class="btn btn-secondary">← Torna agli Eventi</a>
 </div>
 {% endblock %}
+{% endcomment %}
