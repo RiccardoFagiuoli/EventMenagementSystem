@@ -1049,7 +1049,7 @@
     "title": "Python Conference 2025",
     "description": "Una conferenza completa sullo sviluppo Python, framework web e migliori pratiche.",
     "organizer": 435,
-    "location": "Universit‡ di Firenze, Aula Magna",
+    "location": "Universit√† di Firenze, Aula Magna",
     "start_date": "2026-06-15T16:19:35.915Z",
     "end_date": "2026-06-16T00:19:35.915Z",
     "max_attendees": 100,
@@ -1139,7 +1139,7 @@
     "title": "Cybersecurity & Data Protection Summit",
     "description": "Un summit completo sulla sicurezza informatica, protezione dei dati personali (GDPR) e best practices per aziende moderne.",
     "organizer": 435,
-    "location": "Centro Congressi, Piazza della Libert‡ 10, Firenze",
+    "location": "Centro Congressi, Piazza della Libert√† 10, Firenze",
     "start_date": "2026-06-05T16:19:35.915Z",
     "end_date": "2026-06-05T22:19:35.915Z",
     "max_attendees": 60,
@@ -1173,7 +1173,7 @@
   "pk": 603,
   "fields": {
     "title": "Fiera del Libro",
-    "description": "La pi˘ grande fiera dell'editoria con presentazioni, firmacopie e incontri con autori.",
+    "description": "La pi√π grande fiera dell'editoria con presentazioni, firmacopie e incontri con autori.",
     "organizer": 440,
     "location": "Centro Fieristico, Padiglione A",
     "start_date": "2026-06-10T16:19:35.915Z",
@@ -1191,7 +1191,7 @@
   "pk": 604,
   "fields": {
     "title": "Torneo di Basket a Squadre",
-    "description": "Torneo amatoriale di basket aperto a tutte le squadre della citt‡.",
+    "description": "Torneo amatoriale di basket aperto a tutte le squadre della citt√†.",
     "organizer": 441,
     "location": "Palazzetto dello Sport",
     "start_date": "2026-06-20T16:19:35.915Z",
@@ -1227,7 +1227,7 @@
   "pk": 606,
   "fields": {
     "title": "Concerto di Musica Classica",
-    "description": "Un concerto serale con le pi˘ belle sinfonie di Mozart, Beethoven e Chopin.",
+    "description": "Un concerto serale con le pi√π belle sinfonie di Mozart, Beethoven e Chopin.",
     "organizer": 440,
     "location": "Auditorium Comunale",
     "start_date": "2026-07-05T16:19:35.915Z",
@@ -1317,7 +1317,7 @@
   "pk": 611,
   "fields": {
     "title": "Seminario di Marketing Digitale",
-    "description": "Strategie di marketing sui social media, SEO e pubblicit‡ online.",
+    "description": "Strategie di marketing sui social media, SEO e pubblicit√† online.",
     "organizer": 435,
     "location": "Centro Formazione, Sala Executive",
     "start_date": "2026-06-13T16:19:35.915Z",
@@ -1407,7 +1407,7 @@
   "pk": 616,
   "fields": {
     "title": "Workshop di Team Building",
-    "description": "Attivit‡ e giochi per migliorare la collaborazione in team.",
+    "description": "Attivit√† e giochi per migliorare la collaborazione in team.",
     "organizer": 436,
     "location": "Parco Urbano, Area Picnic",
     "start_date": "2026-05-16T16:19:35.915Z",
