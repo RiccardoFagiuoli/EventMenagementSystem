@@ -589,7 +589,7 @@ def organizer_events(request):
             event.can_restore = False
 
     # Paginazione
-    paginator = Paginator(queryset, 10)  # 12 eventi per pagina
+    paginator = Paginator(queryset, 10)  # 10 eventi per pagina
     page_number = request.GET.get('page')
     events_page = paginator.get_page(page_number)
     context = {

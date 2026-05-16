@@ -380,7 +380,7 @@
 <div class="organizer-header">
     <h2>{% if is_admin %}Tutti gli Eventi{% else %}{{ title }}{% endif %}</h2>
     {% if not is_admin %}
-        <a href="{% url 'events:event_create' %}" class="btn btn-primary">+ Crea Nuovo Evento</a>
+        <a href="{% url 'events:event_create' %}?next={{ request.GET.next|default:request.path }}" class="btn btn-primary">+ Crea Nuovo Evento</a>
     {% endif %}
 </div>
 
@@ -475,7 +475,7 @@
 
                         {% if event.deleted_at %}
                             <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #f8d7da; color: #721c24;">
-                                🗑️ Eliminato il {{ event.deleted_at|date:"d/m/Y" }}
+                                Eliminato il {{ event.deleted_at|date:"d/m/Y" }}
                             </span>
                         {% endif %}
                         </div>
@@ -560,7 +560,7 @@
             {% endif %}
         </p>
         {% if not is_admin and not search_query and not status_filter and not date_filter %}
-            <a href="{% url 'events:event_create' %}" class="btn btn-primary" style="margin-top: 1rem;">✨ Crea il Tuo Primo Evento</a>
+            <a href="{% url 'events:event_create' %}?next={{ request.GET.next|default:request.path }}" class="btn btn-primary" style="margin-top: 1rem;">✨ Crea il Tuo Primo Evento</a>
         {% endif %}
     </div>
 {% endif %}

@@ -279,9 +279,9 @@
         {% endif %}
         <div class="button-group">
                     {% if event.deleted_at %}
-                        <button type="submit" class="btn btn-danger" style="background: #ff0000">✖ Sì, Elimina Definitivamente</button>
+                        <button type="submit" class="btn btn-danger" style="background: #ff0000">✓ Sì, Elimina Definitivamente</button>
                     {% else %}
-                        <button type="submit" class="btn btn-danger">✖ Sì, Elimina Evento</button>
+                        <button type="submit" class="btn btn-danger">✓ Sì, Elimina Evento</button>
                     {% endif %}
             <a href="{{ next|default:request.META.HTTP_REFERER}}" class="btn btn-secondary">
                 ✗ No, Torna Indietro
