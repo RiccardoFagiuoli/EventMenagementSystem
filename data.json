@@ -1,0 +1,2414 @@
+[
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 3,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 3,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 3,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 3,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 2,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 2,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 2,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 2,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 4,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 4,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 4,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 4,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 5,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 5,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 5,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 5,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 6,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 6,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 6,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 6,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add User Profile",
+    "content_type": 7,
+    "codename": "add_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change User Profile",
+    "content_type": 7,
+    "codename": "change_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete User Profile",
+    "content_type": 7,
+    "codename": "delete_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view User Profile",
+    "content_type": 7,
+    "codename": "view_userprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can add event",
+    "content_type": 8,
+    "codename": "add_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can change event",
+    "content_type": 8,
+    "codename": "change_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can delete event",
+    "content_type": 8,
+    "codename": "delete_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can view event",
+    "content_type": 8,
+    "codename": "view_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can create events",
+    "content_type": 8,
+    "codename": "can_create_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can edit own events",
+    "content_type": 8,
+    "codename": "can_edit_own_events"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can delete own events",
+    "content_type": 8,
+    "codename": "can_delete_own_events"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can view attendees list",
+    "content_type": 8,
+    "codename": "can_view_attendees"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add event registration",
+    "content_type": 10,
+    "codename": "add_eventregistration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change event registration",
+    "content_type": 10,
+    "codename": "change_eventregistration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete event registration",
+    "content_type": 10,
+    "codename": "delete_eventregistration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can view event registration",
+    "content_type": 10,
+    "codename": "view_eventregistration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can add event attendance",
+    "content_type": 9,
+    "codename": "add_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can change event attendance",
+    "content_type": 9,
+    "codename": "change_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can delete event attendance",
+    "content_type": 9,
+    "codename": "delete_eventattendance"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can view event attendance",
+    "content_type": 9,
+    "codename": "view_eventattendance"
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 105,
+  "fields": {
+    "name": "Attendee",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 106,
+  "fields": {
+    "name": "Organizer",
+    "permissions": [
+      33,
+      35,
+      34,
+      36
+    ]
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 434,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$orqsibj11rrVylhvLvtMDE$0Io13Ngmd+n7rltHv/Bt2xx+GAjMoKjreDM53Z5B0lY=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Admin",
+    "last_name": "User",
+    "email": "admin@eventmgmt.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:31.953Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 435,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$SKf98KKj3StQsyHTvhWVlL$OpE4QUsdkOaNmDjUSi6izN2I/JZ8kCd9VgufQ+ilb1E=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "marco_rossi",
+    "first_name": "Marco",
+    "last_name": "Rossi",
+    "email": "marco.rossi@event.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:32.656Z",
+    "groups": [
+      106
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 436,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$JNESopqIwK5pGl4FDkkSYe$EYzgKqh+9vV04EA4tCVw+X41hclY3CJRZIxrj7Ldt40=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "giulia_bianchi",
+    "first_name": "Giulia",
+    "last_name": "Bianchi",
+    "email": "giulia.bianchi@event.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:33.294Z",
+    "groups": [
+      106
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 437,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$NqFk8CVCfi8IqgFjhlKXbR$6a3Dkeazy+Vk6Y7eiTTnvH7QxtUYXHSsKr4w98oR1eo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "luca_verdi",
+    "first_name": "Luca",
+    "last_name": "Verdi",
+    "email": "luca.verdi@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:33.927Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 438,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$vZ7Fw0HRGRkmgz2mV39Ock$UV8FfnB/VdekHXtw7NYGqJGTLFioCWLe6nhPZphADVw=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "anna_marini",
+    "first_name": "Anna",
+    "last_name": "Marini",
+    "email": "anna.marini@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:34.567Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 439,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$jUm0yiUiWas8ZO0hbloQ1i$Bn8Q7w6GqYub/l0uKqRfBwLwy1v7elBbz1P0QPYfF4U=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "carlo_rosini",
+    "first_name": "Carlo",
+    "last_name": "Rosini",
+    "email": "carlo.rosini@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:35.196Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 440,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Dgiru8sF4Sx27dVQ7MXulQ$RIAQyRs8SA96+XJvPAmQYB8dxny6yvbIUdJgP4oENS0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "laura_neri",
+    "first_name": "Laura",
+    "last_name": "Neri",
+    "email": "laura.neri@event.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:35.943Z",
+    "groups": [
+      106
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 441,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$xtI3ITIE0Kd9lKm5sbtjHa$1ZJPFtOi/WmMVpEU07a5u5SaYufAzj5muPs5fLvUlfk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "andrea_ferrari",
+    "first_name": "Andrea",
+    "last_name": "Ferrari",
+    "email": "andrea.ferrari@event.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:36.589Z",
+    "groups": [
+      106
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 442,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$45jJ9VcDhRs97Y1ESIUz14$xoNjVHMOR1m2k+oT/dNlt6lym2rgSUnGFoPXckhdlss=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "elena_ricci",
+    "first_name": "Elena",
+    "last_name": "Ricci",
+    "email": "elena.ricci@event.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:37.220Z",
+    "groups": [
+      106
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 443,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$6UwKyxKwFKKUmQorWq8GhW$MOmmsIA4tsC2PJ1gptKSqGVuAuiFGQn3sCkwE44IWuU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "paolo_galli",
+    "first_name": "Paolo",
+    "last_name": "Galli",
+    "email": "paolo.galli@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:37.910Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 444,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$TSxs6uXrmToxhpiL1taNcx$xAsVjd5laECKzK3VTSh3QytZMyjbVu7ClPjxyoxBCew=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "sofia_conti",
+    "first_name": "Sofia",
+    "last_name": "Conti",
+    "email": "sofia.conti@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:38.548Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 445,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Ussoe8KEuBOIaOT8XdznBj$PTqmSAmLBkONWWPpdx9DDOHDyI52yBcChtdrXccSIeU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "matteo_esposito",
+    "first_name": "Matteo",
+    "last_name": "Esposito",
+    "email": "matteo.esposito@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:39.189Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 446,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$oUH52fgLi2XdJgzCamLLhc$RWbjwHooeWSJbhPUFBqgE/mGms64FA4eV1fnTmBeRc0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "giulia_romano",
+    "first_name": "Giulia",
+    "last_name": "Romano",
+    "email": "giulia.romano@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:39.827Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 447,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$hJzeKGk0tdszw3FDGqDDwQ$BV+w4qkK66OY3ZqIDFwzgCdxqmL1PPb54E7kpor5oC0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "francesco_greco",
+    "first_name": "Francesco",
+    "last_name": "Greco",
+    "email": "francesco.greco@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-16T16:19:40.571Z",
+    "groups": [
+      105
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "users",
+    "model": "userprofile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 8,
+  "fields": {
+    "app_label": "events",
+    "model": "event"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 9,
+  "fields": {
+    "app_label": "events",
+    "model": "eventattendance"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "events",
+    "model": "eventregistration"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4s8csuootjya5ypm7s00m0q3qwh7y8yx",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe-yNbL8iZ11SnrOYL14bRJAiZRPhbg7ipQC2pnRvClh34a0r2VJo1BHLtLlF_bIzzIdRh6Y7rPK87QtY6-ORJ12VbdZyut6tn-DAetAHekWRbRjH7MXYwCOohlNQG5D7CGcxaL6amz0tomVs4Vr2HGwrS6aPl8T5jfg:1wKIpy:z1RR16enObKcGq_1GSsS5MhYj8Rsw8LNAW2GVDfUdpQ",
+    "expire_date": "2026-05-19T16:41:34.547Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5p9sczq0sy2vxef56ufa00qp7gxcnq7r",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpCEhLM2L1vQHbsFNoKJAJT1b9XSAztene6Nwy0b-OwV12HSaAHjw4uv5QpP3U-lDxovi8mL_O2TmyOxJy2mtsi-rqe7d9gpDpCD4WyqGsQXQrBsvcchbqibSnS2ORiSaoRMTtsxTIGJsUcu2RZxfsAny9L5Tjj:1wMwzt:4RQXzTATKa3_ZUcadHe6LzBQfrg9LGHbk1dPWWxeds0",
+    "expire_date": "2026-05-26T23:58:45.040Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6fkpqghvozi6beyqrjwjtccyjknc6byt",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQAP9lz4YUFpDt0Xu_oQF2K1UDSR8n47-bJj3odWYybxjjvpVxX2UZZ4YekBAuvzTF_JR6KH7Eem8qt7otc1JHok67qqGxvG5n-zcocS3QgwnWWPGoDVm5ChMZGyZHjCwanSdN7HJC3wlmSsmYjoWd1yQuTxjg8wUN4TfL:1wMrwj:hDlofdyRWceJkziy0Bvr1dMmHZA-ONXXCUwIeuSn6II",
+    "expire_date": "2026-05-26T18:35:09.639Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6u04ty7dynhmdzzy7ism5lhwbwr8a046",
+  "fields": {
+    "session_data": ".eJxVjDsOgzAQBe-ydWThH7CU6XMGtKx3Y5LISBiqKHePkCiS7mlm9N4w0r7lca-yjnOCAZy1cPmlE_FTyqHSg8p9MbyUbZ0ncyTmtNXcliSv69n-HWSqGQaILqgEZEWH0Yc29NZhSl3PgdmTHFOwVyQSSyi-ceSbqK5Tja1n-HwBKtQ4hA:1wM9Xc:y3rDGiSlADTI9MofV1RR4l5KYub5ylB7VEIKBoQXoxk",
+    "expire_date": "2026-05-24T19:10:16.515Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7fqh6gf1t0tra4c1folr5ozx42qf43hm",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe-yNbL8iZ11SnrOYL14bRJAiZRPhbg7ipQC2pnRvClh34a0r2VJo1BHLtLlF_bIzzIdRh6Y7rPK87QtY6-ORJ12VbdZyut6tn-DAetAHekWRbRjH7MXYwCOohlNQG5D7CGcxaL6amz0tomVs4Vr2HGwrS6aPl8T5jfg:1wKgjf:0KjKyEHSfuXz471VvUm9xW5jEO2W391MlA6brshxh48",
+    "expire_date": "2026-05-20T18:12:39.918Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9492d3x6p9u5t5p8tlozjjcn7qmoh295",
+  "fields": {
+    "session_data": ".eJxVjL0OgkAQBt9la3PxlgNuKe15BnK33yKogYSfyvjuhoRC25nJvKlL-zZ0-2pLN4Ia8hLo8ktz0qdNh8IjTffZ6Txty5jdkbjTrq6dYa_b2f4NhrQO1FCMQX02SF1xyrmHRjOpfYlrFaGei8wiPULJEgCFCriAWA0uEjN9vlJSORE:1wLV9o:yBNRGdmPAV5NT7_82BqcApd4-8oGZsB5hCTPX35tIZI",
+    "expire_date": "2026-05-23T00:03:00.811Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "a9a1z2cqzfkwolegt6g5a81qf40qip84",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbLW59op6XlDtGs7OIASKUeF-DuKlALamdG8oed9a_2-1qUfC3TgkODyS4Xzs06HKg-e7rPK87Qto6gjUadd1W0u9XU9279B47VBB0mcCSGLjtZ6Kxh90WSJUiAqIQfWmKwZECtHRJ9RTGJXohHtdBoIPl_5QDbm:1wNa61:ajX_ovrESM0uisnQgJ6O6ZMtXVuuuxjmH6rJEs4DjJA",
+    "expire_date": "2026-05-28T17:43:41.979Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ga3w3cpebv2g5val4cbtdte8xdt894eg",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP-yZ0NYCpT26N03kF1YpGrapLQn499Nkx70OjOZN0Tatxr3JmucMoxgDcLllzKlp8yHyg-a74tKy7ytE6sjUadt6rZkeV3P9m9QqVUYgTP6IenOaLEdsxvQCRXtRZDJuIA2cNA-9GSEg9WDt70UtCWYlFAyfL4lijgw:1wNtie:8XcaqGGEXwc0f9zW7k4wK7H3fAPpPVP5936H-Qvdkt0",
+    "expire_date": "2026-05-29T14:40:52.786Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ke4k4u88wtmhwkbvc10qlcx2y7is006r",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpCEhLM2L1vQHbsFNoKJAJT1b9XSAztene6Nwy0b-OwV12HSaAHjw4uv5QpP3U-lDxovi8mL_O2TmyOxJy2mtsi-rqe7d9gpDpCD4WyqGsQXQrBsvcchbqibSnS2ORiSaoRMTtsxTIGJsUcu2RZxfsAny9L5Tjj:1wN94m:a2Tjs4RIDT3JRAVr7RYR4Gc7_FGB2nUJwaKzWTwQqc4",
+    "expire_date": "2026-05-27T12:52:36.493Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "l9z9bcteycn3ol25usq0jxxd60zwm96s",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpCYkpg7M4bkGM7hbZKJAJT1b9XSAztene6N0y0b_O0V12nRWAAhxYuvzQSPzUfSh6U78Vwydu6RHMk5rTVjEX0dTvbv8FMdYYBelHSwB5dIyqJveUeA9seXXLOpQZRfNuE7qoBUYiCxsTWp65NUTTA5wtCMzkA:1wMmGO:yi2wQ0ZAg2WiTVylUo3GhZWaOInpE9XrraXG5n08Ekc",
+    "expire_date": "2026-05-26T12:31:04.824Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nbx06wc2ztgz88nzpudss8lcrmmcslb7",
+  "fields": {
+    "session_data": ".eJxVjL0OgkAQBt9la3PxlgNuKe15BnK33yKogYSfyvjuhoRC25nJvKlL-zZ0-2pLN4Ia8hLo8ktz0qdNh8IjTffZ6Txty5jdkbjTrq6dYa_b2f4NhrQO1FCMQX02SF1xyrmHRjOpfYlrFaGei8wiPULJEgCFCriAWA0uEjN9vlJSORE:1wLNkF:tJPbJuJDQPW-DwnfxWZoCbxJBrbLkeTSkIacbE3xy2g",
+    "expire_date": "2026-05-22T16:08:07.019Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ntjgzfu82g2mo0dj89hclyvnfv8jnnm0",
+  "fields": {
+    "session_data": ".eJxVjL0OgkAQBt9la3PxlgNuKe15BnK33yKogYSfyvjuhoRC25nJvKlL-zZ0-2pLN4Ia8hLo8ktz0qdNh8IjTffZ6Txty5jdkbjTrq6dYa_b2f4NhrQO1FCMQX02SF1xyrmHRjOpfYlrFaGei8wiPULJEgCFCriAWA0uEjN9vlJSORE:1wLMcQ:wgudcKFKpB3zaePLapQp2bwBoNQ2OhAfZH11HJ5K7LA",
+    "expire_date": "2026-05-22T14:55:58.053Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "u0z451p6gxtzmny5qdtorq5zv5mjr4eh",
+  "fields": {
+    "session_data": ".eJxVjLsOwjAMAP_FM4rSpCZOR_Z-Q-XEDimgVupjQvw7qtQB1rvTvWHgfavDvuoyjAIdNNTA5Zcmzk-dDiUPnu6zyfO0LWMyR2JOu5p-Fn3dzvZvUHmt0AHGnJNYxChsyZGLmqgIYiTf2mCvaoWS5yDE6hCT5tL6tlDxIVCw8PkCL6Y4KA:1wLHed:vuwtpRQRSkuIPgPQJ0A0iv-9d50EAoh-1hdO6lvmD0M",
+    "expire_date": "2026-05-22T09:37:55.742Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "x1cdx03b4h7ps8q8q25ckrgxl2w7879e",
+  "fields": {
+    "session_data": ".eJxVjLsOwjAMAP_FM4oIdV4d2fmGyIkdUkCp1LQT4t9RpQ6w3p3uDZG2tcatyxInhhEuBk6_MFF-StsNP6jdZ5Xnti5TUnuiDtvVbWZ5XY_2b1CpVxihGMpWByvZ24CGjdNaXOYz2sGJQ6aiCw_WSAo5FORSCDUlLQ699w4-XxXqOIw:1wKFin:okcfjrFEjiWxeW3PsgLZTe2pgq-SwPTHJWY_T0WdrGc",
+    "expire_date": "2026-05-19T13:21:57.310Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 383,
+  "fields": {
+    "user": 435,
+    "bio": "Professional event organizer",
+    "profile_picture": "",
+    "phone_number": "+39 123 456 7890",
+    "role": "organizer",
+    "date_created": "2026-05-16T16:19:33.289Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 384,
+  "fields": {
+    "user": 436,
+    "bio": "Event organizer with 5 years experience",
+    "profile_picture": "",
+    "phone_number": "+39 987 654 3210",
+    "role": "organizer",
+    "date_created": "2026-05-16T16:19:33.922Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 385,
+  "fields": {
+    "user": 437,
+    "bio": "Technology enthusiast",
+    "profile_picture": "",
+    "phone_number": "+39 111 222 3333",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:34.563Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 386,
+  "fields": {
+    "user": 438,
+    "bio": "Loves networking events",
+    "profile_picture": "",
+    "phone_number": "+39 444 555 6666",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:35.193Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 387,
+  "fields": {
+    "user": 439,
+    "bio": "Business professional",
+    "profile_picture": "",
+    "phone_number": "+39 777 888 9999",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:35.912Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 388,
+  "fields": {
+    "user": 440,
+    "bio": "Organizzatrice di eventi culturali",
+    "profile_picture": "",
+    "phone_number": "+39 123 456 7891",
+    "role": "organizer",
+    "date_created": "2026-05-16T16:19:36.586Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 389,
+  "fields": {
+    "user": 441,
+    "bio": "Specialista in eventi sportivi",
+    "profile_picture": "",
+    "phone_number": "+39 123 456 7892",
+    "role": "organizer",
+    "date_created": "2026-05-16T16:19:37.215Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 390,
+  "fields": {
+    "user": 442,
+    "bio": "Esperta in conferenze tech",
+    "profile_picture": "",
+    "phone_number": "+39 123 456 7893",
+    "role": "organizer",
+    "date_created": "2026-05-16T16:19:37.907Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 391,
+  "fields": {
+    "user": 443,
+    "bio": "Appassionato di tecnologia",
+    "profile_picture": "",
+    "phone_number": "+39 111 222 3334",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:38.543Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 392,
+  "fields": {
+    "user": 444,
+    "bio": "Studentessa universitaria",
+    "profile_picture": "",
+    "phone_number": "+39 111 222 3335",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:39.185Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 393,
+  "fields": {
+    "user": 445,
+    "bio": "Sviluppatore software",
+    "profile_picture": "",
+    "phone_number": "+39 111 222 3336",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:39.823Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 394,
+  "fields": {
+    "user": 446,
+    "bio": "Marketing specialist",
+    "profile_picture": "",
+    "phone_number": "+39 111 222 3337",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:40.567Z"
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 395,
+  "fields": {
+    "user": 447,
+    "bio": "Designer UX/UI",
+    "profile_picture": "",
+    "phone_number": "+39 111 222 3338",
+    "role": "attendee",
+    "date_created": "2026-05-16T16:19:41.307Z"
+  }
+},
+{
+  "model": "events.event",
+  "pk": 596,
+  "fields": {
+    "title": "Python Conference 2025",
+    "description": "Una conferenza completa sullo sviluppo Python, framework web e migliori pratiche.",
+    "organizer": 435,
+    "location": "Università di Firenze, Aula Magna",
+    "start_date": "2026-06-15T16:19:35.915Z",
+    "end_date": "2026-06-16T00:19:35.915Z",
+    "max_attendees": 100,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.915Z",
+    "updated_at": "2026-05-16T16:19:35.916Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 597,
+  "fields": {
+    "title": "Web Development Masterclass",
+    "description": "Impara tecniche avanzate di sviluppo web con Django, React e strumenti moderni.",
+    "organizer": 436,
+    "location": "Online - Zoom",
+    "start_date": "2026-05-30T16:19:35.915Z",
+    "end_date": "2026-05-30T20:19:35.915Z",
+    "max_attendees": 50,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.920Z",
+    "updated_at": "2026-05-16T16:19:35.920Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 598,
+  "fields": {
+    "title": "Artificial Intelligence Workshop",
+    "description": "Workshop pratico su apprendimento automatico e fondamenta dell'intelligenza artificiale.",
+    "organizer": 435,
+    "location": "Campus Scientifico, Sesto Fiorentino",
+    "start_date": "2026-07-15T16:19:35.915Z",
+    "end_date": "2026-07-15T22:19:35.915Z",
+    "max_attendees": 2,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.924Z",
+    "updated_at": "2026-05-16T16:19:35.924Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 599,
+  "fields": {
+    "title": "Cloud Computing & DevOps",
+    "description": "Esplora le tecnologie cloud, Docker, Kubernetes e pratiche DevOps.",
+    "organizer": 436,
+    "location": "Innovation Hub, Via dei Servi",
+    "start_date": "2026-06-30T16:19:35.915Z",
+    "end_date": "2026-06-30T21:19:35.915Z",
+    "max_attendees": 30,
+    "image": "event_images/generated_Cloud_Computing__DevOps_PNqKrkv.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.927Z",
+    "updated_at": "2026-05-16T16:19:42.829Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 600,
+  "fields": {
+    "title": "PPM",
+    "description": "Corso di progettazione e produzione multimediale",
+    "organizer": 436,
+    "location": "Centro didattico Morgagni - UNIFI, Firenze",
+    "start_date": "2026-05-26T16:19:35.915Z",
+    "end_date": "2026-05-26T19:19:35.915Z",
+    "max_attendees": 2,
+    "image": "event_images/morgagni.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.931Z",
+    "updated_at": "2026-05-16T16:19:41.863Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 601,
+  "fields": {
+    "title": "Cybersecurity & Data Protection Summit",
+    "description": "Un summit completo sulla sicurezza informatica, protezione dei dati personali (GDPR) e best practices per aziende moderne.",
+    "organizer": 435,
+    "location": "Centro Congressi, Piazza della Libertà 10, Firenze",
+    "start_date": "2026-06-05T16:19:35.915Z",
+    "end_date": "2026-06-05T22:19:35.915Z",
+    "max_attendees": 60,
+    "image": "event_images/generated_Cybersecurity__Data_Protectio_odPGyOP.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.935Z",
+    "updated_at": "2026-05-16T16:19:42.815Z",
+    "deleted_at": "2026-05-16T16:19:35.915Z"
+  }
+},
+{
+  "model": "events.event",
+  "pk": 602,
+  "fields": {
+    "title": "Workshop di Networking Avanzato",
+    "description": "Un workshop esclusivo per professionisti che desiderano migliorare le loro competenze di networking e creare connessioni strategiche.",
+    "organizer": 435,
+    "location": "Sala Conferenze Palazzo Vecchio, Firenze",
+    "start_date": "2026-04-26T10:19:35.915Z",
+    "end_date": "2026-04-26T16:19:35.915Z",
+    "max_attendees": 75,
+    "image": "event_images/generated_Workshop_di_Networking_Avanzat_cVwPSja.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:35.940Z",
+    "updated_at": "2026-05-16T16:19:42.973Z",
+    "deleted_at": "2026-04-25T16:19:35.915Z"
+  }
+},
+{
+  "model": "events.event",
+  "pk": 603,
+  "fields": {
+    "title": "Fiera del Libro",
+    "description": "La più grande fiera dell'editoria con presentazioni, firmacopie e incontri con autori.",
+    "organizer": 440,
+    "location": "Centro Fieristico, Padiglione A",
+    "start_date": "2026-06-10T16:19:35.915Z",
+    "end_date": "2026-06-13T00:19:35.915Z",
+    "max_attendees": 500,
+    "image": "event_images/generated_Fiera_del_Libro_IWONwBS.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.311Z",
+    "updated_at": "2026-05-16T16:19:42.799Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 604,
+  "fields": {
+    "title": "Torneo di Basket a Squadre",
+    "description": "Torneo amatoriale di basket aperto a tutte le squadre della città.",
+    "organizer": 441,
+    "location": "Palazzetto dello Sport",
+    "start_date": "2026-06-20T16:19:35.915Z",
+    "end_date": "2026-06-20T22:19:35.915Z",
+    "max_attendees": 120,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.316Z",
+    "updated_at": "2026-05-16T16:19:41.316Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 605,
+  "fields": {
+    "title": "Workshop di Sviluppo Mobile",
+    "description": "Impara a creare app per iOS e Android con React Native e Flutter.",
+    "organizer": 442,
+    "location": "Laboratorio Informatico, Piano Terra",
+    "start_date": "2026-06-03T16:19:35.915Z",
+    "end_date": "2026-06-03T21:19:35.915Z",
+    "max_attendees": 30,
+    "image": "event_images/generated_Workshop_di_Sviluppo_Mobile_GIyZsMD.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.320Z",
+    "updated_at": "2026-05-16T16:19:42.882Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 606,
+  "fields": {
+    "title": "Concerto di Musica Classica",
+    "description": "Un concerto serale con le più belle sinfonie di Mozart, Beethoven e Chopin.",
+    "organizer": 440,
+    "location": "Auditorium Comunale",
+    "start_date": "2026-07-05T16:19:35.915Z",
+    "end_date": "2026-07-05T19:19:35.915Z",
+    "max_attendees": 200,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.324Z",
+    "updated_at": "2026-05-16T16:19:41.324Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 607,
+  "fields": {
+    "title": "Maratona di Programmazione",
+    "description": "Competizione di programmazione a squadre con problemi di algoritmi e strutture dati.",
+    "organizer": 442,
+    "location": "Centro Congressi, Sala Code",
+    "start_date": "2026-06-25T16:19:35.915Z",
+    "end_date": "2026-06-26T02:19:35.915Z",
+    "max_attendees": 80,
+    "image": "event_images/generated_Maratona_di_Programmazione_oI8HPoZ.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.328Z",
+    "updated_at": "2026-05-16T16:19:42.946Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 608,
+  "fields": {
+    "title": "Torneo di Scacchi Online",
+    "description": "Torneo di scacchi a eliminazione diretta. Aperto a tutti i livelli.",
+    "organizer": 441,
+    "location": "Piattaforma Online - Discord",
+    "start_date": "2026-05-28T16:19:35.915Z",
+    "end_date": "2026-05-28T21:19:35.915Z",
+    "max_attendees": 64,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.333Z",
+    "updated_at": "2026-05-16T16:19:41.333Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 609,
+  "fields": {
+    "title": "Conferenza su Intelligenza Artificiale",
+    "description": "Conferenza con esperti del settore su AI, Machine Learning e Deep Learning.",
+    "organizer": 442,
+    "location": "Centro Innovazione, Sala AI",
+    "start_date": "2026-07-10T16:19:35.915Z",
+    "end_date": "2026-07-11T00:19:35.915Z",
+    "max_attendees": 150,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.337Z",
+    "updated_at": "2026-05-16T16:19:41.337Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 610,
+  "fields": {
+    "title": "Corso di Fotografia Digitale",
+    "description": "Corso base di fotografia: esposizione, composizione, editing con Lightroom.",
+    "organizer": 440,
+    "location": "Studio Fotografico, Via delle Arti",
+    "start_date": "2026-06-07T16:19:35.915Z",
+    "end_date": "2026-06-07T20:19:35.915Z",
+    "max_attendees": 20,
+    "image": "event_images/generated_Corso_di_Fotografia_Digitale_SE42oo7.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.341Z",
+    "updated_at": "2026-05-16T16:19:42.916Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 611,
+  "fields": {
+    "title": "Seminario di Marketing Digitale",
+    "description": "Strategie di marketing sui social media, SEO e pubblicità online.",
+    "organizer": 435,
+    "location": "Centro Formazione, Sala Executive",
+    "start_date": "2026-06-13T16:19:35.915Z",
+    "end_date": "2026-06-13T22:19:35.915Z",
+    "max_attendees": 60,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.346Z",
+    "updated_at": "2026-05-16T16:19:41.346Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 612,
+  "fields": {
+    "title": "Hackathon per Startup",
+    "description": "Hackathon di 48 ore per sviluppare soluzioni innovative per startup.",
+    "organizer": 442,
+    "location": "Innovation Hub",
+    "start_date": "2026-04-01T16:19:35.915Z",
+    "end_date": "2026-04-03T16:19:35.915Z",
+    "max_attendees": 100,
+    "image": "event_images/generated_Hackathon_per_Startup_71Ox93r.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.351Z",
+    "updated_at": "2026-05-16T16:19:42.858Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 613,
+  "fields": {
+    "title": "Cena di Gala Benefica",
+    "description": "Cena di raccolta fondi per enti di beneficenza locali.",
+    "organizer": 440,
+    "location": "Grand Hotel, Sala Ricevimenti",
+    "start_date": "2026-05-06T16:19:35.915Z",
+    "end_date": "2026-05-06T12:19:35.915Z",
+    "max_attendees": 150,
+    "image": "event_images/generated_Cena_di_Gala_Benefica_CPJ47xW.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.355Z",
+    "updated_at": "2026-05-16T16:19:42.845Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 614,
+  "fields": {
+    "title": "Torneo di Tennis",
+    "description": "Torneo amatoriale di tennis singolare e doppio.",
+    "organizer": 441,
+    "location": "Circolo Tennis, Campi 1-4",
+    "start_date": "2026-04-16T16:19:35.915Z",
+    "end_date": "2026-04-18T16:19:35.915Z",
+    "max_attendees": 32,
+    "image": "event_images/generated_Torneo_di_Tennis_B0gMXUe.jpg",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.360Z",
+    "updated_at": "2026-05-16T16:19:42.998Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 615,
+  "fields": {
+    "title": "Networking Day - Edizione Primaverile",
+    "description": "Giornata di networking tra professionisti del settore tecnologico.",
+    "organizer": 435,
+    "location": "Centro Eventi, Sala Meeting",
+    "start_date": "2026-05-16T16:19:35.915Z",
+    "end_date": "2026-05-16T22:19:35.915Z",
+    "max_attendees": 80,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.364Z",
+    "updated_at": "2026-05-16T16:19:41.364Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 616,
+  "fields": {
+    "title": "Workshop di Team Building",
+    "description": "Attività e giochi per migliorare la collaborazione in team.",
+    "organizer": 436,
+    "location": "Parco Urbano, Area Picnic",
+    "start_date": "2026-05-16T16:19:35.915Z",
+    "end_date": "2026-05-16T20:19:35.915Z",
+    "max_attendees": 40,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.369Z",
+    "updated_at": "2026-05-16T16:19:41.369Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.event",
+  "pk": 617,
+  "fields": {
+    "title": "Presentazione Nuovo Software",
+    "description": "Lancio e dimostrazione del nuovo software di gestione aziendale.",
+    "organizer": 442,
+    "location": "Auditorium Tech, Sala Demo",
+    "start_date": "2026-05-16T16:19:35.915Z",
+    "end_date": "2026-05-16T19:19:35.915Z",
+    "max_attendees": 120,
+    "image": "",
+    "status": "published",
+    "created_at": "2026-05-16T16:19:41.373Z",
+    "updated_at": "2026-05-16T16:19:41.373Z",
+    "deleted_at": null
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1979,
+  "fields": {
+    "event": 603,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.379Z",
+    "updated_at": "2026-05-16T16:19:41.379Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1980,
+  "fields": {
+    "event": 603,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.385Z",
+    "updated_at": "2026-05-16T16:19:41.385Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1981,
+  "fields": {
+    "event": 603,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.390Z",
+    "updated_at": "2026-05-16T16:19:41.390Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1982,
+  "fields": {
+    "event": 603,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.396Z",
+    "updated_at": "2026-05-16T16:19:41.396Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1983,
+  "fields": {
+    "event": 604,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.402Z",
+    "updated_at": "2026-05-16T16:19:41.402Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1984,
+  "fields": {
+    "event": 604,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.407Z",
+    "updated_at": "2026-05-16T16:19:41.407Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1985,
+  "fields": {
+    "event": 604,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.413Z",
+    "updated_at": "2026-05-16T16:19:41.413Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1986,
+  "fields": {
+    "event": 604,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.418Z",
+    "updated_at": "2026-05-16T16:19:41.418Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1987,
+  "fields": {
+    "event": 605,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.423Z",
+    "updated_at": "2026-05-16T16:19:41.423Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1988,
+  "fields": {
+    "event": 605,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.428Z",
+    "updated_at": "2026-05-16T16:19:41.428Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1989,
+  "fields": {
+    "event": 605,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.433Z",
+    "updated_at": "2026-05-16T16:19:41.433Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1990,
+  "fields": {
+    "event": 605,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.439Z",
+    "updated_at": "2026-05-16T16:19:41.439Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1991,
+  "fields": {
+    "event": 606,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.444Z",
+    "updated_at": "2026-05-16T16:19:41.444Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1992,
+  "fields": {
+    "event": 606,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.449Z",
+    "updated_at": "2026-05-16T16:19:41.449Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1993,
+  "fields": {
+    "event": 606,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.455Z",
+    "updated_at": "2026-05-16T16:19:41.455Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1994,
+  "fields": {
+    "event": 606,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.460Z",
+    "updated_at": "2026-05-16T16:19:41.460Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1995,
+  "fields": {
+    "event": 607,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.465Z",
+    "updated_at": "2026-05-16T16:19:41.466Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1996,
+  "fields": {
+    "event": 607,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.470Z",
+    "updated_at": "2026-05-16T16:19:41.470Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1997,
+  "fields": {
+    "event": 607,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.476Z",
+    "updated_at": "2026-05-16T16:19:41.476Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1998,
+  "fields": {
+    "event": 607,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.481Z",
+    "updated_at": "2026-05-16T16:19:41.481Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 1999,
+  "fields": {
+    "event": 608,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.487Z",
+    "updated_at": "2026-05-16T16:19:41.487Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2000,
+  "fields": {
+    "event": 608,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.492Z",
+    "updated_at": "2026-05-16T16:19:41.492Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2001,
+  "fields": {
+    "event": 608,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.498Z",
+    "updated_at": "2026-05-16T16:19:41.498Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2002,
+  "fields": {
+    "event": 608,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.503Z",
+    "updated_at": "2026-05-16T16:19:41.503Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2003,
+  "fields": {
+    "event": 609,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.508Z",
+    "updated_at": "2026-05-16T16:19:41.508Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2004,
+  "fields": {
+    "event": 609,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.514Z",
+    "updated_at": "2026-05-16T16:19:41.514Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2005,
+  "fields": {
+    "event": 609,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.519Z",
+    "updated_at": "2026-05-16T16:19:41.520Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2006,
+  "fields": {
+    "event": 609,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.525Z",
+    "updated_at": "2026-05-16T16:19:41.525Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2007,
+  "fields": {
+    "event": 610,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.530Z",
+    "updated_at": "2026-05-16T16:19:41.530Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2008,
+  "fields": {
+    "event": 610,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.535Z",
+    "updated_at": "2026-05-16T16:19:41.535Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2009,
+  "fields": {
+    "event": 610,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.541Z",
+    "updated_at": "2026-05-16T16:19:41.541Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2010,
+  "fields": {
+    "event": 610,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.546Z",
+    "updated_at": "2026-05-16T16:19:41.546Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2011,
+  "fields": {
+    "event": 611,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.551Z",
+    "updated_at": "2026-05-16T16:19:41.551Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2012,
+  "fields": {
+    "event": 611,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.557Z",
+    "updated_at": "2026-05-16T16:19:41.557Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2013,
+  "fields": {
+    "event": 611,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.562Z",
+    "updated_at": "2026-05-16T16:19:41.562Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2014,
+  "fields": {
+    "event": 611,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.567Z",
+    "updated_at": "2026-05-16T16:19:41.567Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2015,
+  "fields": {
+    "event": 612,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.572Z",
+    "updated_at": "2026-05-16T16:19:41.572Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2016,
+  "fields": {
+    "event": 612,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.577Z",
+    "updated_at": "2026-05-16T16:19:41.577Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2017,
+  "fields": {
+    "event": 612,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.582Z",
+    "updated_at": "2026-05-16T16:19:41.582Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2018,
+  "fields": {
+    "event": 612,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.588Z",
+    "updated_at": "2026-05-16T16:19:41.589Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2019,
+  "fields": {
+    "event": 613,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.595Z",
+    "updated_at": "2026-05-16T16:19:41.595Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2020,
+  "fields": {
+    "event": 613,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.603Z",
+    "updated_at": "2026-05-16T16:19:41.604Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2021,
+  "fields": {
+    "event": 613,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.610Z",
+    "updated_at": "2026-05-16T16:19:41.610Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2022,
+  "fields": {
+    "event": 613,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.618Z",
+    "updated_at": "2026-05-16T16:19:41.618Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2023,
+  "fields": {
+    "event": 614,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.624Z",
+    "updated_at": "2026-05-16T16:19:41.624Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2024,
+  "fields": {
+    "event": 614,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.632Z",
+    "updated_at": "2026-05-16T16:19:41.632Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2025,
+  "fields": {
+    "event": 614,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.638Z",
+    "updated_at": "2026-05-16T16:19:41.638Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2026,
+  "fields": {
+    "event": 614,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.644Z",
+    "updated_at": "2026-05-16T16:19:41.644Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2027,
+  "fields": {
+    "event": 615,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.651Z",
+    "updated_at": "2026-05-16T16:19:41.651Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2028,
+  "fields": {
+    "event": 615,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.658Z",
+    "updated_at": "2026-05-16T16:19:41.658Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2029,
+  "fields": {
+    "event": 615,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.665Z",
+    "updated_at": "2026-05-16T16:19:41.665Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2030,
+  "fields": {
+    "event": 615,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.671Z",
+    "updated_at": "2026-05-16T16:19:41.671Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2031,
+  "fields": {
+    "event": 616,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.678Z",
+    "updated_at": "2026-05-16T16:19:41.678Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2032,
+  "fields": {
+    "event": 616,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.684Z",
+    "updated_at": "2026-05-16T16:19:41.684Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2033,
+  "fields": {
+    "event": 616,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.690Z",
+    "updated_at": "2026-05-16T16:19:41.690Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2034,
+  "fields": {
+    "event": 616,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.695Z",
+    "updated_at": "2026-05-16T16:19:41.695Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2035,
+  "fields": {
+    "event": 617,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.701Z",
+    "updated_at": "2026-05-16T16:19:41.701Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2036,
+  "fields": {
+    "event": 617,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.705Z",
+    "updated_at": "2026-05-16T16:19:41.705Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2037,
+  "fields": {
+    "event": 617,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.709Z",
+    "updated_at": "2026-05-16T16:19:41.709Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2038,
+  "fields": {
+    "event": 617,
+    "user": 443,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.714Z",
+    "updated_at": "2026-05-16T16:19:41.714Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2039,
+  "fields": {
+    "event": 605,
+    "user": 440,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.719Z",
+    "updated_at": "2026-05-16T16:19:41.719Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2040,
+  "fields": {
+    "event": 607,
+    "user": 441,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.723Z",
+    "updated_at": "2026-05-16T16:19:41.723Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2041,
+  "fields": {
+    "event": 609,
+    "user": 435,
+    "status": "pending",
+    "registered_at": "2026-05-16T16:19:41.727Z",
+    "updated_at": "2026-05-16T16:19:41.727Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2042,
+  "fields": {
+    "event": 615,
+    "user": 436,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.731Z",
+    "updated_at": "2026-05-16T16:19:41.731Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2043,
+  "fields": {
+    "event": 596,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.736Z",
+    "updated_at": "2026-05-16T16:19:41.736Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2044,
+  "fields": {
+    "event": 596,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.740Z",
+    "updated_at": "2026-05-16T16:19:41.740Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2045,
+  "fields": {
+    "event": 596,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.745Z",
+    "updated_at": "2026-05-16T16:19:41.745Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2046,
+  "fields": {
+    "event": 597,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.750Z",
+    "updated_at": "2026-05-16T16:19:41.750Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2047,
+  "fields": {
+    "event": 597,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.755Z",
+    "updated_at": "2026-05-16T16:19:41.755Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2048,
+  "fields": {
+    "event": 597,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.759Z",
+    "updated_at": "2026-05-16T16:19:41.759Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2049,
+  "fields": {
+    "event": 598,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.763Z",
+    "updated_at": "2026-05-16T16:19:41.763Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2050,
+  "fields": {
+    "event": 598,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.767Z",
+    "updated_at": "2026-05-16T16:19:41.767Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2051,
+  "fields": {
+    "event": 598,
+    "user": 439,
+    "status": "pending",
+    "registered_at": "2026-05-16T16:19:41.773Z",
+    "updated_at": "2026-05-16T16:19:41.773Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2052,
+  "fields": {
+    "event": 599,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.777Z",
+    "updated_at": "2026-05-16T16:19:41.777Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2053,
+  "fields": {
+    "event": 599,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.782Z",
+    "updated_at": "2026-05-16T16:19:41.782Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2054,
+  "fields": {
+    "event": 599,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.787Z",
+    "updated_at": "2026-05-16T16:19:41.787Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2055,
+  "fields": {
+    "event": 600,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.791Z",
+    "updated_at": "2026-05-16T16:19:41.791Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2056,
+  "fields": {
+    "event": 600,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.796Z",
+    "updated_at": "2026-05-16T16:19:41.796Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2057,
+  "fields": {
+    "event": 600,
+    "user": 439,
+    "status": "pending",
+    "registered_at": "2026-05-16T16:19:41.806Z",
+    "updated_at": "2026-05-16T16:19:41.806Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2058,
+  "fields": {
+    "event": 601,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.812Z",
+    "updated_at": "2026-05-16T16:19:41.812Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2059,
+  "fields": {
+    "event": 601,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.820Z",
+    "updated_at": "2026-05-16T16:19:41.820Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2060,
+  "fields": {
+    "event": 601,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.825Z",
+    "updated_at": "2026-05-16T16:19:41.825Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2061,
+  "fields": {
+    "event": 602,
+    "user": 437,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.834Z",
+    "updated_at": "2026-05-16T16:19:41.834Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2062,
+  "fields": {
+    "event": 602,
+    "user": 438,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.841Z",
+    "updated_at": "2026-05-16T16:19:41.841Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2063,
+  "fields": {
+    "event": 602,
+    "user": 439,
+    "status": "confirmed",
+    "registered_at": "2026-05-16T16:19:41.851Z",
+    "updated_at": "2026-05-16T16:19:41.851Z"
+  }
+},
+{
+  "model": "events.eventregistration",
+  "pk": 2064,
+  "fields": {
+    "event": 600,
+    "user": 435,
+    "status": "pending",
+    "registered_at": "2026-05-16T16:19:41.856Z",
+    "updated_at": "2026-05-16T16:19:41.856Z"
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 156,
+  "fields": {
+    "registration": 2063,
+    "check_in_time": "2026-05-16T16:19:41.870Z",
+    "notes": null
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 157,
+  "fields": {
+    "registration": 2062,
+    "check_in_time": "2026-05-16T16:19:41.875Z",
+    "notes": null
+  }
+},
+{
+  "model": "events.eventattendance",
+  "pk": 158,
+  "fields": {
+    "registration": 2061,
+    "check_in_time": "2026-05-16T16:19:41.881Z",
+    "notes": null
+  }
+}
+]
