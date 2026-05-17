@@ -229,6 +229,25 @@
         border-radius: 8px;
     }
 
+    .event-status{
+        display: inline-block;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 365px) {
+        .event-status {
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+        .event-status span{
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0.5rem 0 0 0;
+            align-self:  flex-start;
+        }
+    }
+
     @media (max-width: 768px) {
         .pagination-left{
             font-size: 0.9rem !important;
@@ -352,7 +371,7 @@
 
         <div class="filter-group">
             <div class="filter-item">
-                <label>📊 Stato:</label>
+                <label>📊 Stato Registrazione:</label>
                 <select aria-label="status_filter" name="status" onchange="this.form.submit()">
                     <option value="all" {% if status_filter == 'all' or not status_filter %}selected{% endif %}>Tutti</option>
                     <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confermato</option>
@@ -431,7 +450,19 @@
                                 <strong>📅 Data:</strong> {{ registration.event.start_date|date:"d/m/Y H:i" }} - {{ registration.event.end_date|date:"H:i" }}<br>
                                 <strong>👤 Organizzatore:</strong> {{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}<br>
                                 <strong>📝 Data Iscrizione:</strong> {{ registration.registered_at|date:"d/m/Y H:i" }}<br>
-                                <strong>🏷️ Status:</strong>
+                                <strong>🏷️ Stato Evento:</strong>
+                                <div class="event-status">
+                                    <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;
+                                        {% if registration.event.status == 'published' %}background-color: #d4edda; color: #155724;
+                                        {% elif registration.event.status == 'draft' %}background-color: #fff3cd; color: #856404;
+                                        {% elif registration.event.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
+                                        {% elif registration.event.status == 'completed' %}background-color: #d1ecf1; color: #0c5460;
+                                        {% elif registration.event.status == 'ongoing' %}background-color: #e8d9ff; color: #4a1d8c;
+                                        {% endif %}">
+                                        {{ registration.event.get_status_display }}
+                                    </span>
+                                </div>
+                                <strong>Registrazione:</strong>
                                 <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #d4edda; color: #155724;">
                                     {{ registration.get_status_display }}
                                 </span>
@@ -462,7 +493,19 @@
                                 <strong>📅 Data:</strong> {{ registration.event.start_date|date:"d/m/Y H:i" }} - {{ registration.event.end_date|date:"H:i" }}<br>
                                 <strong>👤 Organizzatore:</strong> {{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}<br>
                                 <strong>📝 Data Iscrizione:</strong> {{ registration.registered_at|date:"d/m/Y H:i" }}<br>
-                                <strong>🏷️ Status:</strong>
+                                <strong>🏷️ Stato Evento:</strong>
+                                <div class="event-status">
+                                    <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;
+                                        {% if registration.event.status == 'published' %}background-color: #d4edda; color: #155724;
+                                        {% elif registration.event.status == 'draft' %}background-color: #fff3cd; color: #856404;
+                                        {% elif registration.event.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
+                                        {% elif registration.event.status == 'completed' %}background-color: #d1ecf1; color: #0c5460;
+                                        {% elif registration.event.status == 'ongoing' %}background-color: #e8d9ff; color: #4a1d8c;
+                                        {% endif %}">
+                                        {{ registration.event.get_status_display }}
+                                    </span>
+                                </div> <br>
+                                <strong>Registrazione:</strong>
                                 <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #fff3cd; color: #856404;">
                                     {{ registration.get_status_display }}
                                 </span>
@@ -493,7 +536,19 @@
                                 <strong>📅 Data:</strong> {{ registration.event.start_date|date:"d/m/Y H:i" }} - {{ registration.event.end_date|date:"H:i" }}<br>
                                 <strong>👤 Organizzatore:</strong> {{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}<br>
                                 <strong>📝 Data Iscrizione:</strong> {{ registration.registered_at|date:"d/m/Y H:i" }}<br>
-                                <strong>🏷️ Status:</strong>
+                                <strong>🏷️ Stato Evento:</strong>
+                                <div class="event-status">
+                                    <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;
+                                        {% if registration.event.status == 'published' %}background-color: #d4edda; color: #155724;
+                                        {% elif registration.event.status == 'draft' %}background-color: #fff3cd; color: #856404;
+                                        {% elif registration.event.status == 'cancelled' %}background-color: #f8d7da; color: #721c24;
+                                        {% elif registration.event.status == 'completed' %}background-color: #d1ecf1; color: #0c5460;
+                                        {% elif registration.event.status == 'ongoing' %}background-color: #e8d9ff; color: #4a1d8c;
+                                        {% endif %}">
+                                        {{ registration.event.get_status_display }}
+                                    </span>
+                                </div>
+                                <strong>Registrazione:</strong>
                                 <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; background-color: #f8d7da; color: #721c24;">
                                     {{ registration.get_status_display }}
                                 </span>
@@ -512,7 +567,7 @@
 
     <!-- Paginazione -->
     {% if registrations.paginator.num_pages > 1 %}
-        <div class="pagination-container">
+        <div class="pagination-container" style="background: #f0f0f0">
             <div class="pagination-left">
                 {% if registrations.has_previous %}
                     <a href="?page=1

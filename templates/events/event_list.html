@@ -501,7 +501,7 @@ color: #666; margin-bottom: 1.5rem;">
     {% endfor %}
 
     {% if is_paginated %}
-        <div class="pagination-container">
+        <div class="pagination-container" style="background: #f0f0f0">
             <div class="pagination-left">
                 {% if page_obj.has_previous %}
                     <a href="?page=1{% if current_query %}&q={{ current_query }}{% endif %}
