@@ -150,7 +150,7 @@
                 <!-- Bottoni (destra) -->
                 <div class="event-actions">
                     {% if event.can_restore %}
-                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">️️⭯ Ripristina</a>
+                        <a href="{% url 'events:event_restore' event.pk %}" class="btn btn-success">️️⟲ Ripristina</a>
                         <a href="{% url 'events:event_update' event.pk %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color: white;">✎ Modifica</a>
                     {% endif %}
                     {% comment %}<a href="{% url 'events:event_detail' event.pk %}" class="btn btn-info">📄 Dettagli</a>{% endcomment %}
