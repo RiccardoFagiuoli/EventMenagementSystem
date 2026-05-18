@@ -538,6 +538,7 @@ def organizer_events(request):
     status_filter = request.GET.get('status', '')
     date_filter = request.GET.get('date', '')
     show_deleted = request.GET.get('show_deleted', '') == 'true'
+    return_url = request.get_full_path()
 
     # Admin vede tutti gli eventi, gli organizzatori vedono solo i loro
     if is_admin:
@@ -601,6 +602,7 @@ def organizer_events(request):
         'status_filter': status_filter,
         'date_filter': date_filter,
         'show_deleted': show_deleted,
+        'return_url': return_url,
         'status_choices': Event._meta.get_field('status').choices,
     }
     return render(request, 'events/organizer_events.html', context)

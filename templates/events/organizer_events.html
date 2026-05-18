@@ -488,13 +488,13 @@
                     {% comment %}<a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">👁️ Dettagli</a>{% endcomment %}
 
                     {% if not event.deleted_at %}
-                        <a href="{% url 'events:event_update' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-primary">✎ Modifica</a>
-                        <a href="{% url 'events:event_delete' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-danger">✖ Elimina</a>
+                        <a href="{% url 'events:event_update' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-primary">✎ Modifica</a>
+                        <a href="{% url 'events:event_delete' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-danger">✖ Elimina</a>
                     {% elif event.can_restore %}
-                        <a href="{% url 'events:event_restore' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-success">⟲ Ripristina</a>
-                        <a href="{% url 'events:event_delete' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-danger" style="background: #ff0000">✖ Elimina definitivamente</a>
+                        <a href="{% url 'events:event_restore' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-success">⟲ Ripristina</a>
+                        <a href="{% url 'events:event_delete' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-danger" style="background: #ff0000">✖ Elimina definitivamente</a>
                     {% else %}
-                        <a href="{% url 'events:event_delete' event.pk %}?next={{ request.GET.next|default:request.path }}" class="btn btn-danger" style="background: #ff0000">✖ Elimina definitivamente</a>
+                        <a href="{% url 'events:event_delete' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-danger" style="background: #ff0000">✖ Elimina definitivamente</a>
                     {% endif %}
                 </div>
             </div>
