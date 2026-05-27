@@ -22,8 +22,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 # CSRF_TRUSTED_ORIGINS - per i form
-if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS if host and host != 'localhost']
+# CSRF_TRUSTED_ORIGINS - per i form
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://localhost').split(',')
 # Application definition
 
 INSTALLED_APPS = [
