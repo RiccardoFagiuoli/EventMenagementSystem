@@ -1,15 +1,26 @@
-import os
 from pathlib import Path
-from decouple import config
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='dev-secret-for-local')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,eventmenagementsystem.up.railway.app').split(',')
+import os
+from pathlib import Path
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-#d+46!m@h$7&#^0)(u!j6^ikb@3+ig)7=%+fu&(ts1!h=7a&n!')
 
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://localhost,https://eventmenagementsystem.up.railway.app').split(',')
+
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'eventmenagementsystem.up.railway.app',
+    '.railway.app',
+]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -56,10 +67,12 @@ WSGI_APPLICATION = 'eventmenagementsystem.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -76,7 +89,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 LANGUAGE_CODE = 'it-IT'
 
 TIME_ZONE = 'Europe/Rome'
@@ -84,7 +96,6 @@ TIME_ZONE = 'Europe/Rome'
 USE_I18N = True
 
 USE_TZ = True
-
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -105,6 +116,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
-
-ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', 'eventmenagementsystem.up.railway.app', '.railway.app', ]
-CSRF_TRUSTED_ORIGINS = [ 'https://*.railway.app', ]
