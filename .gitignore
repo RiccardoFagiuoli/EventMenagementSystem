@@ -7,3 +7,5 @@
 .Python
 env/
 .env
+
+.env.example

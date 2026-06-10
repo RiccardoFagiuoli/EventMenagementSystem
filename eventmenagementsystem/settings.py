@@ -20,14 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#d+46!m@h$7&#^0)(u!j6^ikb@3+ig)7=%+fu&(ts1!h=7a&n!'
+import os
+from pathlib import Path
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-#d+46!m@h$7&#^0)(u!j6^ikb@3+ig)7=%+fu&(ts1!h=7a&n!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'eventmenagementsystem.up.railway.app',
     '.railway.app',
 ]
 
@@ -149,5 +152,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
 
-# Allow all hosts for development (restrict in production)
-ALLOWED_HOSTS = ['*']
