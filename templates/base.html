@@ -124,7 +124,7 @@
             const pageWidth = window.innerWidth;
 
             // Solo su mobile/tablet
-            if (pageWidth <= 768) {
+            if (nav && pageWidth <= 768) {
                 if (window.scrollY > 10) {
                     nav.classList.add('shrink');
                 } else {
