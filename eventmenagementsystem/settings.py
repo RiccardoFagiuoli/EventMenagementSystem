@@ -106,3 +106,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
 
+ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', 'eventmenagementsystem.up.railway.app', '.railway.app', ]
+CSRF_TRUSTED_ORIGINS = [ 'https://*.railway.app', ]
