@@ -515,7 +515,7 @@
             </a>
         </div>
 
-        <!-- Recent Activity Section (Optional - requires backend) -->
+        <!-- Recent Activity Section -->
         <div class="recent-activity">
             <h3 style="margin-bottom: 1rem;">🔄 Attività Recenti</h3>
             <div class="activity-item">
@@ -558,12 +558,6 @@
                   navigator.vibrate(50);
                 }
               }
-
-              {% comment %}function hapticFeedbackCancel() {
-                if ('vibrate' in navigator) {
-                  navigator.vibrate(30);
-                }
-              }{% endcomment %}
 
               function showTooltip(event, mouseX, mouseY, eventInfo) {
                 hapticFeedbackSuccess();
@@ -924,12 +918,6 @@
                   navigator.vibrate(50);
                 }
               }
-
-              {% comment %}function hapticFeedbackCancel() {
-                if ('vibrate' in navigator) {
-                  navigator.vibrate(30);
-                }
-              }{% endcomment %}
 
               function showTooltip(event, mouseX, mouseY, eventInfo) {
                 hapticFeedbackSuccess();

@@ -161,7 +161,7 @@
         </div>
 
         <div style="background-color: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
-            <!-- MINIATURA DELL'IMMAGINE - AGGIUNTA QUI -->
+            <!-- MINIATURA DELL'IMMAGINE -->
             {% if event.image %}
                 <div class="event-thumbnail">
                     <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: auto; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 0 10px 2px dimgray">
@@ -342,13 +342,11 @@
 </div>
 
 <script>
-    // Salva la provenienza SOLO la prima volta che visiti la pagina
     (function() {
         const eventId = window.location.pathname.match(/\/event\/(\d+)/)?.[1];
         if (eventId) {
             const storageKey = `event_${eventId}_original_from`;
 
-            // Salva solo se non esiste già E se siamo arrivati da un referrer valido
             if (!sessionStorage.getItem(storageKey) && document.referrer &&
                 !document.referrer.includes('/event/') &&
                 !document.referrer.includes('/delete/') &&
@@ -359,7 +357,7 @@
     })();
 
     function smartBack(event) {
-        event.preventDefault(); // Previene la navigazione immediata
+        event.preventDefault();
 
         const eventId = window.location.pathname.match(/\/event\/(\d+)/)?.[1];
         if (eventId) {
@@ -373,7 +371,6 @@
             }
         }
 
-        // Fallback: salta le pagine indesiderate
         const referrer = document.referrer;
         if (referrer.includes('/delete/') ||
             referrer.includes('/unregister/confirm/') ||

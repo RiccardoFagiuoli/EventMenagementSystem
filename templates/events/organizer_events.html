@@ -485,8 +485,6 @@
                 </div>
 
                 <div class="event-card-actions">
-                    {% comment %}<a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">👁️ Dettagli</a>{% endcomment %}
-
                     {% if not event.deleted_at %}
                         <a href="{% url 'events:event_update' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-primary">✎ Modifica</a>
                         <a href="{% url 'events:event_delete' event.pk %}?next={{ return_url|urlencode }}" class="btn btn-danger">✖ Elimina</a>

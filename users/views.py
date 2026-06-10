@@ -15,7 +15,6 @@ def is_admin(user):
     return user.is_authenticated and user.is_staff
 
 def register(request):
-    """ View for user registration. """
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -44,7 +43,6 @@ def register(request):
     return render(request, 'users/register.html')
 
 def user_login(request):
-    """ View for user login. """
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -60,14 +58,12 @@ def user_login(request):
 @login_required
 @require_http_methods(["POST"])
 def user_logout(request):
-    """ View for user logout. """
     logout(request)
     messages.success(request, 'Logout completato!')
     return redirect('home')
 
 @login_required
 def profile(request):
-    """ View for displaying and editing user profile. """
     try:
         user_profile = request.user.profile
     except UserProfile.DoesNotExist:
@@ -90,9 +86,7 @@ def profile(request):
 
 @user_passes_test(is_admin)
 def user_list(request):
-    """
-    Vista per la lista utenti (solo admin)
-    """
+    #Vista per la lista utenti (solo admin)
     # Filtri
     search_query = request.GET.get('search', '')
     role_filter = request.GET.get('role', '')
@@ -162,9 +156,6 @@ def user_list(request):
 
 @user_passes_test(is_admin)
 def user_detail(request, user_id):
-    """
-    Vista per il dettaglio di un singolo utente
-    """
     user = get_object_or_404(User.objects.select_related('profile'), id=user_id)
 
     # Eventi creati (se è organizzatore)
@@ -189,9 +180,6 @@ def user_detail(request, user_id):
 
 @user_passes_test(is_admin)
 def organizer_list(request):
-    """
-    Vista per la lista degli organizzatori (solo admin)
-    """
     # Filtri
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort', 'events_count')  # Default: ordina per numero eventi

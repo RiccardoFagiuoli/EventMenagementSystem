@@ -1,11 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# UserProfile acts as a complementary model for additional fields
 class UserProfile(models.Model):
-    """
-    Extended User profile with additional fields.
-    """
     ROLE_CHOICES = [
         ('attendee', 'Attendee'),
         ('organizer', 'Organizer'),

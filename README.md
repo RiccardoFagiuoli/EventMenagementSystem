@@ -1,310 +1,326 @@
-# Event Management System – Full-Stack Web Application
+# Event Management System
 
-**Studente:** Riccardo [Inserisci il tuo cognome]
-**Data di submit:** 27 Maggio 2026
-**Tipo progetto:** Full-Stack Web Application
-**Framework:** Django
-**Database SQLite incluso (locale):** db.sqlite3 (pre-popolato con demo data)
+**Studente**: Riccardo Fagiuoli  
+**Tipo di Progetto**: Full-Stack Web Application  
+**Framework**: Django 6.0.4  
 
-## Descrizione
+---
 
-Applicazione web per la gestione di eventi. Gli utenti con ruolo Attendee possono visualizzare gli eventi, registrarsi e annullare la propria partecipazione. Gli utenti con ruolo Organizer possono creare, modificare e cancellare i propri eventi, oltre a visualizzare la lista dei partecipanti. Il sistema utilizza un modello Profile (UserProfile) esteso rispetto all'utente base di Django.
+## 📌 Descrizione del Progetto
 
-## Funzionalità per ruolo
+Event Management System è un'applicazione web completa che consente agli utenti di scoprire, registrarsi e partecipare a eventi. Gli organizzatori possono creare e gestire i loro eventi, visualizzare elenchi di partecipanti e gestire la coda d'attesa quando un evento è al completo.
 
-### Attendee (utente standard)
+L'applicazione è progettata con un'architettura modulare Django e include autenticazione, autorizzazione basata su ruoli, gestione delle immagini, soft delete degli eventi, e un sistema di waiting list automatico.
 
-- Visualizzare lista eventi e dettaglio singolo evento
-- Registrarsi a un evento (crea una registrazione nel modello EventRegistration)
-- Visualizzare le proprie registrazioni
-- Annullare la propria registrazione
-- Visualizzare il calendario degli eventi registrati
+---
 
-### Organizer (gestore eventi)
+## 🎯 Funzionalità Implementate
 
-- Tutte le funzionalità di Attendee
-- Creare nuovi eventi (tramite EventCreateView)
-- Modificare e cancellare solo i propri eventi (tramite EventUpdateView e EventDeleteView)
-- Visualizzare gli iscritti ai propri eventi e gestire le registrazioni
-- Accedere alla pagina "I Miei Eventi" per gestire l'intera lista dei propri eventi
+### Per Partecipanti (Attendee)
+-  Visualizzare tutti gli eventi pubblicati con dettagli completi
+-  Ricerca e filtro degli eventi per titolo, descrizione, location
+-  Registrazione e cancellazione dagli eventi
+-  Sistema di waiting list automatico quando un evento è pieno
+-  Visualizzazione delle proprie registrazioni (confermate, in attesa, cancellate)
+-  Calendario interattivo delle proprie registrazioni confermate
+-  Gestione profilo personale
+-  Visualizzazione della propria storia registrazioni
 
-### Amministratore (superuser)
+### Per Organizzatori (Organizer)
+-  Tutte le funzionalità dei Partecipanti
+-  Creazione di nuovi eventi con immagini, data/ora inizio/fine, limite partecipanti
+-  Modifica dei propri eventi
+-  Soft delete degli eventi (ripristinabili entro 3 giorni)
+-  Visualizzazione lista completa iscritti (confermati e in attesa)
+-  Gestione manuale della waiting list (promozione da lista d'attesa)
+-  Calendario degli eventi creati
+-  Pagina dedicata "I miei eventi"
 
-- Accesso al pannello admin di Django
-- Gestire utenti, profili (UserProfile), eventi, registrazioni e presenze
-- Visualizzare tutti gli eventi e utenti del sistema
-- Accesso alla pagina degli "Eventi Eliminati" per ripristinare eventi soft-deleted
+### Per Amministratori (Admin)
+-  Accesso pannello Django Admin completo
+-  Visualizzazione di TUTTI gli eventi (inclusi eliminati)
+-  Gestione utenti e ruoli
+-  Lista organizzatori con statistiche
+-  Pagina degli eventi eliminati con timeline di ripristino
+-  Tutte le funzionalità di organizer
 
-## Demo account inclusi
+---
 
-Ruolo | Username | Password
---- | --- | ---
-Amministratore | admin | admin123
-Organizer | marco_rossi | password123
-Attendee | luca_verdi | password123
-
-## Modelli (relazioni)
-
-- User (Django built-in, esteso con UserProfile)
-- UserProfile (OneToOne con User, contiene ruolo, bio, numero telefono, foto profilo)
-- Event (ForeignKey verso User come organizzatore)
-- EventRegistration (relazione Many-to-Many tra User ed Event per le registrazioni, con status: pending/confirmed/cancelled/attended)
-- EventAttendance (OneToOne con EventRegistration, tracciamento presenza)
-
-### Relazioni implementate
-
-- Event.organizer → ForeignKey a User
-- EventRegistration.event → ForeignKey a Event
-- EventRegistration.user → ForeignKey a User
-- EventAttendance.registration → OneToOne a EventRegistration
-- UserProfile.user → OneToOne a User
-
-## Installazione locale
+## 🛠️ Installazione e Setup Locale
 
 ### Prerequisiti
+- Python 3.10 o superiore
+- pip (gestore pacchetti Python)
+- Git
 
-- Python 3.8 o superiore
-- pip
-- git
+### Procedura di Installazione
 
-### Passaggi
-
-1. Clona il repository
-   git clone <repo-url>
+1. **Clona il repository**
+   ```bash
+   git clone <repository-url>
    cd EventMenagementSystem
+   ```
 
-2. Crea e attiva un ambiente virtuale
+2. **Crea un ambiente virtuale**
+   ```bash
    python -m venv venv
-   source venv/bin/activate  (Windows: venv\Scripts\activate)
+   ```
 
-3. Installa le dipendenze
+3. **Attiva l'ambiente virtuale**
+   - **Su Windows (PowerShell)**:
+     ```powershell
+     .\venv\Scripts\Activate.ps1
+     ```
+   - **Su Windows (Command Prompt)**:
+     ```cmd
+     venv\Scripts\activate.bat
+     ```
+   - **Su macOS/Linux**:
+     ```bash
+     source venv/bin/activate
+     ```
+
+4. **Installa le dipendenze**
+   ```bash
    pip install -r requirements.txt
+   ```
 
-4. (Opzionale) Applica le migrazioni
+5. **Applica le migrazioni** (il database è già pre-popolato, ma esegui comunque)
+   ```bash
    python manage.py migrate
-   
-   Nota: Il database incluso (db.sqlite3) è già aggiornato. Esegui questo comando solo se aggiungi nuove migrazioni.
+   ```
 
-5. Avvia il server locale
+6. **Avvia il server locale**
+   ```bash
    python manage.py runserver
-   
-   Accedi a http://localhost:8000/
+   ```
 
-Nota importante: Il file db.sqlite3 è già incluso e contiene tutti i dati demo (eventi, registrazioni, account). Non è necessario caricare fixture.
+7. **Accedi all'applicazione**
+   - URL: `http://127.0.0.1:8000/`
+   - Django Admin: `http://127.0.0.1:8000/admin/`
 
-## Deployment online
+---
 
-L'applicazione è accessibile su Railway all'indirizzo:
-https://eventmenagementsystem.up.railway.app
+## 📊 Database Pre-Popolato
 
-### Nota sul database di produzione
+Il progetto include il file **`db.sqlite3`** pre-popolato con:
+-  2 organizzatori con eventi creati
+-  5 partecipanti con varie iscrizioni
+-  15+ eventi di esempio in vari stati (draft, published, completed, cancelled)
+-  Registrazioni agli eventi con mix di status (confirmed, pending, cancelled, attended)
+-  Account admin per accesso Django Admin
 
-Il server di produzione utilizza un database PostgreSQL indipendente. Per testare il progetto deployato con i demo account, utilizzare le medesime credenziali del database locale.
+---
 
-## Testing da browser (scenario consigliato)
+## 🔐 Account Demo Disponibili
 
-### Test 1: Creazione e gestione evento (Organizer)
+| Username | Password | Ruolo | Descrizione |
+|---------|----------|--------|-------------|
+| `admin` | `admin123` | **Admin/Superuser** | Accesso completo, visione globale, Django Admin |
+| `marco_rossi` | `password123` | **Organizer** | Può creare/modificare/eliminare eventi, gestisce iscritti |
+| `luca_verdi` | `password123` | **Attendee** | Visualizza eventi, si registra, gestisce iscrizioni |
 
-1. Login come Organizer
-   - Username: marco_rossi
-   - Password: password123
+**Note**: Questi account sono creati esclusivamente per il testing della valutazione. Non sono account reali o personali.
 
-2. Crea un nuovo evento
-   - Clicca su "Create Event" (nella barra di navigazione)
-   - Compila il modulo:
-     - Titolo: "Workshop Django Avanzato"
-     - Descrizione: "Un workshop pratico su Django"
-     - Luogo: "Aula 101"
-     - Data/ora inizio: [data]
-     - Data/ora fine: [dopo l'inizio]
-     - Numero massimo partecipanti: 20
-     - Stato: "published"
-   - Clicca "Create"
+---
 
-3. Verifica l'evento creato
-   - Vai a "I Miei Eventi" → vedi l'evento appena creato
-   - Clicca su dettaglio evento
-   - Usa il pulsante "Update" per modificare il titolo
+## 🌐 Deployment Online
 
-4. Gestisci l'evento
-   - Visualizza la lista degli iscritti
-   - Prova a promuovere utenti dalla lista d'attesa
+**URL di Produzione**: https://eventmenagementsystem.up.railway.app/
 
-### Test 2: Registrazione e gestione iscrizioni (Attendee)
+L'applicazione è deployata su **Railway** (piattaforma free con piano gratuito).
 
-1. Logout da marco_rossi
+**Per accedere online, usa gli stessi account demo elencati sopra.**
 
-2. Login come Attendee
-   - Username: luca_verdi
-   - Password: password123
+---
 
-3. Registrati a un evento
-   - Vai a "Lista Eventi"
-   - Seleziona l'evento creato dall'Organizer
-   - Clicca "Iscriviti"
-   - Verifica il messaggio di successo
+## 📋 Scenario di Testaggio Completo (Browser)
 
-4. Visualizza le tue iscrizioni
-   - Vai a "Le mie registrazioni"
-   - Vedi l'evento con stato "Confermato"
-   - Clicca "Disiscriviti" e conferma la disiscrizione
+### Test 1: Login e Navigazione Base (Attendee)
+1. Vai a https://eventmenagementsystem.up.railway.app/
+2. Accedi con: `luca_verdi` / `password123`
+3. Visualizza la home page con statistiche eventi
+4. Clicca su "Events" → vedi lista eventi pubblicati
+5. Cerca un evento per titolo o location
+6. Clicca su un evento → visualizza dettagli, organizzatore, numero iscritti
 
-### Test 3: Controllo dei permessi
+### Test 2: Registrazione e Gestione Iscrizioni (Attendee)
+1. Rimani loggato come `luca_verdi`
+2. Seleziona un evento non-pieno → clicca "Register"
+3. Ricevi messaggio di conferma "Registrazione completata!"
+4. Vai a "My Registrations" → vedi l'evento nella lista "Confirmed"
+5. Seleziona un evento pieno (max_attendees raggiunto) → clicca "Register"
+6. Ricevi messaggio "Evento al completo. Sei stato aggiunto alla lista d'attesa."
+7. In "My Registrations" vedi lo status "Pending" per quell'evento
+8. Torna su quell'evento → clicca "Unregister"
+9. Ricevi conferma e vedi status cambiato a "Cancelled"
 
-1. Prova accesso non autorizzato come Attendee
-   - Tenta di accedere direttamente a /events/create/
-   - Sistema nega accesso con messaggio di errore
+### Test 3: Cambio Ruolo a Organizer
+1. Vai a "Profile" (menu utente)
+2. Logout come `luca_verdi`
+3. Accedi con: `marco_rossi` / `password123` (Organizer)
+4. Vedi menu aggiuntivi: "Create Event" e "My Events"
 
-2. Prova modifica evento di altri Organizer
-   - Login come Organizer
-   - Prova a modificare un evento creato da un altro organizer (se presente)
-   - Sistema nega accesso
+### Test 4: Creazione Evento (Organizer)
+1. Loggato come `marco_rossi`
+2. Clicca "Create Event"
+3. Compila il form:
+   - Titolo: "Workshop Django"
+   - Descrizione: "Impara Django in 4 ore"
+   - Location: "Sala Conferenze B"
+   - Data Inizio: oggi + 7 giorni, ore 14:00
+   - Data Fine: stessa data, ore 18:00
+   - Max Attendees: 5
+   - Status: "Published"
+   - Immagine: (facoltativa)
+4. Clicca "Save"
+5. Vieni reindirizzato a "My Events" e vedi il nuovo evento
 
-3. Verifica permessi nel frontend
-   - Come Attendee, visualizza evento di un organizer
-   - Pulsante "Update" e "Delete" non visibili
-   - Come Organizer, visualizza tuo evento
-   - Pulsanti "Update" e "Delete" visibili
+### Test 5: Modifica e Soft Delete (Organizer)
+1. Loggato come `marco_rossi`, in "My Events"
+2. Seleziona il workshop creato → clicca "Edit"
+3. Modifica descrizione → clicca "Save"
+4. Torna a dettagli evento → clicca "Delete"
+5. Ricevi messaggio "Evento eliminato con successo! Puoi ripristinarlo entro 3 giorni."
+6. Clicca "Restore" → l'evento è attivo di nuovo
 
-### Test 4: Sistema di waiting list
+### Test 6: Permessi Assenti (Attendee non può creare)
+1. Logout come `marco_rossi`
+2. Accedi come `luca_verdi` (Attendee)
+3. Prova a visitare: http://127.0.0.1:8000/events/create/
+4. Ricevi messaggio di errore "Solo gli organizzatori possono creare eventi."
+5. Sei reindirizzato a Event List
 
-1. Crea evento con 1 posto disponibile
-   - Login come marco_rossi
-   - Create Event con max_attendees = 1
+### Test 7: Admin Panel
+1. Logout come `luca_verdi`
+2. Accedi come `admin_demo` / `admin12345`
+3. Vai su http://127.0.0.1:8000/admin/
+4. Puoi visualizzare e modificare:
+   - Event (tutti gli eventi inclusi eliminati)
+   - EventRegistration
+   - User e UserProfile
+   - Puoi creare/editare/eliminare qualsiasi record
 
-2. Iscrivi primo utente
-   - Login come luca_verdi
-   - Registrati all'evento → stato "Confermato"
+### Test 8: Validazione Form
+1. Loggato come `marco_rossi`, vai a "Create Event"
+2. Tenta di creare evento con **data fine PRIMA della data inizio**
+3. Ricevi errore: "La data e ora di inizio deve essere precedente alla data e ora di fine."
+4. Tenta di caricare immagine > 2MB
+5. Ricevi errore: "L'immagine è troppo pesante (max 2MB)."
 
-3. Iscrivi secondo utente
-   - Crea nuovo account (es. giorgia_rossi / password123)
-   - Registrati allo stesso evento → stato "In Attesa"
+---
 
-4. Testa promozione automatica
-   - Login come luca_verdi
-   - Vai a "My Registrations"
-   - Clicca "Unregister"
-   - Verifica che giorgia_rossi riceva notifica di promozione
+## 🗂️ Struttura del Progetto
 
-## Struttura del progetto
 ```
 EventMenagementSystem/
-├── eventmenagementsystem/ (Configurazione principale Django)
-│   ├── settings.py (Configurazione progetto)
-│   ├── urls.py (URL routing principale)
-│   ├── wsgi.py (WSGI per deployment)
-│   └── asgi.py (ASGI per async)
-├── events/ (App principale per gestione eventi)
-│   ├── models.py (Event, EventRegistration, EventAttendance)
-│   ├── views.py (Class-based views: ListView, DetailView, CreateView, UpdateView, DeleteView)
-│   ├── forms.py (EventForm con validazioni)
-│   ├── urls.py (URL routing per events)
-│   ├── admin.py (Admin panel configuration)
-│   ├── migrations/ (Migrazioni database)
-│   └── templates/events/ (Template HTML per eventi)
-├── users/ (App per gestione utenti e autenticazione)
-│   ├── models.py (UserProfile)
-│   ├── views.py (Autenticazione, profilo, list/detail)
-│   ├── urls.py (URL routing per users)
-│   ├── admin.py (Admin configuration)
-│   └── templates/users/ (Template HTML per login/register/profile)
-├── templates/ (Template globali: base.html, home.html)
-├── static/ (File statici: CSS, JS, favicon)
-├── media/ (Media caricati: event_images/, profile_pictures/)
-├── db.sqlite3 (Database SQLite pre-popolato)
-├── manage.py (Django management script)
-├── requirements.txt (Dipendenze Python)
-└── README.md (Questo file)
+├── db.sqlite3                          # Database pre-popolato
+├── manage.py                           # Django management
+├── requirements.txt                    # Dipendenze Python
+├── README.md                           # Questo file
+├── Procfile                            # Configuration Railway
+├── eventmenagementsystem/              # Configurazione Django principale
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+├── events/                             # App 1: Gestione Eventi
+│   ├── models.py                       # Event, EventRegistration, EventAttendance
+│   ├── views.py                        # 5 class-based views + function-based
+│   ├── forms.py                        # EventForm con validazioni
+│   ├── urls.py
+│   ├── admin.py
+│   ├── migrations/                     # Migrazioni Django
+│   └── templatetags/
+│       └── custom_filters.py           # Custom template filters
+├── users/                              # App 2: Gestione Utenti
+│   ├── models.py                       # User, UserProfile
+│   ├── views.py                        # Login, Register, Profile, Admin views
+│   ├── urls.py
+│   ├── admin.py
+│   └── migrations/
+├── templates/                          # Template HTML
+│   ├── base.html                       # Template base con navbar
+│   ├── home.html
+│   ├── events/                         # Template app events
+│   │   ├── event_list.html
+│   │   ├── event_detail.html
+│   │   ├── event_form.html
+│   │   ├── calendar.html
+│   │   └── ...
+│   └── users/                          # Template app users
+│       ├── login.html
+│       ├── register.html
+│       ├── profile.html
+│       └── ...
+├── static/                             # File statici (CSS, JS, immagini)
+│   └── favicon.ico
+└── media/                              # File caricati (immagini eventi, profili)
+    └── event_images/
 ```
-## Tecnologie utilizzate
-
-- Backend: Django 6.0.4
-- Database: SQLite (locale) / PostgreSQL (production)
-- Frontend: HTML5, CSS3, Bootstrap
-- Server WSGI: Gunicorn (production)
-- Gestione statico: WhiteNoise (production)
-- Validazione immagini: Pillow 12.2.0
-- Environment variables: python-decouple
-
-## Funzionalità avanzate implementate
-
-### Class-based views
-
-Tutte le operazioni CRUD sugli eventi sono gestite da classi generiche di Django:
-
-- EventListView → ListView con filtri avanzati (ricerca testuale, data, organizzatore)
-- EventDetailView → DetailView con visualizzazione iscritti e pending list
-- EventCreateView → CreateView con permessi (solo organizers autenticati)
-- EventUpdateView → UpdateView con permessi (solo organizzatore dell'evento o admin)
-- EventDeleteView → DeleteView con soft-delete (ripristinabile entro 3 giorni)
-
-### Sistema di waiting list
-
-Se un evento raggiunge il massimo di partecipanti:
-- Le nuove registrazioni entrano in stato "pending" (lista d'attesa)
-- Quando un partecipante si ritira, il primo in lista viene promosso automaticamente a "confirmed"
-- Notifiche tramite Django messages
-
-### Soft delete di eventi
-
-Gli eventi eliminati non vengono cancellati dal database:
-- Segnati con timestamp deleted_at
-- Possono essere ripristinati entro 3 giorni
-- Dopo 3 giorni, gli admin possono eliminarli definitivamente
-- Gli utenti non vedono gli eventi soft-deleted (solo admin e organizzatore possono vederli)
-
-### Validazioni implementate
-
-- Validazione date evento (inizio < fine)
-- Validazione numero partecipanti (> 0 o illimitato)
-- Validazione dimensione immagine (max 2MB)
-- Controllo permessi su tutte le operazioni sensibili (create/update/delete)
-- Prevenzione auto-registrazione ai propri eventi
-- Validazione unica EventRegistration (event, user)
-
-### Ricerca e filtri avanzati
-
-- Ricerca testuale per titolo, descrizione, luogo, organizzatore
-- Filtri per data (oggi, prossimi, passati, range personalizzato)
-- Filtri per organizzatore
-- Filtri per stato registrazione (confermato, in attesa, annullato)
-
-## API endpoints e viste
-
-| Metodo | URL | Autenticazione | Ruolo Richiesto | Descrizione |
-| :--- | :--- | :--- | :--- | :--- |
-| **GET** | `/` | No | Tutti | Home page principale |
-| **GET** | `/admin/` | Sì | Admin | Admin panel di Django |
-| **GET** | `/events/` | No | Tutti | Lista eventi pubblicati con filtri avanzati |
-| **GET** | `/events/event/<id>/` | No | Tutti | Dettaglio evento e lista iscritti |
-| **POST** | `/events/create/` | Sì | Organizer | Crea nuovo evento |
-| **POST** | `/events/event/<id>/edit/` | Sì | Organizer | Modifica evento (solo proprietario) |
-| **POST** | `/events/event/<id>/delete/` | Sì | Organizer | Soft-delete evento (solo proprietario) |
-| **POST** | `/events/event/<id>/register/` | Sì | Attendee | Registrati a evento |
-| **POST** | `/events/event/<id>/unregister/` | Sì | Attendee | Cancella registrazione |
-| **GET** | `/events/event/<id>/unregister/confirm/` | Sì | Attendee | Pagina conferma disiscrizione |
-| **POST** | `/events/event/<id>/unregister/confirm/` | Sì | Attendee | Conferma disiscrizione e promozione waiting list |
-| **GET** | `/events/my-registrations/` | Sì | Attendee | Visualizza proprie iscrizioni con filtri |
-| **GET** | `/events/my-events/` | Sì | Organizer | Visualizza propri eventi con filtri |
-| **GET** | `/events/deleted-events/` | Sì | Admin | Visualizza eventi eliminati con timer ripristino (3 giorni) |
-| **POST** | `/events/event/<id>/restore/` | Sì | Admin/Organizer | Ripristina evento eliminato se entro 3 giorni |
-| **GET** | `/events/event/<event_id>/admin-unregister/<registration_id>/confirm/` | Sì | Admin/Organizer | Pagina conferma disiscrivere utente |
-| **POST** | `/events/event/<event_id>/unregister-user/<registration_id>/` | Sì | Admin/Organizer | Disiscrive utente e promuove da waiting list |
-| **GET** | `/events/event/<id>/admin-register/<registration_pk>/confirm/` | Sì | Admin/Organizer | Pagina conferma promozione waiting list |
-| **POST** | `/events/event/<id>/register-user/<registration_pk>/` | Sì | Admin/Organizer | Promuove utente da pending a confirmed |
-| **GET** | `/events/calendar/` | Sì | Attendee | Calendario interattivo degli eventi registrati (FullCalendar) |
-| **GET** | `/events/api/calendar-events/` | Sì | Attendee | API JSON per calendario con eventi (registrati e organizzati) |
-| **POST** | `/users/register/` | No | Tutti | Registra nuovo utente |
-| **POST** | `/users/login/` | No | Tutti | Login utente |
-| **POST** | `/users/logout/` | Sì | Tutti | Logout utente |
-| **GET** | `/users/profile/` | Sì | Tutti | Visualizza e modifica profilo personale |
-| **POST** | `/users/profile/` | Sì | Tutti | Salva modifiche profilo (bio, telefono, nome, email) |
-| **GET** | `/users/admin/users/` | Sì | Admin | Lista di tutti gli utenti con filtri e statistiche |
-| **GET** | `/users/admin/users/<user_id>/` | Sì | Admin | Dettaglio singolo utente (eventi creati, iscrizioni) |
-| **GET** | `/users/admin/organizers/` | Sì | Admin | Lista organizzatori con statistiche (n. eventi, partecipanti totali, ordinamento) |
 
 ---
 
-Ultimo aggiornamento: 27 Maggio 2026
+## 🔧 Requisiti Tecnici Implementati
+
+### Modelli e Relazioni
+-  **Event**: Modello principale con ForeignKey a User (organizer)
+-  **EventRegistration**: Relazione Many-to-Many tra User e Event
+-  **EventAttendance**: OneToOneField a EventRegistration (presenza fisica)
+-  **UserProfile**: OneToOneField a User (custom user profile)
+
+### Autenticazione e Autorizzazione
+-  Sistema login/logout con Django auth
+-  Registrazione utenti con scelta del ruolo
+-  2+ ruoli: Attendee, Organizer, Admin
+-  Permessi enforced con LoginRequiredMixin, UserPassesTestMixin
+-  Messaggi di errore quando l'accesso è negato
+
+### Class-Based Views
+-  EventListView (ListView)
+-  EventDetailView (DetailView)
+-  EventCreateView (CreateView)
+-  EventUpdateView (UpdateView)
+-  EventDeleteView (DeleteView)
+
+### Validazione Input
+-  EventForm con Django ModelForm
+-  Validazioni custom: date coerenti, file size, numero partecipanti
+-  Errori mostrati agli utenti tramite messages framework
+-  Error messages user-friendly in italiano
+
+### CRUD Completo
+-  **Create**: EventCreateView, form valido
+-  **Read**: EventListView, EventDetailView
+-  **Update**: EventUpdateView
+-  **Delete**: EventDeleteView (soft delete)
+-  Permessi rispettati per organizer
 
 ---
+
+## 🚀 Deployment su Railway
+
+L'applicazione è deployata su Railway (https://railway.app/), una piattaforma cloud gratuita.
+
+**URL Live**: https://eventmenagementsystem.up.railway.app/
+
+### Caratteristiche del Deployment
+-  Django in modalità produzione
+-  Database SQLite persistente
+-  Media files serviti correttamente
+-  Static files compressati con WhiteNoise
+-  Login e tutte le funzionalità funzionanti online
+
+---
+
+## 📝 Note Tecniche
+
+- **Soft Delete**: Gli eventi eliminati rimangono nel database per 3 giorni e possono essere ripristinati
+- **Waiting List Automatica**: Quando un evento raggiunge il limite, nuovi iscritti vengono automaticamente aggiunti alla lista d'attesa
+- **Promotion Automatica**: Quando qualcuno si cancella, il primo della waiting list viene promosso automaticamente
+- **Timezone**: Europe/Rome (UTC+1 o UTC+2 a seconda dell'ora legale)
+- **Paginazione**: Event list pagina 10 eventi per pagina, Admin views 20 utenti per pagina
+
+
+**Ultimo aggiornamento**: Giugno 2026  
+**Versione**: 1.0

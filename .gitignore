@@ -10,3 +10,4 @@ env/
 
 generate_event_images.py
 populate_db.py
+/.env.example

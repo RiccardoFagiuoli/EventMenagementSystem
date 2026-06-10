@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from events.models import Event, EventRegistration
 
 def home(request):
-    """ Home page view """
+
 
     # Contatori base
     total_events = Event.objects.filter(deleted_at__isnull=True).count()
@@ -14,7 +14,7 @@ def home(request):
             deleted_at__isnull=True
         ).order_by('start_date').count()
 
-    # Tentativo di contare gli organizzatori (potrebbe fallire se non esiste)
+    # Tentativo di contare gli organizzatori
     try:
         from users.models import UserProfile
         total_organizers = UserProfile.objects.filter(role='organizer').count()

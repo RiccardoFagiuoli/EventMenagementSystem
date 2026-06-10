@@ -14,7 +14,6 @@ from django.utils import timezone
 import datetime
 
 class EventListView(ListView):
-    """ Class-based generic view for listing all published events. """
     model = Event
     template_name = 'events/event_list.html'
     context_object_name = 'events'
@@ -104,7 +103,6 @@ class EventListView(ListView):
                     'full_name': full_name if full_name else username
                 }
 
-        # Formatta i nomi degli organizzatori per il template
         context['organizers'] = sorted(organizers_dict.values(), key=lambda x: x['full_name'])
 
         if self.request.user.is_authenticated:
@@ -117,7 +115,6 @@ class EventListView(ListView):
         return context
 
 class EventDetailView(DetailView):
-    """ Class-based generic view for displaying event details. """
     model = Event
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
@@ -171,7 +168,6 @@ class EventDetailView(DetailView):
         return context
 
 class EventCreateView(LoginRequiredMixin, CreateView):
-    """ Class-based generic view for creating new events. """
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
@@ -196,17 +192,13 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Recupera l'URL di ritorno (priorità: GET > POST > default)
         next_url = self.request.GET.get('next') or self.request.POST.get('next')
 
-        # Se non c'è next_url, determina il default basato sul contesto
         if not next_url:
-            # Default: torna alla lista degli eventi dell'organizzatore
             next_url = reverse('events:organizer_events')
 
         context['next_url'] = next_url
 
-        # Opzionale: aggiungi anche il referer come fallback
         context['http_referer'] = self.request.META.get('HTTP_REFERER', '')
 
         return context
@@ -224,7 +216,6 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView,):
-    """ Class-based generic view for updating events. """
     model = Event
     form_class = EventForm
     template_name = 'events/event_form.html'
@@ -236,7 +227,6 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView,):
         return self.request.user == event.organizer or self.request.user.is_staff
 
     def get_success_url(self):
-        """Redirige alla pagina di dettaglio dell'evento dopo l'update"""
         next_url = self.request.POST.get('next') or self.request.GET.get('next')
         if next_url:
             return next_url
@@ -245,17 +235,13 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView,):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Recupera l'URL di ritorno (priorità: GET > POST > default)
         next_url = self.request.GET.get('next') or self.request.POST.get('next')
 
-        # Se non c'è next_url, determina il default basato sul contesto
         if not next_url:
-            # Default: torna alla lista degli eventi dell'organizzatore
             next_url = reverse('events:organizer_events')
 
         context['next_url'] = next_url
 
-        # Opzionale: aggiungi anche il referer come fallback
         context['http_referer'] = self.request.META.get('HTTP_REFERER', '')
 
         return context
@@ -295,7 +281,6 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView,):
         return super().form_invalid(form)
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    """ Class-based generic view for deleting events. """
     model = Event
     template_name = 'events/event_confirm_delete.html'
 
@@ -306,13 +291,11 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == event.organizer or self.request.user.is_staff
 
     def get_context_data(self, **kwargs):
-        """Aggiunge il parametro next al contesto del template"""
         context = super().get_context_data(**kwargs)
         context['next'] = self.request.GET.get('next', '')
         return context
 
     def post(self, request, *args, **kwargs):
-        """Questo metodo gestisce le richieste POST (soft delete o hard delete)"""
         event = self.get_object()
         from django.utils import timezone
 
@@ -339,7 +322,6 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 def event_register(request, pk):
-    """ View for registering a user to an event. """
     back_url = request.META.get('HTTP_REFERER', '/events/')
 
     if not request.user.is_authenticated:
@@ -372,7 +354,6 @@ def event_register(request, pk):
             messages.warning(request, 'Sei già registrato a questo evento.')
 
     except EventRegistration.DoesNotExist:
-        # Nuova registrazione
         if event.is_full():
             # Evento pieno → lista d'attesa
             registration = EventRegistration.objects.create(
@@ -395,7 +376,6 @@ def event_register(request, pk):
 
 @login_required
 def event_unregister_confirm(request, pk):
-    """Pagina di conferma per la disiscrizione da un evento"""
     event = get_object_or_404(Event, pk=pk)
 
     # Verifica che l'utente sia effettivamente registrato all'evento
@@ -423,7 +403,6 @@ def event_unregister_confirm(request, pk):
 
         return redirect(next_url or reverse('events:event_detail', args=[pk]))
 
-    # GET: mostra la pagina di conferma
     context = {
         'event': event,
         'registration': registration,
@@ -432,7 +411,6 @@ def event_unregister_confirm(request, pk):
     return render(request, 'events/confirm_unregister.html', context)
 
 def event_unregister(request, pk):
-    """ View for unregistering a user from an event. """
     if not request.user.is_authenticated:
         messages.error(request, 'È necessario essere loggati.')
         return redirect('users:login')
@@ -454,7 +432,6 @@ def event_unregister(request, pk):
 
 
 def user_registrations(request):
-    """ View to display user's event registrations with filters and pagination. """
     if not request.user.is_authenticated:
         return redirect('users:login')
 
@@ -462,7 +439,6 @@ def user_registrations(request):
     status_filter = request.GET.get('status', 'all')
     date_filter = request.GET.get('date', 'all')
 
-    # Query base
     queryset = EventRegistration.objects.filter(user=request.user).select_related('event')
 
     # Filtro per stato
@@ -480,7 +456,6 @@ def user_registrations(request):
     # Ordina per data evento (più recenti prima)
     queryset = queryset.order_by('status', '-event__start_date')
 
-    # Calcola statistiche per i gruppi (sul queryset totale senza filtri)
     all_registrations = EventRegistration.objects.filter(user=request.user)
 
     search_query = request.GET.get('search', '')
@@ -518,7 +493,6 @@ def user_registrations(request):
     return render(request, 'events/user_registrations.html', context)
 
 def organizer_events(request):
-    """ View to display organizer's events. """
     if not request.user.is_authenticated:
         return redirect('users:login')
     try:
@@ -608,7 +582,6 @@ def organizer_events(request):
     return render(request, 'events/organizer_events.html', context)
 
 def event_restore(request, pk):
-    """ View to restore a deleted event. """
     if not request.user.is_authenticated:
         messages.error(request, 'È necessario essere loggati.')
         return redirect('users:login')
@@ -637,7 +610,6 @@ def event_restore(request, pk):
 
 @login_required
 def admin_unregister_confirm(request, event_id, registration_id):
-    """Pagina di conferma per disiscrivere un utente da un evento (solo admin/organizzatore)"""
     event = get_object_or_404(Event, pk=event_id)
 
     # Permetti solo all'admin o all'organizzatore dell'evento
@@ -665,7 +637,6 @@ def admin_unregister_confirm(request, event_id, registration_id):
 
         return redirect('events:event_detail', pk=event_id)
 
-    # GET: mostra la pagina di conferma
     context = {
         'event': event,
         'registration': registration,
@@ -675,7 +646,6 @@ def admin_unregister_confirm(request, event_id, registration_id):
     return render(request, 'events/confirm_unregister.html', context)
 
 def admin_unregister_user(request, event_id, registration_id):
-     """ View to unregister a user from an event (admin and organizer only). Promuove il primo in coda """
      if not request.user.is_authenticated:
          messages.error(request, 'È necessario essere loggati.')
          return redirect('users:login')
@@ -705,7 +675,6 @@ def admin_unregister_user(request, event_id, registration_id):
 
 @login_required
 def admin_register_confirm(request, pk, registration_pk):
-    """Pagina di conferma per iscrivere un utente dalla lista d'attesa (solo admin/organizzatore)"""
     event = get_object_or_404(Event, pk=pk, status='published')
     registration = get_object_or_404(EventRegistration, pk=registration_pk, event=event)
 
@@ -729,7 +698,6 @@ def admin_register_confirm(request, pk, registration_pk):
 
         return redirect('events:event_detail', pk=pk)
 
-    # GET: mostra la pagina di conferma
     context = {
         'event': event,
         'registration': registration,
@@ -739,7 +707,6 @@ def admin_register_confirm(request, pk, registration_pk):
     return render(request, 'events/confirm_register.html', context)
 
 def admin_register_user(request, pk, registration_pk):
-    """View per admin per confermare utente dalla lista d'attesa"""
     if not request.user.is_authenticated:
         messages.error(request, 'È necessario essere loggati.')
         return redirect('users:login')
@@ -762,7 +729,6 @@ def admin_register_user(request, pk, registration_pk):
     return redirect('events:event_detail', pk=pk)
 
 def deleted_events(request):
-    """ View to display all deleted events (admin only). """
     if not request.user.is_authenticated:
         messages.error(request, 'È necessario essere loggati.')
         return redirect('users:login')
@@ -798,7 +764,6 @@ def deleted_events(request):
 
 @login_required
 def calendar_view(request):
-    """ View to display user's event calendar. """
     # Impedisce gli admin di accedere (non possono iscriversi agli eventi)
     if request.user.is_staff:
         messages.error(request, 'Gli admin non possono visualizzare il calendario.')
@@ -808,7 +773,6 @@ def calendar_view(request):
 
 @login_required
 def calendar_events(request):
-    """ API endpoint to get user's registered events in JSON format. """
     # Impedisce gli admin di accedere
     if request.user.is_staff:
         return JsonResponse([], safe=False)

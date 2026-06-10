@@ -115,8 +115,6 @@ def handle_image_deletion(sender, instance, **kwargs):
     if not instance.pk:
         return
 
-    # Se stai usando un campo personalizzato per segnare la cancellazione
-    # Puoi passare un attributo temporaneo dall'admin
     if hasattr(instance, '_delete_image') and instance._delete_image:
         if instance.image:
             instance.image.delete(save=False)

@@ -228,7 +228,7 @@
             }
 
             .event-tooltip {
-                display: block !important; /* Forziamo la visualizzazione anche su mobile */
+                display: block !important;
             }
             .event-tooltip {
                 padding: 10px 14px;
@@ -350,11 +350,6 @@
             .fc .fc-daygrid-day-frame {
                 min-height: 60px !important;
             }
-
-            {% comment %}/* Su mobile non mostrare il tooltip */
-            .event-tooltip {
-                display: none !important;
-            }{% endcomment %}
         }
     </style>
 
@@ -406,14 +401,6 @@
             }
           }
 
-          {% comment %}// Funzione per feedback negativo/cancellazione
-          function hapticFeedbackCancel() {
-            if ('vibrate' in navigator) {
-              // Vibrazione breve singola
-              navigator.vibrate(30);
-            }
-          }{% endcomment %}
-
           function showTooltip(event, mouseX, mouseY, eventInfo) {
             // Feedback aptico quando si mostra il tooltip
             hapticFeedbackSuccess();
@@ -439,7 +426,7 @@
             // Posiziona il tooltip
             tooltip.classList.add('show');
 
-            // Calcola posizione (offset per non coprire il mouse/dito)
+            // Calcola posizione del tooltip con offset
             let left = mouseX;
             let top = mouseY - 100;
 
@@ -546,7 +533,6 @@
                   cancelLongPress();
                   startLongPress(e, info);
 
-                  // Non prevenire default completamente, solo il context menu
                   e.preventDefault();
                 });
 
@@ -556,7 +542,7 @@
                       Math.abs(e.touches[0].clientY - touchStartY) > 10) {
                     cancelLongPress();
                     hideTooltip();
-                    hapticFeedbackCancel(); // Feedback di cancellazione
+                    hapticFeedbackCancel();
                   }
                 });
 
@@ -565,9 +551,8 @@
 
                   // Se è stato un tap breve (meno di 500ms e nessun long press attivato)
                   if (touchDuration < 500 && longPressTimer !== null) {
-                    // Era un tap breve, naviga
                     cancelLongPress();
-                    hapticFeedback(); // Feedback aptico per il tap
+                    hapticFeedback();
                     setTimeout(() => {
                       window.location.href = info.event.url;
                     }, 50);
@@ -581,7 +566,6 @@
                   }
                 });
 
-                // Previeni il context menu standard su long press
                 eventEl.addEventListener('contextmenu', function(e) {
                   e.preventDefault();
                   return false;

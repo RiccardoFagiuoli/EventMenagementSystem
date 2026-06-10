@@ -21,7 +21,7 @@ class EventForm(forms.ModelForm):
         for field_name in ['title', 'description', 'location']:
             self.fields[field_name].widget.attrs.update({'class': 'form-control'})
 
-        # ⭐ SOLO IN MODIFICA: popola i campi data con il formato corretto
+        # SOLO IN MODIFICA: popola i campi data con il formato corretto
         if self.instance and self.instance.pk:  # Evento esistente
             if self.instance.start_date:
                 self.initial['start_date'] = self.instance.start_date.strftime('%Y-%m-%dT%H:%M')
